@@ -23,12 +23,39 @@ export const addULCircuit = async (req, res) => {
   }
 };
 
+//get all
 export const getAllUL = async (req, res) => {
   try {
     const allUL = await universalLogicModel.find({});
     res.status(201).json({ success: true, allCircuits: allUL });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server Error!" });
+    console.log(error);
+  }
+};
+
+//Update
+export const updateUL = async (req, res) => {
+  const { id } = req.params;
+  const toBeULCircuit = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res
+      .status(404)
+      .json({ success: false, message: "Can't find Universal Circuit" });
+  }
+
+  try {
+    const updatedUL = await universalLogicModel.findByIdAndUpdate(
+      id,
+      toBeULCircuit,
+      { new: true }
+    );
+    res.status(200).json({ success: true, message: updatedUL });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Server Error! can't Update" });
     console.log(error);
   }
 };
