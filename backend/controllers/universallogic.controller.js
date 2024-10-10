@@ -59,3 +59,19 @@ export const updateUL = async (req, res) => {
     console.log(error);
   }
 };
+
+//delete
+export const deleteUL = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await universalLogicModel.findByIdAndDelete(id);
+    res
+      .status(200)
+      .json({ success: true, message: "Universal Circuit Deleted!" });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Server Error! Can't Delete" });
+    console.log(error);
+  }
+};
