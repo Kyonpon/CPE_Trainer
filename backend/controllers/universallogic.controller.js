@@ -22,3 +22,13 @@ export const addULCircuit = async (req, res) => {
     console.log(error);
   }
 };
+
+export const getAllUL = async (req, res) => {
+  try {
+    const allUL = await universalLogicModel.find({});
+    res.status(201).json({ success: true, allCircuits: allUL });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error!" });
+    console.log(error);
+  }
+};
