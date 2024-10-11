@@ -5,9 +5,9 @@ import {
   HStack,
   Text,
   useColorMode,
-  useColorModeValue,
 } from "@chakra-ui/react";
 import { CiSquarePlus } from "react-icons/ci";
+import { SlLogin } from "react-icons/sl";
 import { Link } from "react-router-dom";
 
 const NavBar = () => {
@@ -35,7 +35,10 @@ const NavBar = () => {
           <Link to={"/"}>CPE-4B</Link>
         </Text>
 
-        <HStack spacing={2} alignItems={"center"}>
+        <HStack spacing={3} alignItems={"center"}>
+          <Link to="/login">
+            <SlLogin fontSize={30} />
+          </Link>
           <Link to={"/create"}>
             <CiSquarePlus fontSize={40} />
           </Link>
