@@ -7,11 +7,21 @@ import {
   useColorMode,
 } from "@chakra-ui/react";
 import { CiSquarePlus } from "react-icons/ci";
-import { SlLogin } from "react-icons/sl";
+import { SlLogin, SlLogout } from "react-icons/sl";
 import { Link } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
+  const [cookies, setCookies] = useCookies(["access_token"]);
+  const navigate = useNavigate();
   const { colorMode, toggleColorMode } = useColorMode(); // Corrected here
+
+  const handleLogout = () => {
+    setCookies("access_token", "");
+    window.localStorage.removeItem("userID");
+    navigate("/login");
+  };
 
   return (
     <Container maxW={"1140px"} px={4}>
@@ -36,9 +46,17 @@ const NavBar = () => {
         </Text>
 
         <HStack spacing={3} alignItems={"center"}>
-          <Link to="/login">
-            <SlLogin fontSize={30} />
-          </Link>
+          {!cookies.access_token ? (
+            <Link to="/login">
+              <SlLogin fontSize={30} />
+            </Link>
+          ) : (
+            <button onClick={handleLogout}>
+              <Link>
+                <SlLogout fontSize={30} />
+              </Link>
+            </button>
+          )}
           <Link to={"/create"}>
             <CiSquarePlus fontSize={40} />
           </Link>
