@@ -4,6 +4,7 @@ import Createpage from "./pages/Createpage";
 import Homepage from "./pages/Homepage";
 import NavBar from "./components/NavBar";
 import Loginpage from "./pages/Loginpage";
+import Universallogicmenupage from "./pages/Universallogicmenupage";
 
 function App() {
   return (
@@ -14,6 +15,10 @@ function App() {
           <Route path="/" element={<Homepage></Homepage>}></Route>
           <Route path="/create" element={<Createpage></Createpage>}></Route>
           <Route path="/login" element={<Loginpage></Loginpage>}></Route>
+          <Route
+            path="ulcircuitsHome"
+            element={<Universallogicmenupage></Universallogicmenupage>}
+          ></Route>
         </Routes>
       </Box>
     </>
