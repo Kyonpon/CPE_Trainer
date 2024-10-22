@@ -18,7 +18,13 @@ export const addULCircuit = async (req, res) => {
 
   try {
     await newULCircuit.save();
-    res.status(201).json({ success: true, message: "Created new circuit" });
+    res
+      .status(201)
+      .json({
+        success: true,
+        message: "Created new circuit",
+        data: newULCircuit,
+      });
   } catch (error) {
     res.status(500).json({ success: false, message: "Server Error!" });
     console.log(error);

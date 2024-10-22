@@ -1,13 +1,30 @@
-import { create } from "zustand";
 import axios from "axios";
+import { create } from "zustand";
 
-export const useULCircuits = create((set) => ({
-  ulCircuit: [],
-  setUlCircuit: (ulCircuit) => set({ ulCircuit }),
+export const useUlcircuits = create((set) => ({
+  universalLogicCircuit: [],
+  setUniversalLogicCircuit: (universalLogicCircuit) =>
+    set({ universalLogicCircuit }),
+  createUniversalLogicCircuit: async (newUniversalLogicCircuit) => {
+    if (!newUniversalLogicCircuit.universalCircuitName) {
+      return { success: false, message: "please add a circuit Name!" };
+    }
+    try {
+      const res = await axios.post(
+        "/api/ulcircuits/createul",
+        newUniversalLogicCircuit,
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-  zustandCreateUlCircuit: async (newULCircuit) => {
-    if (!newULCircuit.circuit) {
-      return { success: false, message: "Circuit name required!" };
+      set((state) => ({
+        universalLogicCircuit: [...state.universalLogicCircuit, res.data.data],
+      }));
+      return { success: true, message: "Circuit created successfully" };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || "An error occurred",
+      };
     }
   },
 }));
