@@ -4,13 +4,15 @@ import mongoose from "mongoose";
 //Crete new circuit
 export const addULCircuit = async (req, res) => {
   const ULCircuit = req.body;
-  if (!ULCircuit.circuit) {
+  if (!ULCircuit.universalCircuitName) {
     return res
       .status(400)
       .json({ success: false, message: "please fill the circuit field" });
   }
 
-  ULCircuit.image = "no Image URL";
+  if (!ULCircuit.imageUrl) {
+    ULCircuit.imageUrl = "no Image URL";
+  }
 
   const newULCircuit = new universalLogicModel(ULCircuit);
 
