@@ -1,8 +1,11 @@
+import { Container } from "@chakra-ui/react";
+import PushDatabaseNewCircuit from "../components/PushDatabaseNewCircuit";
+
 const Createpage = () => {
   return (
-    <div>
-      <p>Create page</p>
-    </div>
+    <Container pt={10}>
+      <PushDatabaseNewCircuit></PushDatabaseNewCircuit>
+    </Container>
   );
 };
 
