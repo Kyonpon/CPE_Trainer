@@ -10,7 +10,9 @@ export const addULCircuit = async (req, res) => {
       .json({ success: false, message: "please fill the circuit field" });
   }
 
-  ULCircuit.image = "no Image URL";
+  if (!ULCircuit.image) {
+    ULCircuit.image = "no Image URL";
+  }
 
   const newULCircuit = new universalLogicModel(ULCircuit);
 
