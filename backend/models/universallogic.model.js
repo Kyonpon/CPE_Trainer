@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
 
 const universalLogicSchema = new mongoose.Schema({
-  circuit: {
+  universalCircuitName: {
     type: String,
     required: true,
   },
-  image: {
+  imageUrl: {
     type: String,
   },
 });
