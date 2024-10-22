@@ -19,7 +19,7 @@ function HomeCards(props) {
             objectFit="cover"
           />
           <Stack mt="6" spacing="3" flexGrow={1} justify="space-between">
-            <Heading size="xl" textAlign="center">
+            <Heading fontSize="3xl" textAlign="center">
               {props.title}
             </Heading>{" "}
           </Stack>

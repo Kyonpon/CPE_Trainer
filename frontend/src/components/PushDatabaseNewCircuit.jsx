@@ -9,12 +9,28 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useUlcircuits } from "../hooks/zustandUlCircuit";
+import { useLocation } from "react-router-dom"; // Import useLocation
 
 function PushDatabaseNewCircuit() {
   const [newUniversalLogicCircuit, setNewUniversalLogicCircuit] = useState({
     universalCircuitName: "",
     imageUrl: "",
   });
+  const location = useLocation();
+  // Determine the heading based on the current URL
+  const getHeadingText = () => {
+    const path = location.pathname;
+    if (path.includes("createcb")) {
+      return "Create Combinational Logic Circuit";
+    }
+    if (path.includes("createul")) {
+      return "Create Universal Logic Circuit";
+    }
+    if (path.includes("create")) {
+      return "Create New Circuit";
+    }
+    return "Manage Circuits"; // Default heading or based on other conditions
+  };
 
   const { createUniversalLogicCircuit } = useUlcircuits();
   const handleAddNewCircuit = async () => {
@@ -29,8 +45,7 @@ function PushDatabaseNewCircuit() {
     <Container maxW={"container.sm"}>
       <VStack spacing={10}>
         <Heading as={"h1"} size={"2xl"} textAlign={"center"}>
-          {/* Make this dynamic */}
-          Create New Circuit
+          {getHeadingText()} {/* Use the dynamic heading */}
         </Heading>
         <Box
           w={"full"}
