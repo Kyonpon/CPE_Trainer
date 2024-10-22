@@ -14,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Homepage></Homepage>}></Route>
           <Route path="/create" element={<Createpage></Createpage>}></Route>
+          <Route path="createul" element={<Createpage></Createpage>}></Route>
           <Route path="/login" element={<Loginpage></Loginpage>}></Route>
           <Route
             path="ulcircuitsHome"
