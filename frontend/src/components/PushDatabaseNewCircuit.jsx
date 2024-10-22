@@ -8,15 +8,21 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { useUlcircuits } from "../hooks/zustandUlCircuit";
 
 function PushDatabaseNewCircuit() {
   const [newUniversalLogicCircuit, setNewUniversalLogicCircuit] = useState({
-    ulCircuitName: "",
+    universalCircuitName: "",
     imageUrl: "",
   });
 
-  const handleAddNewCircuit = () => {
+  const { createUniversalLogicCircuit } = useUlcircuits();
+  const handleAddNewCircuit = async () => {
     console.log(newUniversalLogicCircuit);
+    const { success, message } = await createUniversalLogicCircuit(
+      newUniversalLogicCircuit
+    );
+    console.log("Success:", success), console.log("Message", message);
   };
 
   return (
@@ -36,19 +42,19 @@ function PushDatabaseNewCircuit() {
           <VStack spacing={4}>
             <Input
               placeholder="Circuit Name"
-              name="circuit"
-              value={newUniversalLogicCircuit.circuit}
+              name="universalCircuitName"
+              value={newUniversalLogicCircuit.universalCircuitName}
               onChange={(event) =>
                 setNewUniversalLogicCircuit({
                   ...newUniversalLogicCircuit,
-                  ulCircuitName: event.target.value,
+                  universalCircuitName: event.target.value,
                 })
               }
             />
             <Input
               placeholder="Image URL"
-              name="image"
-              value={newUniversalLogicCircuit.image}
+              name="imageUrl"
+              value={newUniversalLogicCircuit.imageUrl}
               onChange={(event) =>
                 setNewUniversalLogicCircuit({
                   ...newUniversalLogicCircuit,
