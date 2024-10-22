@@ -1,5 +1,6 @@
 import { Box } from "@chakra-ui/react";
 import UniversalLogicCard from "../components/UniversalLogicCard";
+import CreateCard from "../components/CreateCard";
 
 function Universallogicmenupage() {
   return (
@@ -12,6 +13,7 @@ function Universallogicmenupage() {
           imgurlalt="this a picture"
           title="testcircuit"
         ></UniversalLogicCard>
+        <CreateCard url="/createul" title="Create New Circuit"></CreateCard>
       </Box>
     </Box>
   );
