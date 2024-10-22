@@ -10,13 +10,13 @@ import {
 import { useState } from "react";
 
 function PushDatabaseNewCircuit() {
-  const [newCircuit, setNewCircuit] = useState({
-    circuit: "",
-    image: "",
+  const [newUniversalLogicCircuit, setNewUniversalLogicCircuit] = useState({
+    ulCircuitName: "",
+    imageUrl: "",
   });
 
   const handleAddNewCircuit = () => {
-    console.log(newCircuit);
+    console.log(newUniversalLogicCircuit);
   };
 
   return (
@@ -37,17 +37,23 @@ function PushDatabaseNewCircuit() {
             <Input
               placeholder="Circuit Name"
               name="circuit"
-              value={newCircuit.circuit}
+              value={newUniversalLogicCircuit.circuit}
               onChange={(event) =>
-                setNewCircuit({ ...newCircuit, circuit: event.target.value })
+                setNewUniversalLogicCircuit({
+                  ...newUniversalLogicCircuit,
+                  ulCircuitName: event.target.value,
+                })
               }
             />
             <Input
               placeholder="Image URL"
               name="image"
-              value={newCircuit.image}
+              value={newUniversalLogicCircuit.image}
               onChange={(event) =>
-                setNewCircuit({ ...newCircuit, image: event.target.value })
+                setNewUniversalLogicCircuit({
+                  ...newUniversalLogicCircuit,
+                  imageUrl: event.target.value,
+                })
               }
             />
 
