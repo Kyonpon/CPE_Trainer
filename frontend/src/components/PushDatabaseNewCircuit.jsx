@@ -10,9 +10,9 @@ import {
 import { useState } from "react";
 import { useUlCircuits } from "../hooks/zustandUlCircuit";
 import { useCBCircuits } from "../hooks/zustandCBCircuit";
-import { useLocation } from "react-router-dom"; // Import useLocation
+import { useLocation } from "react-router-dom";
 
-function PushDatabaseNewCircuit() {
+function PushDatabaseNewCircuit_try() {
   const [newUniversalLogicCircuit, setNewUniversalLogicCircuit] = useState({
     universalCircuitName: "",
     imageUrl: "",
@@ -25,6 +25,7 @@ function PushDatabaseNewCircuit() {
     });
 
   const location = useLocation();
+
   // Determine the heading based on the current URL
   const getHeadingText = () => {
     const path = location.pathname;
@@ -37,29 +38,36 @@ function PushDatabaseNewCircuit() {
     if (path.includes("create")) {
       return "Create New Circuit";
     }
-    return "Manage Circuits"; // Default heading or based on other conditions
+    return "Manage Circuits";
   };
 
   const { createUniversalLogicCircuit } = useUlCircuits();
-  const { createCombinationalLogicCircuit } = useCBCircuits();
+  const { createCombiLogicCircuit } = useCBCircuits();
 
-  const handleNewUL = async () => {
-    console.log(newUniversalLogicCircuit);
-    const { success, message } = await createUniversalLogicCircuit(
-      newUniversalLogicCircuit
-    );
-    console.log("Success:", success), console.log("Message", message);
+  const handleAddNewCircuit = async () => {
+    const path = location.pathname;
+    if (path.includes("createcb")) {
+      // Handle combinational circuit creation
+      const { success, message } = await createCombiLogicCircuit(
+        newCombinationalLogicCircuit
+      );
+      console.log("Success:", success);
+      console.log("Message:", message);
+    } else if (path.includes("createul")) {
+      // Handle universal circuit creation
+      const { success, message } = await createUniversalLogicCircuit(
+        newUniversalLogicCircuit
+      );
+      console.log("Success:", success);
+      console.log("Message:", message);
+    }
   };
-
-  const handleNewCB = async () => {};
-
-  const handleAddNewCircuit = async () => {};
 
   return (
     <Container maxW={"container.sm"}>
       <VStack spacing={10}>
         <Heading as={"h1"} size={"2xl"} textAlign={"center"}>
-          {getHeadingText()} {/* Use the dynamic heading */}
+          {getHeadingText()}
         </Heading>
         <Box
           w={"full"}
@@ -69,29 +77,66 @@ function PushDatabaseNewCircuit() {
           shadow={"md"}
         >
           <VStack spacing={4}>
-            <Input
-              placeholder="Circuit Name"
-              name="universalCircuitName"
-              value={newUniversalLogicCircuit.universalCircuitName}
-              onChange={(event) =>
-                setNewUniversalLogicCircuit({
-                  ...newUniversalLogicCircuit,
-                  universalCircuitName: event.target.value,
-                })
+            {/* Render input fields based on the URL */}
+            {(() => {
+              if (location.pathname.includes("createcb")) {
+                return (
+                  <>
+                    <Input
+                      placeholder="Circuit Name"
+                      name="combiLogicCircuitName"
+                      value={newCombinationalLogicCircuit.combiLogicCircuitName}
+                      onChange={(event) =>
+                        setNewCombinationalLogicCircuit({
+                          ...newCombinationalLogicCircuit,
+                          combiLogicCircuitName: event.target.value,
+                        })
+                      }
+                    />
+                    <Input
+                      placeholder="Image URL"
+                      name="imageUrl"
+                      value={newCombinationalLogicCircuit.imageUrl}
+                      onChange={(event) =>
+                        setNewCombinationalLogicCircuit({
+                          ...newCombinationalLogicCircuit,
+                          imageUrl: event.target.value,
+                        })
+                      }
+                    />
+                  </>
+                );
               }
-            />
-            <Input
-              placeholder="Image URL"
-              name="imageUrl"
-              value={newUniversalLogicCircuit.imageUrl}
-              onChange={(event) =>
-                setNewUniversalLogicCircuit({
-                  ...newUniversalLogicCircuit,
-                  imageUrl: event.target.value,
-                })
+              if (location.pathname.includes("createul")) {
+                return (
+                  <>
+                    <Input
+                      placeholder="Circuit Name"
+                      name="universalCircuitName"
+                      value={newUniversalLogicCircuit.universalCircuitName}
+                      onChange={(event) =>
+                        setNewUniversalLogicCircuit({
+                          ...newUniversalLogicCircuit,
+                          universalCircuitName: event.target.value,
+                        })
+                      }
+                    />
+                    <Input
+                      placeholder="Image URL"
+                      name="imageUrl"
+                      value={newUniversalLogicCircuit.imageUrl}
+                      onChange={(event) =>
+                        setNewUniversalLogicCircuit({
+                          ...newUniversalLogicCircuit,
+                          imageUrl: event.target.value,
+                        })
+                      }
+                    />
+                  </>
+                );
               }
-            />
-
+              return null; // Return null if no conditions are met
+            })()}
             <Button colorScheme="blue" w="full" onClick={handleAddNewCircuit}>
               Create!
             </Button>
@@ -102,4 +147,4 @@ function PushDatabaseNewCircuit() {
   );
 }
 
-export default PushDatabaseNewCircuit;
+export default PushDatabaseNewCircuit_try;
