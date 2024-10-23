@@ -8,7 +8,8 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { useUlcircuits } from "../hooks/zustandUlCircuit";
+import { useUlCircuits } from "../hooks/zustandUlCircuit";
+import { useCBCircuits } from "../hooks/zustandCBCircuit";
 import { useLocation } from "react-router-dom"; // Import useLocation
 
 function PushDatabaseNewCircuit() {
@@ -16,6 +17,13 @@ function PushDatabaseNewCircuit() {
     universalCircuitName: "",
     imageUrl: "",
   });
+
+  const [newCombinationalLogicCircuit, setNewCombinationalLogicCircuit] =
+    useState({
+      combiLogicCircuitName: "",
+      imageUrl: "",
+    });
+
   const location = useLocation();
   // Determine the heading based on the current URL
   const getHeadingText = () => {
@@ -32,14 +40,20 @@ function PushDatabaseNewCircuit() {
     return "Manage Circuits"; // Default heading or based on other conditions
   };
 
-  const { createUniversalLogicCircuit } = useUlcircuits();
-  const handleAddNewCircuit = async () => {
+  const { createUniversalLogicCircuit } = useUlCircuits();
+  const { createCombinationalLogicCircuit } = useCBCircuits();
+
+  const handleNewUL = async () => {
     console.log(newUniversalLogicCircuit);
     const { success, message } = await createUniversalLogicCircuit(
       newUniversalLogicCircuit
     );
     console.log("Success:", success), console.log("Message", message);
   };
+
+  const handleNewCB = async () => {};
+
+  const handleAddNewCircuit = async () => {};
 
   return (
     <Container maxW={"container.sm"}>
