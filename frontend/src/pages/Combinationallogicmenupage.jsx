@@ -22,7 +22,7 @@ function Combinationallogicmenupage() {
         {combiLogicCircuit.map((combiLogic) => (
           <UniversalLogicCard
             key={combiLogic._id} // Use combiLogic._id or combiLogic.id based on your data structure
-            url={`/circuit/${combiLogic._id}`} // Assuming the URL uses the circuit's ID
+            url={`/cbcircuit/${combiLogic._id}`} // Assuming the URL uses the circuit's ID
             imgurl={combiLogic.imageUrl}
             imgurlalt={combiLogic.combiLogicCircuitName}
             title={combiLogic.combiLogicCircuitName}
