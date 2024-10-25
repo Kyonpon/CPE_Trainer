@@ -25,4 +25,14 @@ export const useCBCircuits = create((set) => ({
       };
     }
   },
+
+  fetchCBCircuits: async () => {
+    try {
+      const res = await axios.get("/api/cbcircuits/getall");
+
+      set({ combiLogicCircuit: res.data.allCircuits });
+    } catch (error) {
+      console.error("Error fetching combinational logic circuits:", error);
+    }
+  },
 }));
