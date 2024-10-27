@@ -1,7 +1,6 @@
 import {
   Box,
   Container,
-  Heading,
   Input,
   useColorModeValue,
   VStack,
@@ -25,22 +24,6 @@ function PushDatabaseNewCircuit_try() {
     });
 
   const location = useLocation();
-
-  // Determine the heading based on the current URL
-  const getHeadingText = () => {
-    const path = location.pathname;
-    if (path.includes("createcb")) {
-      return "Create Combinational Logic Circuit";
-    }
-    if (path.includes("createul")) {
-      return "Create Universal Logic Circuit";
-    }
-    if (path.includes("create")) {
-      return "Create New Circuit";
-    }
-    return "Manage Circuits";
-  };
-
   const { createUniversalLogicCircuit } = useUlCircuits();
   const { createCombiLogicCircuit } = useCBCircuits();
 
@@ -66,9 +49,6 @@ function PushDatabaseNewCircuit_try() {
   return (
     <Container maxW={"container.sm"}>
       <VStack spacing={10}>
-        <Heading as={"h1"} size={"2xl"} textAlign={"center"}>
-          {getHeadingText()}
-        </Heading>
         <Box
           w={"full"}
           bg={useColorModeValue("white", "gray.800")}
@@ -76,6 +56,7 @@ function PushDatabaseNewCircuit_try() {
           rounded={"lg"}
           shadow={"md"}
         >
+          {/* this is the form */}
           <VStack spacing={4}>
             {/* Render input fields based on the URL */}
             {(() => {
