@@ -43,4 +43,4 @@ const CombiLogicModel = mongoose.model(
   v2CombiLogicSchema
 );
 
-export default CombiLogicModel;
+export default v2CombiLogicModel;
