@@ -6,6 +6,8 @@ export const v2addCBcircuit = async (req, res) => {
   const tbaCBCircuit = req.body;
 
   // Validate content array
+
+  /*
   if (
     !Array.isArray(tbaCBCircuit.content) ||
     tbaCBCircuit.content.length === 0
@@ -15,6 +17,7 @@ export const v2addCBcircuit = async (req, res) => {
       message: "Content array is required and cannot be empty.",
     });
   }
+  */
 
   // Loop through each item in content array
   for (let i = 0; i < tbaCBCircuit.content.length; i++) {
