@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const contentSchema = new mongoose.Schema({
   type: {
     type: String,
-    enum: ["Text, Image, TextAndImage"],
+    enum: ["Text", "Image", "TextAndImage"],
   },
   text: {
     type: String,
@@ -38,7 +38,7 @@ const v2CombiLogicSchema = new mongoose.Schema({
   content: [contentSchema],
 });
 
-const CombiLogicModel = mongoose.model(
+const v2CombiLogicModel = mongoose.model(
   "Combinational_Logic_Circuit",
   v2CombiLogicSchema
 );
