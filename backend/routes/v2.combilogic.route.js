@@ -1,8 +1,8 @@
 import express from "express";
-import { addCBcircuit } from "../controllers/v2.combilogic.controller";
+import { v2addCBcircuit } from "../controllers/v2.combilogic.controller.js";
 
 const router = express.Router();
 
-router.post("/createcb", addCBcircuit);
+router.post("/createcb", v2addCBcircuit);
 
 export { router as CBCircuitAPIv2 };
