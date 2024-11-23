@@ -29,13 +29,11 @@ export const addCBcircuit = async (req, res) => {
 
   try {
     await newCBCircuit.save();
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "Created new Combinational Circuit",
-        data: newCBCircuit,
-      });
+    res.status(201).json({
+      success: true,
+      message: "Created new Combinational Circuit",
+      data: newCBCircuit,
+    });
   } catch (error) {
     res
       .status(500)
