@@ -36,4 +36,21 @@ export const useCBCircuits = create((set) => ({
       console.error("Error fetching combinational logic circuits:", error);
     }
   },
+
+  fetchSingleCBCircuit: async (id) => {
+    if (!id) {
+      console.log("No ID provided to fetch a CB circuit");
+      return null;
+    }
+    try {
+      const res = await axios.get(`/api/cbcircuits/getbyid/${id}`);
+      return res.data.circuit;
+    } catch (error) {
+      console.log(
+        "Error Fetching this ID in combinational logic circuits:",
+        error
+      );
+      return null;
+    }
+  },
 }));
