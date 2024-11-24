@@ -23,9 +23,9 @@ function Combinationallogicmenupage() {
           <UniversalLogicCard
             key={combiLogic._id} // Use combiLogic._id or combiLogic.id based on your data structure
             url={`/cbcircuit/${combiLogic._id}`} // Assuming the URL uses the circuit's ID
-            imgurl={combiLogic.imageUrl}
+            imgurl={combiLogic.thumbnailUrl}
             imgurlalt={combiLogic.combiLogicCircuitName}
-            title={combiLogic.combiLogicCircuitName}
+            title={combiLogic.circuitName}
           />
         ))}
         <CreateCard url="/createcb" title="Create New Circuit"></CreateCard>
