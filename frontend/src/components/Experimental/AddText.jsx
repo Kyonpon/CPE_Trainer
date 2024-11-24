@@ -91,16 +91,14 @@ const AddText = ({
         return null;
       })}
 
-      {/* Dropdown to select the type */}
-      <Select
-        placeholder="Select Content Type"
-        value={selectedType}
-        onChange={handleTypeChange}
-      >
-        <option value="Text">Text</option>
-        <option value="Image">Image</option>
-        <option value="TextAndImage">Text and Image</option>
-      </Select>
+      <VStack>
+        <Heading>Select Content Type</Heading>
+        <Select value={selectedType} onChange={handleTypeChange}>
+          <option value="Text">Text</option>
+          <option value="Image">Image</option>
+          <option value="TextAndImage">Text and Image</option>
+        </Select>
+      </VStack>
 
       {/* Add Button */}
       <Button colorScheme="blue" onClick={handleAddContent}>
