@@ -4,8 +4,9 @@ import { create } from "zustand";
 export const useCBCircuits = create((set) => ({
   combiLogicCircuit: [],
   setCombiLogicCircuit: (combiLogicCircuit) => set({ combiLogicCircuit }),
+
   createCombiLogicCircuit: async (newCombiLogicCircuit) => {
-    if (!newCombiLogicCircuit.combiLogicCircuitName) {
+    if (!newCombiLogicCircuit.circuitName) {
       return { success: false, message: "Please add a circuit name!" };
     }
     try {
