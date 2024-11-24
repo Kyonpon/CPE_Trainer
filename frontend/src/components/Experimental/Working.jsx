@@ -1,78 +1,25 @@
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
-import { useUlCircuits } from "../../hooks/zustandUlCircuit";
-import { useCBCircuits } from "../../hooks/zustandCBCircuit";
-import {
-  Box,
-  Button,
-  Container,
-  Input,
-  useColorModeValue,
-  VStack,
-} from "@chakra-ui/react";
-import AddText from "./AddText";
+import React from "react";
 
 function CreateLib() {
-  const location = useLocation(); //This is used to determined what Create is the page
-
-  //#region States in Create
-  const [newUniversalLogicCircuit, setNewUniversalLogicCircuit] = useState({
-    universalCircuitName: "",
-    thumbnailUrl: "",
-    content: [
-      {
-        type: "Text",
-        text: "",
-      },
-    ],
-  });
-
   const [newCombinationalLogicCircuit, setNewCombinationalLogicCircuit] =
     useState({
-      //combinationalCircuitName: "",
       circuitName: "",
       thumbnailUrl: "",
       content: [],
     });
 
-  const [newMicroprocessorCircuit, setNewMicroprocessorCircuit] = useState({
-    microprocessorCircuitName: "",
-    thumbnailUrl: "",
-    content: [{ type: "Text", text: "" }],
-  });
-
-  //#endrgion
-
-  //#region Zustand calls
-  const { createUniversalLogicCircruit } = useUlCircuits();
+  const location = useLocation();
   const { createCombiLogicCircuit } = useCBCircuits();
 
-  //TO DO:
-  //const {createMicroCircuit} = useMicroCircuits();
-
   const handleAddNewCircuit = async () => {
-    const path = location.pathname;
-    if (path.includes("createcb")) {
-      const { success, message } = await createCombiLogicCircuit(
-        newCombinationalLogicCircuit
-      );
-      console.log("Success: ", success);
-      console.log("Message:", message);
-      console.log(newCombinationalLogicCircuit);
-    } else if (path.includes("createul")) {
-      const { success, message } = await createUniversalLogicCircruit(
-        newUniversalLogicCircuit
-      );
-      console.log("Success: ", success);
-      console.log("Message:", message);
-      console.log(newUniversalLogicCircuit);
-    } else if (path.includes("createmicro")) {
-      console.log("Create Micro");
-    }
+    const { success, message } = await createCombiLogicCircuit(
+      newCombinationalLogicCircuit
+    );
+    console.log("Success: ", success);
+    console.log("Message:", message);
+    console.log(newCombinationalLogicCircuit);
   };
-  //#endregion
 
-  //#region CONTENT STUFF1
   const handleContentChange = (index, event, field = "text") => {
     const updatedContent = [...newCombinationalLogicCircuit.content];
     updatedContent[index][field] = event.target.value;
@@ -87,11 +34,11 @@ function CreateLib() {
     if (type === "Text") {
       newContent.text = "";
     } else if (type === "Image") {
-      newContent.imageUrl = "";
+      newContent.ImageUrl = "";
       newContent.altText = "";
-    } else if (type === "TextAndImage") {
+    } else if (type === "TextandImage") {
       newContent.text = "";
-      newContent.imageUrl = "";
+      newContent.ImageUrl = "";
       newContent.altText = "";
     }
     setNewCombinationalLogicCircuit((prev) => ({
@@ -99,7 +46,6 @@ function CreateLib() {
       content: [...prev.content, newContent],
     }));
   };
-  //#endregion
 
   return (
     <Container maxW={"container.sm"}>
