@@ -101,6 +101,15 @@ function CreateLib() {
   };
   //#endregion
 
+  const handleDeleteContent = (index) => {
+    const updatedContent = [...newCombinationalLogicCircuit.content];
+    updatedContent.splice(index, 1); // Remove content at the specified index
+    setNewCombinationalLogicCircuit({
+      ...newCombinationalLogicCircuit,
+      content: updatedContent,
+    });
+  };
+
   return (
     <Container maxW={"container.sm"}>
       <VStack spacing={10}>
@@ -140,6 +149,7 @@ function CreateLib() {
                   content={newCombinationalLogicCircuit.content}
                   onContentChange={handleContentChange}
                   onAddContent={handleAddContent}
+                  onDeleteContent={handleDeleteContent}
                 />
               </>
             )}

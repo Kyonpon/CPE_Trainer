@@ -1,7 +1,12 @@
-import { VStack, Input, Button, Select } from "@chakra-ui/react";
+import { VStack, Input, Button, Select, HStack } from "@chakra-ui/react";
 import { useState } from "react";
 
-const AddText = ({ content, onContentChange, onAddContent }) => {
+const AddText = ({
+  content,
+  onContentChange,
+  onAddContent,
+  onDeleteContent,
+}) => {
   const [selectedType, setSelectedType] = useState("Text"); // Track the selected content type
 
   const handleTypeChange = (event) => {
@@ -17,12 +22,17 @@ const AddText = ({ content, onContentChange, onAddContent }) => {
       {content.map((item, index) => {
         if (item.type === "Text") {
           return (
-            <Input
-              key={index}
-              placeholder="Content Text"
-              value={item.text}
-              onChange={(event) => onContentChange(index, event)}
-            />
+            <VStack key={index} spacing={4}>
+              <Input
+                placeholder="Content Text"
+                value={item.text}
+                onChange={(event) => onContentChange(index, event, "text")}
+              />
+              {/* Delete button */}
+              <Button colorScheme="red" onClick={() => onDeleteContent(index)}>
+                Delete
+              </Button>
+            </VStack>
           );
         }
         if (item.type === "Image") {
@@ -38,6 +48,9 @@ const AddText = ({ content, onContentChange, onAddContent }) => {
                 value={item.altText}
                 onChange={(event) => onContentChange(index, event, "altText")}
               />
+              <Button colorScheme="red" onClick={() => onDeleteContent(index)}>
+                Delete
+              </Button>
             </VStack>
           );
         }
@@ -59,6 +72,9 @@ const AddText = ({ content, onContentChange, onAddContent }) => {
                 value={item.altText}
                 onChange={(event) => onContentChange(index, event, "altText")}
               />
+              <Button colorScheme="red" onClick={() => onDeleteContent(index)}>
+                Delete
+              </Button>
             </VStack>
           );
         }
