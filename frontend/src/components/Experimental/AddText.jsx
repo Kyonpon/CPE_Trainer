@@ -30,8 +30,8 @@ const AddText = ({ content, onContentChange, onAddContent }) => {
             <VStack key={index} spacing={2}>
               <Input
                 placeholder="Image URL"
-                value={item.ImageUrl}
-                onChange={(event) => onContentChange(index, event, "ImageUrl")}
+                value={item.imageUrl}
+                onChange={(event) => onContentChange(index, event, "imageUrl")}
               />
               <Input
                 placeholder="Alt Text"
@@ -41,7 +41,7 @@ const AddText = ({ content, onContentChange, onAddContent }) => {
             </VStack>
           );
         }
-        if (item.type === "TextandImage") {
+        if (item.type === "TextAndImage") {
           return (
             <VStack key={index} spacing={2}>
               <Input
@@ -51,8 +51,8 @@ const AddText = ({ content, onContentChange, onAddContent }) => {
               />
               <Input
                 placeholder="Image URL"
-                value={item.ImageUrl}
-                onChange={(event) => onContentChange(index, event, "ImageUrl")}
+                value={item.imageUrl}
+                onChange={(event) => onContentChange(index, event, "imageUrl")}
               />
               <Input
                 placeholder="Alt Text"
@@ -73,7 +73,7 @@ const AddText = ({ content, onContentChange, onAddContent }) => {
       >
         <option value="Text">Text</option>
         <option value="Image">Image</option>
-        <option value="TextandImage">Text and Image</option>
+        <option value="TextAndImage">Text and Image</option>
       </Select>
 
       {/* Add Button */}
