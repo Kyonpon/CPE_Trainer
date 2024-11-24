@@ -71,7 +71,7 @@ export const v2addCBcircuit = async (req, res) => {
 export const v2getAllCb = async (req, res) => {
   try {
     const allCBCircuit = await v2CombiLogicModel.find({});
-    res.status(201).json({ success: true, allCircuits: allCBCircuit });
+    res.status(200).json({ success: true, allCircuits: allCBCircuit });
   } catch (error) {
     res
       .status(500)
@@ -82,6 +82,22 @@ export const v2getAllCb = async (req, res) => {
 //#endregion
 
 //Get a Combinational Logic Circuit By their document id
+export const v2getCBById = async (req, res) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res
+      .status(404)
+      .json({ success: false, message: "Can't find the CB logic" });
+  }
+
+  try {
+    const gotCB = await v2CombiLogicModel.findById(id);
+    res.status(200).json({ success: true, circuit: gotCB });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server Error getCBByID" });
+  }
+};
 
 //#region UPDATE COMBINATIONAL LOGIC CIRCUIT OR A SPECIFIC CONTENT ITEM /maindocid/contentid
 export const v2UpdateCBById = async (req, res) => {
