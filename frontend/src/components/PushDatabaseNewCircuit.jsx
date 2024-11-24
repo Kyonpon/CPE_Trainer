@@ -30,14 +30,12 @@ function PushDatabaseNewCircuit_try() {
   const handleAddNewCircuit = async () => {
     const path = location.pathname;
     if (path.includes("createcb")) {
-      // Handle combinational circuit creation
       const { success, message } = await createCombiLogicCircuit(
         newCombinationalLogicCircuit
       );
       console.log("Success:", success);
       console.log("Message:", message);
     } else if (path.includes("createul")) {
-      // Handle universal circuit creation
       const { success, message } = await createUniversalLogicCircuit(
         newUniversalLogicCircuit
       );
@@ -56,9 +54,7 @@ function PushDatabaseNewCircuit_try() {
           rounded={"lg"}
           shadow={"md"}
         >
-          {/* this is the form */}
           <VStack spacing={4}>
-            {/* Render input fields based on the URL */}
             {(() => {
               if (location.pathname.includes("createcb")) {
                 return (
