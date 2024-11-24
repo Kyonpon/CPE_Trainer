@@ -6,6 +6,7 @@ import NavBar from "./components/NavBar";
 import Loginpage from "./pages/Loginpage";
 import Universallogicmenupage from "./pages/Universallogicmenupage";
 import Combinationallogicmenupage from "./pages/Combinationallogicmenupage";
+import Activitiescircuitpages from "./pages/Activitiescircuitpages";
 
 function App() {
   return (
@@ -25,6 +26,10 @@ function App() {
           <Route
             path="/cbcircuitsHome"
             element={<Combinationallogicmenupage></Combinationallogicmenupage>}
+          ></Route>
+          <Route
+            path="/cbcircuit/:id"
+            element={<Activitiescircuitpages></Activitiescircuitpages>}
           ></Route>
         </Routes>
       </Box>
