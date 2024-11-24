@@ -132,10 +132,10 @@ function PushDatabaseNewCircuit_try() {
                         />
                       )
                     )}
-                    {/*#endregion*/}
                     <Button colorScheme="blue" onClick={handleAddContent}>
                       Add Content
                     </Button>
+                    {/*#endregion*/}
                   </>
                 );
               }
