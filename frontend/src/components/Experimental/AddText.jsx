@@ -1,4 +1,11 @@
-import { VStack, Input, Button, Select, HStack } from "@chakra-ui/react";
+import {
+  VStack,
+  Input,
+  Button,
+  Select,
+  HStack,
+  Heading,
+} from "@chakra-ui/react";
 import { useState } from "react";
 
 const AddText = ({
@@ -23,6 +30,7 @@ const AddText = ({
         if (item.type === "Text") {
           return (
             <VStack key={index} spacing={4}>
+              <Heading size="md">Card {index + 1}</Heading>
               <Input
                 placeholder="Content Text"
                 value={item.text}
@@ -38,6 +46,7 @@ const AddText = ({
         if (item.type === "Image") {
           return (
             <VStack key={index} spacing={2}>
+              <Heading size="md">Card {index + 1}</Heading>
               <Input
                 placeholder="Image URL"
                 value={item.imageUrl}
@@ -57,6 +66,7 @@ const AddText = ({
         if (item.type === "TextAndImage") {
           return (
             <VStack key={index} spacing={2}>
+              <Heading size="md">Card {index + 1}</Heading>
               <Input
                 placeholder="Content Text"
                 value={item.text}
