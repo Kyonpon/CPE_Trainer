@@ -17,6 +17,8 @@ const NavBar = () => {
   const navigate = useNavigate();
   const { colorMode, toggleColorMode } = useColorMode(); // Corrected here
 
+  const bgColor = colorMode === "dark" ? "gray.700 " : "#ababaf";
+
   const handleLogout = () => {
     setCookies("access_token", "");
     window.localStorage.removeItem("userID");
@@ -24,7 +26,7 @@ const NavBar = () => {
   };
 
   return (
-    <Container maxW={"1140px"} px={4}>
+    <Container maxW={"1140px"} px={4} bg={bgColor} maxWidth="100%">
       <Flex
         h={16}
         alignItems={"center"}
