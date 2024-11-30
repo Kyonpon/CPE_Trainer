@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import TextAndImageComponent from "../components/Experimental/TextAndImageComponent";
 import TextComponent from "../components/Experimental/TextComponent";
 import ImageComponent from "../components/Experimental/ImageComponent";
+import { Box } from "@chakra-ui/react";
 
 function Activitiescircuitpages() {
   const { id } = useParams();
@@ -71,7 +72,7 @@ function Activitiescircuitpages() {
 
       {/* Pass the ID as a prop to child components */}
       {/* <GetCBById id={id} /> */}
-      <div>{fetchedCircuitContent.map((item) => renderContent(item))}</div>
+      <Box>{fetchedCircuitContent.map((item) => renderContent(item))}</Box>
     </div>
   );
 }
