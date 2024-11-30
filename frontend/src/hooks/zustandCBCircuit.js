@@ -53,4 +53,27 @@ export const useCBCircuits = create((set) => ({
       return null;
     }
   },
+
+  deleteSingleContent: async (circuitid, contentid) => {
+    if (!contentid) {
+      console.log("No ID provided to delete a Content");
+      return null;
+    }
+    if (!circuitid) {
+      console.log("No Circuit ID provided to delete a Content");
+      return null;
+    }
+    try {
+      const res = await axios.delete(
+        `/api/cbcircuits/delete/${circuitid}/${contentid}`
+      );
+      return res.data.circuit;
+    } catch (error) {
+      console.error(
+        "Error Deleting this ID in combinational logic circuits:",
+        error
+      );
+    }
+    return null;
+  },
 }));
