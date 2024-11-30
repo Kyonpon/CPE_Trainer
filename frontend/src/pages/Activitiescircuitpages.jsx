@@ -4,8 +4,21 @@ import { useEffect, useState } from "react";
 import TextAndImageComponent from "../components/Experimental/TextAndImageComponent";
 import TextComponent from "../components/Experimental/TextComponent";
 import ImageComponent from "../components/Experimental/ImageComponent";
-import { Box, Button, HStack, VStack, Text } from "@chakra-ui/react";
-import TestingDialog from "../components/Experimental/TestingDialogBox";
+import {
+  Box,
+  Button,
+  HStack,
+  VStack,
+  Text,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  Input,
+  Textarea,
+} from "@chakra-ui/react";
 
 function Activitiescircuitpages() {
   const { id } = useParams();
@@ -13,32 +26,42 @@ function Activitiescircuitpages() {
   const [fetchedCircuitContent, setFetchedCircuitContent] = useState([]);
   const [fetchedCircuit, setFetchedCircuit] = useState(null);
   const [showAdditionalButtons, setShowAdditionalButtons] = useState(false);
+  const [selectedContent, setSelectedContent] = useState(null);
+  const [formData, setFormData] = useState({
+    text: "",
+    imageUrl: "",
+    altText: "",
+  });
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const fetchCircuit = async () => {
+    if (!id) {
+      console.error("Wrong URL Format");
+      return;
+    }
+
+    try {
+      const fetchedData = await fetchSingleCBCircuit(id);
+      console.log("Fetched Data:", fetchedData);
+
+      if (fetchedData?.content && fetchedData.content.length > 0) {
+        setFetchedCircuit(fetchedData);
+        setFetchedCircuitContent(fetchedData.content); // Update the state with the latest content
+      } else {
+        console.error("No content found in the fetched circuit.");
+      }
+    } catch (error) {
+      console.error("Error in fetching circuit:", error);
+    }
+  };
+
+  //#region Fetching the content of the circuit
   useEffect(() => {
-    const fetchCircuit = async () => {
-      if (!id) {
-        console.error("Wrong URL Format");
-        return;
-      }
-
-      try {
-        const fetchedData = await fetchSingleCBCircuit(id);
-        console.log("Fetched Data:", fetchedData);
-
-        if (fetchedData?.content && fetchedData.content.length > 0) {
-          setFetchedCircuit(fetchedData);
-          setFetchedCircuitContent(fetchedData.content);
-        } else {
-          console.error("No content found in the fetched circuit.");
-        }
-      } catch (error) {
-        console.error("Error in fetching circuit:", error);
-      }
-    };
-
     fetchCircuit();
   }, [id]);
 
+  //#region Dynamically display the right component
   const renderContent = (contentItem) => {
     switch (contentItem.type) {
       case "Text":
@@ -65,6 +88,7 @@ function Activitiescircuitpages() {
     }
   };
 
+  //#region Delete content
   const { deleteSingleContent } = useCBCircuits();
   const handleDeleteContent = async (contentItem) => {
     if (!contentItem._id) {
@@ -91,11 +115,137 @@ function Activitiescircuitpages() {
     }
   };
 
+  //#region Update content
+  const handleOpenModal = (contentItem) => {
+    setSelectedContent(contentItem);
+    setFormData({
+      text: contentItem.text || "",
+      imageUrl: contentItem.imageUrl || "",
+      altText: contentItem.altText || "",
+    });
+    onOpen();
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const { updateContent } = useCBCircuits();
+  const handleSubmit = async () => {
+    if (!selectedContent || !selectedContent._id) {
+      console.error("No content selected for update.");
+      return;
+    }
+
+    const payload = {
+      contentId: selectedContent._id,
+      ...formData, // Includes fields like text, imageUrl, and altText
+    };
+
+    try {
+      const { success, message, data } = await updateContent(
+        fetchedCircuit._id,
+        selectedContent._id,
+        payload
+      );
+
+      if (success) {
+        console.log("Content successfully updated:", data);
+
+        // Update the specific item in the state dynamically
+        setFetchedCircuitContent((prevContent) =>
+          prevContent.map((item) =>
+            item._id === selectedContent._id ? { ...item, ...data } : item
+          )
+        );
+
+        await fetchCircuit();
+        // Close the modal after update
+        onClose();
+      } else {
+        console.error("Failed to update content:", message);
+      }
+    } catch (error) {
+      console.error("Error during content update:", error);
+    }
+  };
+
   return (
     <div>
       <h1>Activity Page</h1>
       <p>Activity ID: {id}</p>
 
+      {/* Update Content Window */}
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Update Content</ModalHeader>
+          <ModalCloseButton />
+          <Box p={4}>
+            {selectedContent?.type === "Text" && (
+              <Textarea
+                name="text"
+                value={formData.text}
+                onChange={handleInputChange}
+                placeholder="Enter text"
+                mb={3}
+              />
+            )}
+            {selectedContent?.type === "Image" && (
+              <>
+                <Input
+                  name="imageUrl"
+                  value={formData.imageUrl}
+                  onChange={handleInputChange}
+                  placeholder="Enter image URL"
+                  mb={3}
+                />
+                <Input
+                  name="altText"
+                  value={formData.altText}
+                  onChange={handleInputChange}
+                  placeholder="Enter alt text"
+                  mb={3}
+                />
+              </>
+            )}
+            {selectedContent?.type === "TextAndImage" && (
+              <>
+                <Textarea
+                  name="text"
+                  value={formData.text}
+                  onChange={handleInputChange}
+                  placeholder="Enter text"
+                  mb={3}
+                />
+                <Input
+                  name="imageUrl"
+                  value={formData.imageUrl}
+                  onChange={handleInputChange}
+                  placeholder="Enter image URL"
+                  mb={3}
+                />
+                <Input
+                  name="altText"
+                  value={formData.altText}
+                  onChange={handleInputChange}
+                  placeholder="Enter alt text"
+                  mb={3}
+                />
+              </>
+            )}
+            <Button colorScheme="teal" onClick={handleSubmit}>
+              Submit
+            </Button>
+          </Box>
+        </ModalContent>
+      </Modal>
+
+      {/* show Update Content Options */}
       <Button
         colorScheme="teal"
         mb={4}
@@ -106,6 +256,7 @@ function Activitiescircuitpages() {
         {showAdditionalButtons ? "Hide Edit" : "Edit Content"}
       </Button>
 
+      {/* Each Box for the Content */}
       <VStack align="stretch" spacing={4}>
         {fetchedCircuitContent.map((item) => (
           <Box key={item._id} borderRadius="md" p={4} boxShadow="sm">
@@ -116,7 +267,11 @@ function Activitiescircuitpages() {
               {/* Conditionally render buttons on the right */}
               {showAdditionalButtons && (
                 <VStack spacing={2}>
-                  <Button colorScheme="teal" size="sm">
+                  <Button
+                    colorScheme="teal"
+                    size="sm"
+                    onClick={() => handleOpenModal(item)}
+                  >
                     Update
                   </Button>
                   <Button
@@ -135,6 +290,7 @@ function Activitiescircuitpages() {
         ))}
       </VStack>
 
+      {/* Each Box for the Content */}
       {showAdditionalButtons && (
         <Box
           mt={4}
@@ -147,7 +303,6 @@ function Activitiescircuitpages() {
             {" "}
             This is for Adding new content{" "}
           </Text>
-          <TestingDialog></TestingDialog>
         </Box>
       )}
     </div>
