@@ -101,9 +101,8 @@ export const v2getCBById = async (req, res) => {
 
 //#region UPDATE COMBINATIONAL LOGIC CIRCUIT OR A SPECIFIC CONTENT ITEM /maindocid/contentid
 export const v2UpdateCBById = async (req, res) => {
-  const { id } = req.params; // ID OF THE MAIN DOCUMENT
-  const { contentId } = req.body; // ID OF THE CONTENT ITEM, IF UPDATING A SPECIFIC ONE
-  const updateData = req.body;
+  const { id } = req.params; // ID of the main document
+  const { contentId, ...updateData } = req.body; // Separate contentId from updateData
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res
@@ -119,23 +118,53 @@ export const v2UpdateCBById = async (req, res) => {
           .json({ success: false, message: "INVALID CONTENT ITEM ID" });
       }
 
-      console.log("UPDATE DATA:", updateData);
-      console.log(
-        "COMPUTED UPDATE OBJECT:",
-        Object.keys(updateData).reduce((acc, key) => {
-          acc[`content.$.${key}`] = updateData[key];
-          return acc;
-        }, {})
+      // Fetch the specific content item to determine its type
+      const mainDoc = await v2CombiLogicModel.findOne({
+        _id: id,
+        "content._id": contentId,
+      });
+
+      if (!mainDoc) {
+        return res
+          .status(404)
+          .json({ success: false, message: "CONTENT ITEM NOT FOUND" });
+      }
+
+      const contentItem = mainDoc.content.find(
+        (item) => item._id.toString() === contentId
       );
+
+      if (!contentItem) {
+        return res
+          .status(404)
+          .json({ success: false, message: "CONTENT ITEM NOT FOUND" });
+      }
+
+      // Define allowed fields for each type
+      const allowedFields = {
+        Text: ["text"],
+        Image: ["imageUrl", "altText"],
+        TextAndImage: ["text", "imageUrl", "altText"],
+      };
+
+      // Get allowed fields based on the type
+      const fieldsToUpdate = allowedFields[contentItem.type] || [];
+      const validFields = Object.keys(updateData).reduce((acc, key) => {
+        if (fieldsToUpdate.includes(key)) {
+          acc[`content.$.${key}`] = updateData[key];
+        }
+        return acc;
+      }, {});
+
+      if (Object.keys(validFields).length === 0) {
+        return res
+          .status(400)
+          .json({ success: false, message: "NO VALID FIELDS TO UPDATE" });
+      }
 
       const updatedDocument = await v2CombiLogicModel.findOneAndUpdate(
         { _id: id, "content._id": contentId },
-        {
-          $set: Object.keys(updateData).reduce((acc, key) => {
-            acc[`content.$.${key}`] = updateData[key];
-            return acc;
-          }, {}),
-        },
+        { $set: validFields },
         { new: true }
       );
 
@@ -152,6 +181,7 @@ export const v2UpdateCBById = async (req, res) => {
       });
     }
 
+    // Update the main document directly
     const updatedCBCircuit = await v2CombiLogicModel.findByIdAndUpdate(
       id,
       updateData,
@@ -174,6 +204,7 @@ export const v2UpdateCBById = async (req, res) => {
     console.log(error);
   }
 };
+
 //#endregion
 
 //#region  Delete Combinational Logic Circuit by using an ID in MongoDb
