@@ -1,4 +1,4 @@
-import { Container, Image } from "@chakra-ui/react";
+import { Box, Container, Image } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
 const ImageComponent = ({ imageUrl, altText }) => {
@@ -29,17 +29,23 @@ const ImageComponent = ({ imageUrl, altText }) => {
   //#endregion
 
   return (
-    <Container>
-      <Image
-        // src = {imageUrl}
-        src={randomUrl} // Add the dynamic URL THIS IS FOR TESTING
-        alt={altText}
-        maxW="100%" // Make the image width responsive
-        height="auto" // Maintain aspect ratio
-        objectFit="cover" // Ensure the image covers the container without distortion
-        borderRadius="md" // Optional: Add rounded corners to the image
-        mb={4} // Add margin-bottom to space the text from the image
-      />
+    <Container maxW="100%" centerContent>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        width="100%" // Ensure the Box fills the container's width
+      >
+        <Image
+          src={randomUrl} // Add the dynamic URL for testing
+          alt={altText}
+          width="100%" // Make the image fill the width of the box
+          height="auto" // Maintain aspect ratio
+          objectFit="cover" // Ensure the image covers the container without distortion
+          borderRadius="md" // Optional: Add rounded corners to the image
+          mb={4} // Add margin-bottom to space the text from the image
+        />
+      </Box>
     </Container>
   );
 };
