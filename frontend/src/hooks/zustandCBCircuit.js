@@ -76,4 +76,34 @@ export const useCBCircuits = create((set) => ({
     }
     return null;
   },
+
+  updateContent: async (circuitid, contentid, updatedContent) => {
+    if (!contentid) {
+      console.log("No ID provided to delete a Content");
+      return null;
+    }
+    if (!circuitid) {
+      console.log("No Circuit ID provided to delete a Content");
+      return null;
+    }
+    try {
+      const res = await axios.put(
+        `/api/cbcircuits/update/${circuitid}`,
+        updatedContent,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return {
+        success: res.data.success,
+        message: res.data.message,
+        data: res.data.data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message:
+          error.response?.data?.message ||
+          "An error occurred in updating the content",
+      };
+    }
+  },
 }));
