@@ -39,7 +39,7 @@ const v2CombiLogicSchema = new mongoose.Schema({
 });
 
 const v2CombiLogicModel = mongoose.model(
-  "Combinational_Logic_Circuit2",
+  "Combinational_Logic_Circuit2", //This line Determines what is the name of the Collection
   v2CombiLogicSchema
 );
 
