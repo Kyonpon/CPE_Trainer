@@ -113,6 +113,8 @@ function CreateLib() {
   return (
     <Container maxW={"container.sm"}>
       <VStack spacing={10}>
+        {" "}
+        {/*This Might be redundant because it only contains one box*/}
         <Box
           w={"full"}
           bg={useColorModeValue("white", "gray.800")}

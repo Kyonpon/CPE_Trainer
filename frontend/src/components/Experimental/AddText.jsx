@@ -1,11 +1,5 @@
-import {
-  VStack,
-  Input,
-  Button,
-  Select,
-  HStack,
-  Heading,
-} from "@chakra-ui/react";
+import { VStack, Input, Button, Select, Heading } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 import { useState } from "react";
 
 const AddText = ({
@@ -14,7 +8,7 @@ const AddText = ({
   onAddContent,
   onDeleteContent,
 }) => {
-  const [selectedType, setSelectedType] = useState("Text"); // Track the selected content type
+  const [selectedType, setSelectedType] = useState("Text");
 
   const handleTypeChange = (event) => {
     setSelectedType(event.target.value);
@@ -106,6 +100,13 @@ const AddText = ({
       </Button>
     </VStack>
   );
+};
+
+AddText.propTypes = {
+  content: PropTypes.object.isRequired,
+  onContentChange: PropTypes.func.isRequired,
+  onAddContent: PropTypes.func.isRequired,
+  onDeleteContent: PropTypes.func.isRequired,
 };
 
 export default AddText;
