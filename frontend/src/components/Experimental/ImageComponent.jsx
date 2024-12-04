@@ -24,12 +24,12 @@ const ImageComponent = ({ imageUrl, altText }) => {
   };
 
   // Generate a random number (or timestamp) to prevent caching and get a new image each time
-  const randomUrl = `https://picsum.photos/${getRandomImageSize()}`;
+  //const randomUrl = `https://picsum.photos/${getRandomImageSize()}`;
 
   //#endregion
 
   return (
-    <Container maxW="100%" centerContent>
+    <Container maxW="%" centerContent>
       <Box
         display="flex"
         justifyContent="center"
@@ -37,9 +37,9 @@ const ImageComponent = ({ imageUrl, altText }) => {
         width="100%" // Ensure the Box fills the container's width
       >
         <Image
-          src={randomUrl} // Add the dynamic URL for testing
+          src={imageUrl} // Add the dynamic URL for testing
           alt={altText}
-          width="100%" // Make the image fill the width of the box
+          width="90%" // Make the image fill the width of the box
           height="auto" // Maintain aspect ratio
           objectFit="cover" // Ensure the image covers the container without distortion
           borderRadius="md" // Optional: Add rounded corners to the image
