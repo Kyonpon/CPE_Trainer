@@ -21,17 +21,17 @@ import {
 } from "@chakra-ui/react";
 
 function Activitiescircuitpages() {
-  const { id } = useParams();
-  const { fetchSingleCBCircuit } = useCBCircuits();
-  const [fetchedCircuitContent, setFetchedCircuitContent] = useState([]);
-  const [fetchedCircuit, setFetchedCircuit] = useState(null);
-  const [showAdditionalButtons, setShowAdditionalButtons] = useState(false);
-  const [selectedContent, setSelectedContent] = useState(null);
+  const { id } = useParams(); //Gets the ID in the url
+  const { fetchSingleCBCircuit } = useCBCircuits(); //Used in fetchCircuit function
+  const [fetchedCircuitContent, setFetchedCircuitContent] = useState([]); //Container for the array content of the fetchedCircuit
+  const [fetchedCircuit, setFetchedCircuit] = useState(null); //Container for the whole document of the fetchedCircuit
+  const [showAdditionalButtons, setShowAdditionalButtons] = useState(false); //State holder to if the update buttons are shown
+  const [selectedContent, setSelectedContent] = useState(null); //State holder for what the modal is updating
   const [formData, setFormData] = useState({
     text: "",
     imageUrl: "",
     altText: "",
-  });
+  }); //Modal Form (This is will be converted to json using the zustand function)
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -290,7 +290,6 @@ function Activitiescircuitpages() {
         ))}
       </VStack>
 
-      {/* Each Box for the Content */}
       {showAdditionalButtons && (
         <Box
           mt={4}
