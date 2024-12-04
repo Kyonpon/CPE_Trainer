@@ -106,4 +106,29 @@ export const useCBCircuits = create((set) => ({
       };
     }
   },
+  updateAddContent: async (circuitid, type, updateAddContent) => {
+    const validTypes = ["Text", "Image", "TextAndUrl"];
+    if (!validTypes.includes(type)) {
+      console.log("The Type provided is invalid");
+      return null;
+    }
+    try {
+      const res = await axios.put(
+        `/api/cbcircuits/addcontent/${circuitid}`,
+        updateAddContent,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return {
+        success: res.data.success,
+        message: res.data.message,
+        data: res.data.data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message:
+          error.response?.data.message || "An error in adding new content",
+      };
+    }
+  },
 }));
