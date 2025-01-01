@@ -67,7 +67,6 @@ function Activitiescircuitpages() {
       content: [...prev.content, newContent],
     }));
   };
-  //#endregion
 
   const handleUpdateDeleteContent = (index) => {
     const updatedContent = [...updateNewContent.content];
@@ -124,6 +123,7 @@ function Activitiescircuitpages() {
 
     alert("All content added successfully!");
   };
+  //#endregion
 
   const fetchCircuit = async () => {
     if (!id) {
