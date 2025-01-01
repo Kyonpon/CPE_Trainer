@@ -19,6 +19,7 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
+import AddText from "../components/Experimental/AddText";
 
 function Activitiescircuitpages() {
   const { id } = useParams(); //Gets the ID in the url
@@ -34,6 +35,95 @@ function Activitiescircuitpages() {
   }); //Modal Form (This is will be converted to json using the zustand function)
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [updateNewContent, setUpdateNewContent] = useState({
+    content: [],
+  });
+
+  //#region CONTENT STUFF1
+  const handleContentChange = (index, event, field = "text") => {
+    const updatedContent = [...updateNewContent.content];
+    updatedContent[index][field] = event.target.value;
+    setUpdateNewContent({
+      ...updateNewContent,
+      content: updatedContent,
+    });
+  };
+
+  const handleAddContent = (type) => {
+    const newContent = { type };
+    if (type === "Text") {
+      newContent.text = "";
+    } else if (type === "Image") {
+      newContent.imageUrl = "";
+      newContent.altText = "";
+    } else if (type === "TextAndImage") {
+      newContent.text = "";
+      newContent.imageUrl = "";
+      newContent.altText = "";
+    }
+    setUpdateNewContent((prev) => ({
+      ...prev,
+      content: [...prev.content, newContent],
+    }));
+  };
+  //#endregion
+
+  const handleUpdateDeleteContent = (index) => {
+    const updatedContent = [...updateNewContent.content];
+    updatedContent.splice(index, 1); // Remove content at the specified index
+    setUpdateNewContent({
+      ...updateNewContent,
+      content: updatedContent,
+    });
+  };
+
+  const { updateAddContent } = useCBCircuits();
+  const handleUpdateNewContent = async () => {
+    const circuitId = id; // Replace with the actual circuit ID
+    const { content } = updateNewContent;
+
+    for (const item of content) {
+      // Validate the item
+      if (item.type === "Text" && !item.text?.trim()) {
+        alert("Text content cannot be empty.");
+        return;
+      }
+      if (
+        item.type === "Image" &&
+        (!item.imageUrl?.trim() || !item.altText?.trim())
+      ) {
+        alert("Image URL and Alt Text cannot be empty.");
+        return;
+      }
+      if (
+        item.type === "TextAndImage" &&
+        (!item.text?.trim() || !item.imageUrl?.trim() || !item.altText?.trim())
+      ) {
+        alert("Text, Image URL, and Alt Text cannot be empty.");
+        return;
+      }
+
+      // Prepare the payload for this content item
+      const newContent = {
+        type: item.type,
+        ...(item.text && { text: item.text }),
+        ...(item.imageUrl && { imageUrl: item.imageUrl }),
+        ...(item.altText && { altText: item.altText }),
+      };
+
+      console.log("Preparing to add content:", newContent);
+      // Call Zustand function
+      const response = await updateAddContent(circuitId, item.type, newContent);
+
+      if (!response?.success) {
+        alert(`Failed to add content: ${response?.message || "Unknown error"}`);
+        return; // Stop on first failure
+      }
+    }
+
+    alert("All content added successfully!");
+  };
 
   const fetchCircuit = async () => {
     if (!id) {
@@ -298,6 +388,15 @@ function Activitiescircuitpages() {
           borderRadius="md"
           boxShadow="md"
         >
+          <AddText
+            content={updateNewContent.content}
+            onContentChange={handleContentChange}
+            onAddContent={handleAddContent}
+            onDeleteContent={handleUpdateDeleteContent}
+          ></AddText>
+          <Button colorScheme="blue" w="full" onClick={handleUpdateNewContent}>
+            Create!
+          </Button>
           <Text fontSize={"3xl"} textAlign={"center"}>
             {" "}
             This is for Adding new content{" "}

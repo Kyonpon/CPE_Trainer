@@ -107,7 +107,7 @@ export const useCBCircuits = create((set) => ({
     }
   },
   updateAddContent: async (circuitid, type, updateAddContent) => {
-    const validTypes = ["Text", "Image", "TextAndUrl"];
+    const validTypes = ["Text", "Image", "TextAndImage"];
     if (!validTypes.includes(type)) {
       console.log("The Type provided is invalid");
       return null;
