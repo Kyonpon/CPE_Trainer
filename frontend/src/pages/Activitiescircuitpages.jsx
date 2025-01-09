@@ -1,9 +1,13 @@
+import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import { useCBCircuits } from "../hooks/zustandCBCircuit";
+import { useMicroCircuits } from "../hooks/zustandMicroCircuit";
 import { useEffect, useState } from "react";
 import TextAndImageComponent from "../components/Experimental/TextAndImageComponent";
 import TextComponent from "../components/Experimental/TextComponent";
+import AddText from "../components/Experimental/AddText";
 import ImageComponent from "../components/Experimental/ImageComponent";
+
 import {
   Box,
   Button,
@@ -19,28 +23,40 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-import AddText from "../components/Experimental/AddText";
 
-function Activitiescircuitpages() {
-  const { id } = useParams(); //Gets the ID in the url
-  const { fetchSingleCBCircuit } = useCBCircuits(); //Used in fetchCircuit function
-  const [fetchedCircuitContent, setFetchedCircuitContent] = useState([]); //Container for the array content of the fetchedCircuit
-  const [fetchedCircuit, setFetchedCircuit] = useState(null); //Container for the whole document of the fetchedCircuit
-  const [showAdditionalButtons, setShowAdditionalButtons] = useState(false); //State holder to if the update buttons are shown
-  const [selectedContent, setSelectedContent] = useState(null); //State holder for what the modal is updating
+function Activitiescircuitpages({ circuitType }) {
+  const { id } = useParams(); // Gets the ID in the URL
+
+  // Load both stores at the top level
+  const cbcStore = useCBCircuits();
+  const microStore = useMicroCircuits();
+
+  // Dynamically select the store based on circuitType
+  const store = circuitType === "CB" ? cbcStore : microStore;
+
+  const {
+    fetchSingleCircuit,
+    updateAddContent,
+    deleteSingleContent,
+    updateContent,
+  } = store;
+
+  const [fetchedCircuitContent, setFetchedCircuitContent] = useState([]); // Container for circuit content
+  const [fetchedCircuit, setFetchedCircuit] = useState(null); // Container for circuit document
+  const [showAdditionalButtons, setShowAdditionalButtons] = useState(false); // Show/hide update buttons
+  const [selectedContent, setSelectedContent] = useState(null); // Content being updated
   const [formData, setFormData] = useState({
     text: "",
     imageUrl: "",
     altText: "",
-  }); //Modal Form (This is will be converted to json using the zustand function)
+  });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const [updateNewContent, setUpdateNewContent] = useState({
     content: [],
   });
 
-  //#region CONTENT STUFF1
+  //#region CONTENT HANDLING
   const handleContentChange = (index, event, field = "text") => {
     const updatedContent = [...updateNewContent.content];
     updatedContent[index][field] = event.target.value;
@@ -70,20 +86,18 @@ function Activitiescircuitpages() {
 
   const handleUpdateDeleteContent = (index) => {
     const updatedContent = [...updateNewContent.content];
-    updatedContent.splice(index, 1); // Remove content at the specified index
+    updatedContent.splice(index, 1);
     setUpdateNewContent({
       ...updateNewContent,
       content: updatedContent,
     });
   };
 
-  const { updateAddContent } = useCBCircuits();
   const handleUpdateNewContent = async () => {
-    const circuitId = id; // Replace with the actual circuit ID
+    const circuitId = id;
     const { content } = updateNewContent;
 
     for (const item of content) {
-      // Validate the item
       if (item.type === "Text" && !item.text?.trim()) {
         alert("Text content cannot be empty.");
         return;
@@ -103,7 +117,6 @@ function Activitiescircuitpages() {
         return;
       }
 
-      // Prepare the payload for this content item
       const newContent = {
         type: item.type,
         ...(item.text && { text: item.text }),
@@ -111,18 +124,17 @@ function Activitiescircuitpages() {
         ...(item.altText && { altText: item.altText }),
       };
 
-      console.log("Preparing to add content:", newContent);
-      // Call Zustand function
       const response = await updateAddContent(circuitId, item.type, newContent);
 
       if (!response?.success) {
         alert(`Failed to add content: ${response?.message || "Unknown error"}`);
-        return; // Stop on first failure
+        return;
       }
     }
 
     alert("All content added successfully!");
   };
+
   //#endregion
 
   const fetchCircuit = async () => {
@@ -132,12 +144,10 @@ function Activitiescircuitpages() {
     }
 
     try {
-      const fetchedData = await fetchSingleCBCircuit(id);
-      console.log("Fetched Data:", fetchedData);
-
+      const fetchedData = await fetchSingleCircuit(id);
       if (fetchedData?.content && fetchedData.content.length > 0) {
         setFetchedCircuit(fetchedData);
-        setFetchedCircuitContent(fetchedData.content); // Update the state with the latest content
+        setFetchedCircuitContent(fetchedData.content);
       } else {
         console.error("No content found in the fetched circuit.");
       }
@@ -146,12 +156,11 @@ function Activitiescircuitpages() {
     }
   };
 
-  //#region Fetching the content of the circuit
   useEffect(() => {
     fetchCircuit();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  //#region Dynamically display the right component
   const renderContent = (contentItem) => {
     switch (contentItem.type) {
       case "Text":
@@ -178,8 +187,6 @@ function Activitiescircuitpages() {
     }
   };
 
-  //#region Delete content
-  const { deleteSingleContent } = useCBCircuits();
   const handleDeleteContent = async (contentItem) => {
     if (!contentItem._id) {
       console.log("Error in deleting Content no Content ID provided");
@@ -191,9 +198,6 @@ function Activitiescircuitpages() {
         contentItem._id
       );
       if (deleteThisContent) {
-        console.log("Content Deleted");
-
-        // Update the state to remove the deleted item
         setFetchedCircuitContent((prevContent) =>
           prevContent.filter((item) => item._id !== contentItem._id)
         );
@@ -205,7 +209,6 @@ function Activitiescircuitpages() {
     }
   };
 
-  //#region Update content
   const handleOpenModal = (contentItem) => {
     setSelectedContent(contentItem);
     setFormData({
@@ -224,7 +227,6 @@ function Activitiescircuitpages() {
     }));
   };
 
-  const { updateContent } = useCBCircuits();
   const handleSubmit = async () => {
     if (!selectedContent || !selectedContent._id) {
       console.error("No content selected for update.");
@@ -233,7 +235,7 @@ function Activitiescircuitpages() {
 
     const payload = {
       contentId: selectedContent._id,
-      ...formData, // Includes fields like text, imageUrl, and altText
+      ...formData,
     };
 
     try {
@@ -244,9 +246,6 @@ function Activitiescircuitpages() {
       );
 
       if (success) {
-        console.log("Content successfully updated:", data);
-
-        // Update the specific item in the state dynamically
         setFetchedCircuitContent((prevContent) =>
           prevContent.map((item) =>
             item._id === selectedContent._id ? { ...item, ...data } : item
@@ -254,7 +253,6 @@ function Activitiescircuitpages() {
         );
 
         await fetchCircuit();
-        // Close the modal after update
         onClose();
       } else {
         console.error("Failed to update content:", message);
@@ -269,7 +267,6 @@ function Activitiescircuitpages() {
       <h1>Activity Page</h1>
       <p>Activity ID: {id}</p>
 
-      {/* Update Content Window */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -335,7 +332,6 @@ function Activitiescircuitpages() {
         </ModalContent>
       </Modal>
 
-      {/* show Update Content Options */}
       <Button
         colorScheme="teal"
         mb={4}
@@ -346,15 +342,12 @@ function Activitiescircuitpages() {
         {showAdditionalButtons ? "Hide Edit" : "Edit Content"}
       </Button>
 
-      {/* Each Box for the Content */}
       <VStack align="stretch" spacing={4}>
         {fetchedCircuitContent.map((item) => (
           <Box key={item._id} borderRadius="md" p={4} boxShadow="sm">
             <HStack align="center">
-              {/* Render content */}
               <Box flex="1">{renderContent(item)}</Box>
 
-              {/* Conditionally render buttons on the right */}
               {showAdditionalButtons && (
                 <VStack spacing={2}>
                   <Button
@@ -398,13 +391,17 @@ function Activitiescircuitpages() {
             Create!
           </Button>
           <Text fontSize={"3xl"} textAlign={"center"}>
-            {" "}
-            This is for Adding new content{" "}
+            This is for Adding new content
           </Text>
         </Box>
       )}
     </div>
   );
 }
+
+// Add PropTypes validation
+Activitiescircuitpages.propTypes = {
+  circuitType: PropTypes.oneOf(["CB", "Micro"]).isRequired,
+};
 
 export default Activitiescircuitpages;
