@@ -131,4 +131,42 @@ export const useCBCircuits = create((set) => ({
       };
     }
   },
+  deleteCircuit: async (circuitId) => {
+    try {
+      const res = await axios.delete(`api/cbcircuits/delete/${circuitId}`);
+      return {
+        success: res.data.success,
+        message: res.data.message,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data.message || "Invalid main document id",
+      };
+    }
+  },
+  updateCircuit: async (circuitId, updatedCircuit) => {
+    if (!updatedCircuit) {
+      console.log("Empty Update, Will remain unchanged");
+      return null;
+    }
+    try {
+      const res = await axios.put(
+        `/api/cbcircuits/update/${circuitId}`,
+        updatedCircuit,
+        { headers: { "Content-Type": "application/json" } }
+      );
+      return {
+        success: res.data.success,
+        message: res.data.message,
+        data: res.data.data,
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message:
+          error.response?.data.message || "Failed to update main document!",
+      };
+    }
+  },
 }));
