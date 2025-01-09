@@ -7,6 +7,7 @@ import Loginpage from "./pages/Loginpage";
 import Universallogicmenupage from "./pages/Universallogicmenupage";
 import Combinationallogicmenupage from "./pages/Combinationallogicmenupage";
 import Activitiescircuitpages from "./pages/Activitiescircuitpages";
+import Microprocessormenupage from "./pages/Microprocessormenupage";
 
 function App() {
   return (
@@ -18,6 +19,10 @@ function App() {
           <Route path="/create" element={<Createpage></Createpage>}></Route>
           <Route path="/createul" element={<Createpage></Createpage>}></Route>
           <Route path="/createcb" element={<Createpage></Createpage>}></Route>
+          <Route
+            path="/createmicro"
+            element={<Createpage></Createpage>}
+          ></Route>
           <Route path="/login" element={<Loginpage></Loginpage>}></Route>
           <Route
             path="/ulcircuitsHome"
@@ -28,8 +33,20 @@ function App() {
             element={<Combinationallogicmenupage></Combinationallogicmenupage>}
           ></Route>
           <Route
+            path="/microprocessorHome"
+            element={<Microprocessormenupage></Microprocessormenupage>}
+          ></Route>
+          <Route
             path="/cbcircuit/:id"
-            element={<Activitiescircuitpages></Activitiescircuitpages>}
+            element={
+              <Activitiescircuitpages circuitType="CB"></Activitiescircuitpages>
+            }
+          ></Route>
+          <Route
+            path="/microcircuit/:id"
+            element={
+              <Activitiescircuitpages circuitType="Micro"></Activitiescircuitpages>
+            }
           ></Route>
         </Routes>
       </Box>
