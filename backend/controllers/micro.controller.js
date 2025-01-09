@@ -68,6 +68,7 @@ export const addMicroCircuit = async (req, res) => {
 export const getAllMicro = async (req, res) => {
   try {
     const allMicroCircuit = await microModel.find({});
+    res.status(200).json({ success: true, allCircuits: allMicroCircuit });
   } catch (error) {
     res
       .status(500)
@@ -154,6 +155,12 @@ export const updateMicroByID = async (req, res) => {
         return acc;
       }, {});
 
+      if (Object.keys(validFields).length === 0) {
+        return res
+          .status(400)
+          .json({ success: false, message: "NO VALID FIELDS TO UPDATE" });
+      }
+
       const updatedDocument = await microModel.findOneAndUpdate(
         { _id: id, "content._id": contentId },
         { $set: validFields },
@@ -166,30 +173,30 @@ export const updateMicroByID = async (req, res) => {
           .json({ success: false, message: "Content Item Not Found 3" });
       }
 
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: "Content Item Updated",
         data: updatedDocument,
       });
-
-      //------------------------------------------------------
-      //Update The Main Document Directly
-      const updatedMicro = await microModel.findByIdAndUpdate(id, updateData, {
-        new: true,
-      });
-
-      if (!updatedMicro) {
-        return res
-          .status(404)
-          .json({ success: false, message: "Main Document Not Found" });
-      }
-
-      res.status(200).json({
-        success: true,
-        message: "Main Document Updated",
-        data: updatedMicro,
-      });
     }
+
+    //------------------------------------------------------
+    //Update The Main Document Directly
+    const updatedMicro = await microModel.findByIdAndUpdate(id, updateData, {
+      new: true,
+    });
+
+    if (!updatedMicro) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Main Document Not Found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Main Document Updated",
+      data: updatedMicro,
+    });
   } catch (error) {
     res
       .status(500)

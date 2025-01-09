@@ -16,7 +16,7 @@ router.get("/getall", getAllMicro);
 router.get("/getbyid/:id", getMicroById);
 router.put("/update/:id", updateMicroByID);
 router.delete("/delete/:id", deleteMicro);
-router.delete("/delete/:id/:contentid", deleteContentById);
+router.delete("/delete/:id/:contentId", deleteContentById);
 router.put("/addcontent/:id", addToContent);
 
 export { router as MicroCircuitAPI };
