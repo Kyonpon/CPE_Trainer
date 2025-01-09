@@ -37,7 +37,7 @@ export const useCBCircuits = create((set) => ({
     }
   },
 
-  fetchSingleCBCircuit: async (id) => {
+  fetchSingleCircuit: async (id) => {
     if (!id) {
       console.log("No ID provided to fetch a CB circuit");
       return null;
