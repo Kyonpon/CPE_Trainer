@@ -1,7 +1,7 @@
 import axios from "axios";
 import { create } from "zustand";
 
-export const useUlcircuits = create((set) => ({
+export const useUlCircuits = create((set) => ({
   universalLogicCircuit: [],
   setUniversalLogicCircuit: (universalLogicCircuit) =>
     set({ universalLogicCircuit }),

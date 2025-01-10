@@ -1,6 +1,7 @@
 import {
   Box,
   Container,
+  Heading,
   Input,
   useColorModeValue,
   VStack,
@@ -24,18 +25,36 @@ function PushDatabaseNewCircuit_try() {
     });
 
   const location = useLocation();
+
+  // Determine the heading based on the current URL
+  const getHeadingText = () => {
+    const path = location.pathname;
+    if (path.includes("createcb")) {
+      return "Create Combinational Logic Circuit";
+    }
+    if (path.includes("createul")) {
+      return "Create Universal Logic Circuit";
+    }
+    if (path.includes("create")) {
+      return "Create New Circuit";
+    }
+    return "Manage Circuits";
+  };
+
   const { createUniversalLogicCircuit } = useUlCircuits();
   const { createCombiLogicCircuit } = useCBCircuits();
 
   const handleAddNewCircuit = async () => {
     const path = location.pathname;
     if (path.includes("createcb")) {
+      // Handle combinational circuit creation
       const { success, message } = await createCombiLogicCircuit(
         newCombinationalLogicCircuit
       );
       console.log("Success:", success);
       console.log("Message:", message);
     } else if (path.includes("createul")) {
+      // Handle universal circuit creation
       const { success, message } = await createUniversalLogicCircuit(
         newUniversalLogicCircuit
       );
@@ -47,6 +66,9 @@ function PushDatabaseNewCircuit_try() {
   return (
     <Container maxW={"container.sm"}>
       <VStack spacing={10}>
+        <Heading as={"h1"} size={"2xl"} textAlign={"center"}>
+          {getHeadingText()}
+        </Heading>
         <Box
           w={"full"}
           bg={useColorModeValue("white", "gray.800")}
@@ -55,6 +77,7 @@ function PushDatabaseNewCircuit_try() {
           shadow={"md"}
         >
           <VStack spacing={4}>
+            {/* Render input fields based on the URL */}
             {(() => {
               if (location.pathname.includes("createcb")) {
                 return (

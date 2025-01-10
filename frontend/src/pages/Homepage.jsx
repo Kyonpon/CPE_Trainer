@@ -7,6 +7,12 @@ const Homepage = () => {
       <p>Homepage</p>
       <Box display="flex" justifyContent="center" gap="20px" flexFlow="wrap">
         <HomeCards
+          url="/microprocessorHome"
+          imgurl="https://picsum.photos/250"
+          imgurlalt="This is a picture"
+          title="Microprocessors"
+        />
+        <HomeCards
           url="/ulcircuitsHome"
           imgurl="https://picsum.photos/250"
           imgurlalt="This is a picture"
