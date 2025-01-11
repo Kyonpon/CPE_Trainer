@@ -8,15 +8,7 @@ const TextAndImageComponent = ({ text, imageUrl, altText }) => {
   const textColor = colorMode === "dark" ? "white" : "black";
 
   return (
-    <Container
-      bg={bgColor}
-      p={4}
-      borderRadius="md"
-      maxWidth="100%"
-      width="95%"
-      mt={2}
-      mb={2}
-    >
+    <Container bg={bgColor} p={4} borderRadius="md" maxWidth="100%" width="95%">
       <Flex
         alignItems={"center"}
         justifyContent={"space-around"}

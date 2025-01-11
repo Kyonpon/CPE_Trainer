@@ -23,15 +23,17 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
-
 function Activitiescircuitpages({ circuitType }) {
+  const [fetchedCircuitContent, setFetchedCircuitContent] = useState([]); // Container for circuit content
+  const [fetchedCircuit, setFetchedCircuit] = useState(null); // Container for circuit document
+  const [showAdditionalButtons, setShowAdditionalButtons] = useState(false); // Show/hide update buttons
+  const [selectedContent, setSelectedContent] = useState(null); // Content being updated
+
   const { id } = useParams(); // Gets the ID in the URL
 
-  // Load both stores at the top level
   const cbcStore = useCBCircuits();
   const microStore = useMicroCircuits();
 
-  // Dynamically select the store based on circuitType
   const store = circuitType === "CB" ? cbcStore : microStore;
 
   const {
@@ -41,10 +43,6 @@ function Activitiescircuitpages({ circuitType }) {
     updateContent,
   } = store;
 
-  const [fetchedCircuitContent, setFetchedCircuitContent] = useState([]); // Container for circuit content
-  const [fetchedCircuit, setFetchedCircuit] = useState(null); // Container for circuit document
-  const [showAdditionalButtons, setShowAdditionalButtons] = useState(false); // Show/hide update buttons
-  const [selectedContent, setSelectedContent] = useState(null); // Content being updated
   const [formData, setFormData] = useState({
     text: "",
     imageUrl: "",
@@ -342,9 +340,9 @@ function Activitiescircuitpages({ circuitType }) {
         {showAdditionalButtons ? "Hide Edit" : "Edit Content"}
       </Button>
 
-      <VStack align="stretch" spacing={4}>
+      <VStack align="stretch" spacing={1}>
         {fetchedCircuitContent.map((item) => (
-          <Box key={item._id} borderRadius="md" p={4} boxShadow="sm">
+          <Box key={item._id} borderRadius="md" boxShadow="sm">
             <HStack align="center">
               <Box flex="1">{renderContent(item)}</Box>
 
@@ -373,6 +371,7 @@ function Activitiescircuitpages({ circuitType }) {
         ))}
       </VStack>
 
+      {/*This is where it updates and add new content*/}
       {showAdditionalButtons && (
         <Box
           mt={4}
@@ -381,18 +380,25 @@ function Activitiescircuitpages({ circuitType }) {
           borderRadius="md"
           boxShadow="md"
         >
+          <Text fontSize={"3xl"} textAlign={"center"}>
+            This is for Adding new content
+          </Text>
+
           <AddText
             content={updateNewContent.content}
             onContentChange={handleContentChange}
             onAddContent={handleAddContent}
             onDeleteContent={handleUpdateDeleteContent}
           ></AddText>
-          <Button colorScheme="blue" w="full" onClick={handleUpdateNewContent}>
+
+          <Button
+            colorScheme="blue"
+            w="full"
+            onClick={handleUpdateNewContent}
+            mt={2}
+          >
             Create!
           </Button>
-          <Text fontSize={"3xl"} textAlign={"center"}>
-            This is for Adding new content
-          </Text>
         </Box>
       )}
     </div>
