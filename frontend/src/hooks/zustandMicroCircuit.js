@@ -104,7 +104,7 @@ export const useMicroCircuits = create((set) => ({
     }
   },
   updateAddContent: async (circuitid, type, updateAddContent) => {
-    const validTypes = ["Text", "Image", "TextAndImage"];
+    const validTypes = ["Text", "Image", "TextAndImage", "Code"];
     if (!validTypes.includes(type)) {
       console.log("The Type provided is invalid");
       return null;
