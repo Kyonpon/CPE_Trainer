@@ -76,7 +76,7 @@ function CreateLib() {
 
   return (
     <Container maxW={"container.sm"}>
-      <VStack spacing={10}>
+      <VStack spacing={10} align="stretch">
         <Box
           w={"full"}
           bg={useColorModeValue("white", "gray.800")}
@@ -84,7 +84,7 @@ function CreateLib() {
           rounded={"lg"}
           shadow={"md"}
         >
-          <VStack spacing={4}>
+          <VStack spacing={4} align="stretch">
             <Input
               placeholder="Circuit Name"
               name="circuitName"
