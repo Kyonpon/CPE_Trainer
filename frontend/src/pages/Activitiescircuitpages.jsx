@@ -7,6 +7,7 @@ import TextAndImageComponent from "../components/Experimental/TextAndImageCompon
 import TextComponent from "../components/Experimental/TextComponent";
 import AddText from "../components/Experimental/AddText";
 import ImageComponent from "../components/Experimental/ImageComponent";
+import CodeComponent from "../components/Experimental/CodeComponent";
 
 import {
   Box,
@@ -47,6 +48,7 @@ function Activitiescircuitpages({ circuitType }) {
     text: "",
     imageUrl: "",
     altText: "",
+    code: "",
   });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -75,6 +77,8 @@ function Activitiescircuitpages({ circuitType }) {
       newContent.text = "";
       newContent.imageUrl = "";
       newContent.altText = "";
+    } else if (type === "Code") {
+      newContent.code = "";
     }
     setUpdateNewContent((prev) => ({
       ...prev,
@@ -114,18 +118,25 @@ function Activitiescircuitpages({ circuitType }) {
         alert("Text, Image URL, and Alt Text cannot be empty.");
         return;
       }
+      if (item.type === "Code" && !item.code?.trim()) {
+        alert("Code content cannot be empty.");
+        return;
+      }
 
       const newContent = {
         type: item.type,
         ...(item.text && { text: item.text }),
         ...(item.imageUrl && { imageUrl: item.imageUrl }),
         ...(item.altText && { altText: item.altText }),
+        ...(item.code && { code: item.code }),
       };
 
       const response = await updateAddContent(circuitId, item.type, newContent);
 
       if (!response?.success) {
-        alert(`Failed to add content: ${response?.message || "Unknown error"}`);
+        alert(
+          `Failed to add content: ${response?.message || "FE, Unknown error"}`
+        );
         return;
       }
     }
@@ -180,6 +191,8 @@ function Activitiescircuitpages({ circuitType }) {
             altText={contentItem.altText}
           />
         );
+      case "Code":
+        return <CodeComponent key={contentItem._id} code={contentItem.code} />;
       default:
         return null;
     }
@@ -213,6 +226,7 @@ function Activitiescircuitpages({ circuitType }) {
       text: contentItem.text || "",
       imageUrl: contentItem.imageUrl || "",
       altText: contentItem.altText || "",
+      code: contentItem.code || "",
     });
     onOpen();
   };
@@ -322,6 +336,15 @@ function Activitiescircuitpages({ circuitType }) {
                   mb={3}
                 />
               </>
+            )}
+            {selectedContent?.type === "Code" && (
+              <Textarea
+                name="code"
+                value={formData.code}
+                onChange={handleInputChange}
+                placeholder="Enter Code"
+                mb={3}
+              ></Textarea>
             )}
             <Button colorScheme="teal" onClick={handleSubmit}>
               Submit

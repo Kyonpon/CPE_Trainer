@@ -12,7 +12,7 @@ export const addMicroCircuit = async (req, res) => {
   ) {
     return res.status(400).json({
       success: false,
-      message: "Content array is required and cannot be empty.",
+      message: "Back End, Content array is required and cannot be empty.",
     });
   }
 
@@ -40,6 +40,15 @@ export const addMicroCircuit = async (req, res) => {
       // Set default alt text if not provided
       if (!contentItem.altText) {
         contentItem.altText = "No alt text";
+      }
+    }
+
+    if (contentItem.type === "Code") {
+      if (!contentItem.code) {
+        return res.status(400).json({
+          success: false,
+          message: `Code is required for item ${i + 1} in content.`,
+        });
       }
     }
   }
@@ -144,6 +153,7 @@ export const updateMicroByID = async (req, res) => {
         Text: ["text"],
         Image: ["imageUrl", "altText"],
         TextAndImage: ["text", "imageUrl", "altText"],
+        Code: ["code"],
       };
 
       //Get allowed field based on the type

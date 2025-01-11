@@ -28,12 +28,14 @@ function CreateLib() {
     content: [],
   });
 
+  //Limited to create
   const zustandFunctions = {
     combinational: useCBCircuits().createCombiLogicCircuit,
     universal: useUlCircuits().createUniversalLogicCircruit,
     microprocessor: useMicroCircuits().createMicroCircuit,
   };
 
+  //This make it so dynamic create per circuit
   const handleAddNewCircuit = async () => {
     const createCircuit = zustandFunctions[circuitType];
     if (createCircuit) {
@@ -61,6 +63,8 @@ function CreateLib() {
       newContent.text = "";
       newContent.imageUrl = "";
       newContent.altText = "";
+    } else if (type === "Code") {
+      newContent.code = "";
     }
     setNewCircuit((prev) => ({
       ...prev,

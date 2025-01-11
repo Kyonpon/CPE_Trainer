@@ -7,6 +7,7 @@ import {
 } from "react-syntax-highlighter/dist/esm/styles/prism"; // Themes for syntax highlighting
 
 function CodeComponent({ code, language = "cpp" }) {
+  /*
   const testCode = `
   // Calibration time for the PIR sensor (in seconds)
 int calibrationTime = 5;        
@@ -91,6 +92,7 @@ void loop() {
 }
 
   `;
+  */
   const { colorMode } = useColorMode();
 
   const bgColor = colorMode === "dark" ? "gray.700" : "#ababaf";
@@ -115,7 +117,6 @@ void loop() {
           fontSize: "0.9em", // Adjust font size
         }}
       >
-        {testCode}
         {code}
       </SyntaxHighlighter>
     </Container>

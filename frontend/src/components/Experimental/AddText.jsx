@@ -107,6 +107,16 @@ const AddText = ({
                       />
                     </>
                   )}
+                  {item.type === "Code" && (
+                    <Textarea
+                      placeholder="Content Code"
+                      value={item.code}
+                      onChange={(event) => {
+                        onContentChange(index, event, "code");
+                      }}
+                      resize="vertical"
+                    ></Textarea>
+                  )}
                   <Button
                     colorScheme="red"
                     onClick={() => onDeleteContent(index)}
@@ -125,6 +135,7 @@ const AddText = ({
             <option value="Text">Text</option>
             <option value="Image">Image</option>
             <option value="TextAndImage">Text and Image</option>
+            <option value="Code">Code</option>
           </Select>
           <Button colorScheme="blue" onClick={handleAddContent} width="100%">
             Add Content
