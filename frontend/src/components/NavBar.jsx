@@ -11,18 +11,22 @@ import { SlLogin, SlLogout } from "react-icons/sl";
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import { useLogin } from "../hooks/zustandUsers";
 
 const NavBar = () => {
   const [cookies, setCookies] = useCookies(["access_token"]);
   const navigate = useNavigate();
   const { colorMode, toggleColorMode } = useColorMode(); // Corrected here
+  const { setAdmin, admin } = useLogin();
 
   const bgColor = colorMode === "dark" ? "gray.700 " : "#ababaf";
 
   const handleLogout = () => {
     setCookies("access_token", "");
     window.localStorage.removeItem("userID");
+    setAdmin(false);
     navigate("/login");
+    console.log("Admin State: ", admin);
   };
 
   return (

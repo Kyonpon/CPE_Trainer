@@ -30,9 +30,13 @@ function LoginComp() {
         }
       );
       console.log(response);
-      setCookies("access_token", response.data.token);
-      window.localStorage.setItem("userID", response.data.userID);
-      navigate("/");
+      if (response.data.success) {
+        navigate("/");
+        setCookies("access_token", response.data.token);
+        window.localStorage.setItem("userID", response.data.userID);
+      } else {
+        alert("Wrong password or username");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -47,7 +51,7 @@ function LoginComp() {
             <Input
               placeholder="Username"
               type="text"
-              id="username"
+              id="lusername"
               value={regUsername}
               onChange={(event) => setRegUsername(event.target.value)}
             />
@@ -56,7 +60,7 @@ function LoginComp() {
             <Input
               placeholder="password"
               type="password"
-              id="password"
+              id="lpassword"
               value={regPassword}
               onChange={(event) => setRegPassword(event.target.value)}
             />
