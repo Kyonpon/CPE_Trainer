@@ -14,6 +14,7 @@ import { useCBCircuits } from "../hooks/zustandCBCircuit";
 import { useEffect, useState } from "react";
 import UniversalLogicCard from "../components/UniversalLogicCard";
 import EditMenuPageCard from "../components/Experimental/EditMenuPageCard";
+import { useLogin } from "../hooks/zustandUsers";
 
 function Combinationallogicmenupage() {
   const { fetchCBCircuits, combiLogicCircuit } = useCBCircuits();
@@ -25,6 +26,9 @@ function Combinationallogicmenupage() {
   });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { admin } = useLogin();
+  const [editable, setEditable] = useState(false);
 
   //#region Update content
   const handleOpenModal = (contentItem) => {
@@ -100,6 +104,7 @@ function Combinationallogicmenupage() {
     if (combiLogicCircuit.length === 0) {
       fetchCBCircuits();
     }
+    setEditable(admin);
   }, [fetchCBCircuits, combiLogicCircuit.length]);
 
   console.log("CB Circuits", combiLogicCircuit);
@@ -151,11 +156,15 @@ function Combinationallogicmenupage() {
             ></UniversalLogicCard>
           </Box>
         ))}
-        <CreateCard url="/createcb" title="Create New Circuit"></CreateCard>
-        <EditMenuPageCard
-          showAdditionalButtons={showAdditionalButtons}
-          setShowAdditionalButtons={setShowAdditionalButtons}
-        ></EditMenuPageCard>
+        {editable && (
+          <>
+            <CreateCard url="/createcb" title="Create New Circuit"></CreateCard>
+            <EditMenuPageCard
+              showAdditionalButtons={showAdditionalButtons}
+              setShowAdditionalButtons={setShowAdditionalButtons}
+            ></EditMenuPageCard>
+          </>
+        )}
       </Box>
     </Box>
   );

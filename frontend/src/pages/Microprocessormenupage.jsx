@@ -14,6 +14,7 @@ import { useMicroCircuits } from "../hooks/zustandMicroCircuit"; // Ensure you u
 import { useEffect, useState } from "react";
 import UniversalLogicCard from "../components/UniversalLogicCard";
 import EditMenuPageCard from "../components/Experimental/EditMenuPageCard";
+import { useLogin } from "../hooks/zustandUsers";
 
 function Microprocessormenupage() {
   const { fetchMicroCircuits, microCircuit } = useMicroCircuits();
@@ -25,6 +26,8 @@ function Microprocessormenupage() {
   });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { admin } = useLogin();
+  const [editable, setEditable] = useState(false);
 
   //#region Update content
   const handleOpenModal = (contentItem) => {
@@ -101,6 +104,7 @@ function Microprocessormenupage() {
     if (microCircuit.length === 0) {
       fetchMicroCircuits();
     }
+    setEditable(admin);
   }, [fetchMicroCircuits, microCircuit.length]);
 
   console.log("Microprocessor Circuits", microCircuit);
@@ -153,11 +157,15 @@ function Microprocessormenupage() {
             />
           </Box>
         ))}
-        <CreateCard url="/createmicro" title="Create New Circuit" />
-        <EditMenuPageCard
-          showAdditionalButtons={showAdditionalButtons}
-          setShowAdditionalButtons={setShowAdditionalButtons}
-        />
+        {editable && (
+          <>
+            <CreateCard url="/createmicro" title="Create New Circuit" />
+            <EditMenuPageCard
+              showAdditionalButtons={showAdditionalButtons}
+              setShowAdditionalButtons={setShowAdditionalButtons}
+            />
+          </>
+        )}
       </Box>
     </Box>
   );
