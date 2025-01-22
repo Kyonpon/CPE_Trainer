@@ -12,7 +12,7 @@ import {
 import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 
-const AddText = ({
+const AddContentType = ({
   content,
   onContentChange,
   onAddContent,
@@ -146,11 +146,11 @@ const AddText = ({
   );
 };
 
-AddText.propTypes = {
+AddContentType.propTypes = {
   content: PropTypes.array.isRequired,
   onContentChange: PropTypes.func.isRequired,
   onAddContent: PropTypes.func.isRequired,
   onDeleteContent: PropTypes.func.isRequired,
 };
 
-export default AddText;
+export default AddContentType;

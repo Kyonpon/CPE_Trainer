@@ -1,13 +1,13 @@
 import { Box } from "@chakra-ui/react";
 import { Route, Routes } from "react-router-dom";
-import Createpage from "./pages/Createpage";
+import Createpage from "./pages/ActivitiesLibPages/Createpage";
 import Homepage from "./pages/Homepage";
 import NavBar from "./components/NavBar";
 import Loginpage from "./pages/Loginpage";
-import Universallogicmenupage from "./pages/Universallogicmenupage";
-import Combinationallogicmenupage from "./pages/Combinationallogicmenupage";
-import Activitiescircuitpages from "./pages/Activitiescircuitpages";
-import Microprocessormenupage from "./pages/Microprocessormenupage";
+import Universallogicmenupage from "./pages/ActivitiesLibPages/Universallogicmenupage";
+import Combinationallogicmenupage from "./pages/ActivitiesLibPages/Combinationallogicmenupage";
+import Activitiescircuitpages from "./pages/ActivitiesLibPages/Activitiescircuitpages";
+import Microprocessormenupage from "./pages/ActivitiesLibPages/Microprocessormenupage";
 
 function App() {
   return (

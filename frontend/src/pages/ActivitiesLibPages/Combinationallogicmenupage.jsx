@@ -9,12 +9,12 @@ import {
   ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
-import CreateCard from "../components/CreateCard";
-import { useCBCircuits } from "../hooks/zustandCBCircuit";
+import CreateCard from "../../components/ActivitiesLibComponents/CreateCard";
+import { useCBCircuits } from "../../hooks/zustandCBCircuit";
 import { useEffect, useState } from "react";
-import UniversalLogicCard from "../components/UniversalLogicCard";
-import EditMenuPageCard from "../components/Experimental/EditMenuPageCard";
-import { useLogin } from "../hooks/zustandUsers";
+import UniversalLogicCard from "../../components/ActivitiesLibComponents/ActivityCircuitCard";
+import EditMenuPageCard from "../../components/ActivitiesLibComponents/EditMenuPageCard";
+import { useLogin } from "../../hooks/zustandUsers";
 
 function Combinationallogicmenupage() {
   const { fetchCBCircuits, combiLogicCircuit } = useCBCircuits();

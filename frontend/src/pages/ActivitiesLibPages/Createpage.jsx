@@ -1,6 +1,6 @@
 import { Box } from "@chakra-ui/react";
-import CreateHeading from "../components/CreateHeading";
-import CreateLib from "../components/Experimental/CreateLib";
+import CreateHeading from "../../components/ActivitiesLibComponents/CreatePage/CreateHeading";
+import CreateLib from "../../components/ActivitiesLibComponents/CreatePage/CreateLib";
 
 const Createpage = () => {
   return (

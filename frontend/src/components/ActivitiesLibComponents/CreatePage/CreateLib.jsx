@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useUlCircuits } from "../../hooks/zustandUlCircuit";
-import { useCBCircuits } from "../../hooks/zustandCBCircuit";
-import { useMicroCircuits } from "../../hooks/zustandMicroCircuit";
+import { useUlCircuits } from "../../../hooks/zustandUlCircuit";
+import { useCBCircuits } from "../../../hooks/zustandCBCircuit";
+import { useMicroCircuits } from "../../../hooks/zustandMicroCircuit";
 import {
   Box,
   Button,
@@ -11,7 +11,7 @@ import {
   useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
-import AddText from "./AddText";
+import AddContentType from "../ActivityPageComponents/AddContentType";
 
 function CreateLib() {
   const location = useLocation();
@@ -111,7 +111,7 @@ function CreateLib() {
                 })
               }
             />
-            <AddText
+            <AddContentType
               content={newCircuit.content}
               onContentChange={handleContentChange}
               onAddContent={handleAddContent}

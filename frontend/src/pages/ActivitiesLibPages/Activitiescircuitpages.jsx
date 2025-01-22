@@ -1,13 +1,13 @@
 import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
-import { useCBCircuits } from "../hooks/zustandCBCircuit";
-import { useMicroCircuits } from "../hooks/zustandMicroCircuit";
+import { useCBCircuits } from "../../hooks/zustandCBCircuit";
+import { useMicroCircuits } from "../../hooks/zustandMicroCircuit";
 import { useEffect, useState } from "react";
-import TextAndImageComponent from "../components/Experimental/TextAndImageComponent";
-import TextComponent from "../components/Experimental/TextComponent";
-import AddText from "../components/Experimental/AddText";
-import ImageComponent from "../components/Experimental/ImageComponent";
-import CodeComponent from "../components/Experimental/CodeComponent";
+import TextAndImageComponent from "../../components/ActivitiesLibComponents/ActivityPageComponents/TextAndImageComponent";
+import TextComponent from "../../components/ActivitiesLibComponents/ActivityPageComponents/TextComponent";
+import AddContentType from "../../components/ActivitiesLibComponents/ActivityPageComponents/AddContentType";
+import ImageComponent from "../../components/ActivitiesLibComponents/ActivityPageComponents/ImageComponent";
+import CodeComponent from "../../components/ActivitiesLibComponents/ActivityPageComponents/CodeComponent";
 
 import {
   Box,
@@ -407,12 +407,12 @@ function Activitiescircuitpages({ circuitType }) {
             This is for Adding new content
           </Text>
 
-          <AddText
+          <AddContentType
             content={updateNewContent.content}
             onContentChange={handleContentChange}
             onAddContent={handleAddContent}
             onDeleteContent={handleUpdateDeleteContent}
-          ></AddText>
+          ></AddContentType>
 
           <Button
             colorScheme="blue"
