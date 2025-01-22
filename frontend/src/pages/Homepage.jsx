@@ -9,17 +9,24 @@ const Homepage = () => {
   useEffect(() => {
     const fetchAdminStatus = async () => {
       const userID = localStorage.getItem("userID");
-      if (!userID) {
-        console.log("User ID not found in localStorage");
-        return;
+
+      if (!userID || userID === "undefined" || userID === null) {
+        console.log("User is not logged in; no userID in localStorage.");
+        setAdmin(false); // Ensure admin state is set to false
+        return; // Exit early if no userID is found
       }
-      const isAdmin = await showEdit(userID); // Wait for the promise to resolve
-      console.log("Admin status:", isAdmin); // Log the admin status
-      setAdmin(isAdmin); // Set the admin state
+
+      try {
+        const isAdmin = await showEdit(userID); // Call the backend if userID exists
+        console.log("Admin status:", isAdmin);
+        setAdmin(isAdmin); // Update admin state
+      } catch (error) {
+        console.error("Error fetching admin status:", error);
+      }
     };
 
-    fetchAdminStatus(); // Call the function to fetch admin status
-  }, [showEdit, setAdmin]); // Dependencies include only stable functions
+    fetchAdminStatus();
+  }, [showEdit, setAdmin]);
 
   console.log("Admin State:", admin);
   return (
