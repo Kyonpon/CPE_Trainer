@@ -8,6 +8,7 @@ import Universallogicmenupage from "./pages/ActivitiesLibPages/Universallogicmen
 import Combinationallogicmenupage from "./pages/ActivitiesLibPages/Combinationallogicmenupage";
 import Activitiescircuitpages from "./pages/ActivitiesLibPages/Activitiescircuitpages";
 import Microprocessormenupage from "./pages/ActivitiesLibPages/Microprocessormenupage";
+import CircuitTesterHome from "./pages/CircuitTester/CircuitTesterHome";
 
 function App() {
   return (
@@ -48,6 +49,10 @@ function App() {
               <Activitiescircuitpages circuitType="Micro"></Activitiescircuitpages>
             }
           ></Route>
+          <Route
+            path="/logicciruittesterhome"
+            element={<CircuitTesterHome />}
+          />
         </Routes>
       </Box>
     </>
