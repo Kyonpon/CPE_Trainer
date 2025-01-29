@@ -1,4 +1,4 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Heading, Text } from "@chakra-ui/react";
 import { generateSOP } from "../../utils/BoolUtils";
 import PropTypes from "prop-types";
 
@@ -32,11 +32,13 @@ const BoolSOP = ({ variables, minTerms }) => {
   }
 
   return (
-    <Box p={4} m={0} backgroundColor={"gray"}>
+    <Box>
       {!minimizedExpression ? (
         <h1>No SOP generated</h1>
       ) : (
-        <h1>{processBooleanExpression(minimizedExpression)}</h1>
+        <Heading size="md">
+          {processBooleanExpression(minimizedExpression)}
+        </Heading>
       )}
     </Box>
   );
@@ -44,6 +46,6 @@ const BoolSOP = ({ variables, minTerms }) => {
 // Define PropTypes for the component with length validation
 BoolSOP.propTypes = {
   variables: PropTypes.array.isRequired, // Array of variables
-  minTerms: PropTypes.array.isRequired, // Array of minterms
+  minTerms: PropTypes.array, // Array of minterms
 };
 export default BoolSOP;

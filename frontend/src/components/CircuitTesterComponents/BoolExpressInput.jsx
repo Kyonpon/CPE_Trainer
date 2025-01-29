@@ -7,7 +7,7 @@ const BoolExpressInput = ({ expression, onExpressionChange }) => {
   };
 
   return (
-    <Box p={4} m={0} backgroundColor={"gray"}>
+    <Box>
       <Input
         placeholder="Example Format: (AB)' + AB'C + A'"
         type="text"

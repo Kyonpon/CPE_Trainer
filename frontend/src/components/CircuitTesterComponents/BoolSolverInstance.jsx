@@ -1,4 +1,4 @@
-import { Box, HStack, VStack } from "@chakra-ui/react";
+import { Box, Heading, HStack, VStack } from "@chakra-ui/react";
 import BoolExpressInput from "./BoolExpressInput";
 import BoolSOP from "./BoolSOP";
 import BoolExpressTT from "./BoolExpressTT";
@@ -36,17 +36,37 @@ function BoolSolverInstance() {
   return (
     <Box m={0} p={0}>
       <VStack spacing={1}>
-        <HStack justify="space-evenly" spacing={1} w="100%">
-          <Box flex="1">
+        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={1} w="100%">
+          <Box
+            p={4}
+            m={0}
+            backgroundColor="gray"
+            display="flex"
+            flexDirection="column"
+          >
             <BoolExpressInput
               expression={expression}
               onExpressionChange={handleExpressionChange}
-            ></BoolExpressInput>
+            />
           </Box>
-          <Box flex="1">
-            <BoolSOP variables={variables} minTerms={tableData.minTerms} />
+          <Box
+            p={4}
+            m={0}
+            backgroundColor="gray"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            {!expression ? (
+              <Heading size="md" textAlign="center">
+                Enter a Logic/Boolean Function
+              </Heading>
+            ) : (
+              <BoolSOP variables={variables} minTerms={tableData.minTerms} />
+            )}
           </Box>
-        </HStack>
+        </Box>
 
         <HStack justify="space-evenly" spacing={1} w="100%">
           <Box flex="1">
