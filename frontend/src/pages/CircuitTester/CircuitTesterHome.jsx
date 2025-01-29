@@ -1,12 +1,24 @@
 import { Box, Button, HStack, Input } from "@chakra-ui/react";
 import BoolSolverInstance from "../../components/CircuitTesterComponents/BoolSolverInstance";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 function CircuitTesterHome() {
   const [expressions, setExpressions] = useState([]);
   const [result, setResult] = useState({});
   const [resultNames, setResultNames] = useState([]);
   const [cacheResultNames, setCacheResultNames] = useState("");
+  const [resultWithNames, setResultWithNames] = useState({});
+  const [namesWithVariables, setNamesWithVariables] = useState({});
+
+  useEffect(() => {
+    const newObject = {};
+
+    resultNames.forEach((name, index) => {
+      newObject[name] = result[index] || []; // Assign the corresponding result or an empty array
+    });
+
+    setResultWithNames(newObject);
+  }, [resultNames, result]);
 
   const handleAddExpression = () => {
     setExpressions([...expressions, ""]);
@@ -26,6 +38,17 @@ function CircuitTesterHome() {
     }
   };
 
+  const handleOnvariablesChange = useCallback((index, variables) => {
+    setNamesWithVariables((prev) => ({
+      ...prev,
+      [index]: variables, // Update only the relevant index
+    }));
+  }, []);
+
+  const handleCheck = () => {
+    console.log("Results with names:", resultWithNames);
+    console.log("Names with variables:", namesWithVariables);
+  };
   return (
     <Box p={2} m={0} w="100vw" backgroundColor="purple.700">
       <h1>BOOLEAN FUNCTION SOLVER</h1>
@@ -39,6 +62,9 @@ function CircuitTesterHome() {
             handleFColumnValuesChange(index, values)
           }
           expressionName={resultNames[index]}
+          onVariablesChange={(variables) =>
+            handleOnvariablesChange(index, variables)
+          }
         />
       ))}
 
@@ -52,6 +78,7 @@ function CircuitTesterHome() {
         <Button mt={2} onClick={handleAddExpression}>
           Add Another Output
         </Button>
+        <Button mt={2} onClick={handleCheck}></Button>
       </HStack>
     </Box>
   );
