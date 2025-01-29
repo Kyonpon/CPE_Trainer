@@ -1,15 +1,29 @@
-import { Box, Heading, HStack, VStack } from "@chakra-ui/react";
-import BoolExpressInput from "./BoolExpressInput";
+import { Box, Heading, HStack, Input, VStack } from "@chakra-ui/react";
 import BoolSOP from "./BoolSOP";
 import BoolExpressTT from "./BoolExpressTT";
 //import BoolKmap from "./BoolKmap";
 import { generateTable } from "../../utils/BoolUtils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 
-function BoolSolverInstance() {
+function BoolSolverInstance({
+  onDeleteInstance,
+  onFColumnValuesChange,
+  expressionName,
+}) {
   const [expression, setExpression] = useState("");
   const [variables, setVariables] = useState([]);
   const [tableData, setTableData] = useState({});
+
+  useEffect(() => {
+    if (tableData.fColumnValues) {
+      onFColumnValuesChange(tableData.fColumnValues);
+    }
+  }, [onFColumnValuesChange, tableData.fColumnValues]);
+
+  const handleInputChange = (e) => {
+    handleExpressionChange(e.target.value.trim().toUpperCase());
+  };
 
   const handleExpressionChange = (newExpression) => {
     setExpression(newExpression);
@@ -33,10 +47,17 @@ function BoolSolverInstance() {
     setTableData({ tableHTML, minTerms, maxTerms, fColumnValues });
   };
 
+  const handleExpressionDelete = () => {
+    onDeleteInstance();
+  };
+
   return (
     <Box m={0} p={0}>
       <VStack spacing={1}>
-        <Box display="grid" gridTemplateColumns="1fr 1fr" gap={1} w="100%">
+        <Heading size="lg" textAlign="left" width="100%" ml="1%">
+          {expressionName}
+        </Heading>
+        <Box display="grid" gridTemplateColumns="1fr 1fr .3fr" gap={1} w="100%">
           <Box
             p={4}
             m={0}
@@ -44,10 +65,14 @@ function BoolSolverInstance() {
             display="flex"
             flexDirection="column"
           >
-            <BoolExpressInput
-              expression={expression}
-              onExpressionChange={handleExpressionChange}
-            />
+            <Input
+              placeholder="Example Format: (AB)' + AB'C + A'"
+              type="text"
+              autoComplete="off"
+              spellCheck="false"
+              value={expression}
+              onChange={handleInputChange}
+            ></Input>
           </Box>
           <Box
             p={4}
@@ -66,6 +91,21 @@ function BoolSolverInstance() {
               <BoolSOP variables={variables} minTerms={tableData.minTerms} />
             )}
           </Box>
+          <Box
+            p={4}
+            m={0}
+            backgroundColor="red.500"
+            borderRadius="10px"
+            display="flex"
+            flexDirection="column"
+            alignContent="center"
+            justifyContent="center"
+            onClick={() => handleExpressionDelete(console.log("Delete"))}
+          >
+            <Heading size="md" textAlign="center">
+              Delete
+            </Heading>
+          </Box>
         </Box>
 
         <HStack justify="space-evenly" spacing={1} w="100%">
@@ -83,5 +123,12 @@ function BoolSolverInstance() {
     </Box>
   );
 }
+
+BoolSolverInstance.propTypes = {
+  instanceExpression: PropTypes.string.isRequired,
+  onDeleteInstance: PropTypes.func.isRequired,
+  onFColumnValuesChange: PropTypes.func,
+  expressionName: PropTypes.string.isRequired,
+};
 
 export default BoolSolverInstance;
