@@ -13,7 +13,7 @@ import PropTypes from "prop-types";
 const BoolExpressTT = ({ variables = [], tableData = {} }) => {
   // Return null or a loading message if no table data is present
   if (!variables.length) {
-    return <div>Loading...</div>; // Show loading or nothing while data is empty
+    return <div></div>; // Show loading or nothing while data is empty
   }
 
   // Generate truth table with the variables
@@ -39,9 +39,10 @@ const BoolExpressTT = ({ variables = [], tableData = {} }) => {
   }
 
   const inputsTT = generateTruthTable(variables);
-
-  // Add "F()" column to the truth table and combine it with the rest of the variables
-  const output = tableData.fColumnValues || []; // Ensure we have the fColumnValues or fallback to an empty array
+  //console.log("inputsTT", inputsTT);
+  // This is the Function Output
+  const output = tableData.fColumnValues || [];
+  // console.log("F()", output);
   const truthTableWithF = {};
 
   // Add all variables from inputsTT
@@ -49,10 +50,11 @@ const BoolExpressTT = ({ variables = [], tableData = {} }) => {
     truthTableWithF[variable] = inputsTT[variable];
   });
 
-  // Add the F() column to the truth table
+  //This just keyed the "F()" to the ouput array
   truthTableWithF["F()"] = output;
+  // console.log("Complete Object", truthTableWithF);
 
-  // Columns will include all variables plus the F() column
+  //Table Header Array
   const columns = [...variables, "F()"];
 
   return (
