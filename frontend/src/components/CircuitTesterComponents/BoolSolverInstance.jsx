@@ -10,16 +10,24 @@ function BoolSolverInstance({
   onDeleteInstance,
   onFColumnValuesChange,
   expressionName,
+  onVariablesChange,
 }) {
   const [expression, setExpression] = useState("");
   const [variables, setVariables] = useState([]);
   const [tableData, setTableData] = useState({});
 
   useEffect(() => {
+    // Avoid unnecessary state updates
     if (tableData.fColumnValues) {
-      onFColumnValuesChange(tableData.fColumnValues);
+      setTimeout(() => {
+        onFColumnValuesChange?.(tableData.fColumnValues);
+      }, 0);
     }
-  }, [onFColumnValuesChange, tableData.fColumnValues]);
+
+    setTimeout(() => {
+      onVariablesChange?.(variables);
+    }, 0);
+  }, [JSON.stringify(tableData.fColumnValues), JSON.stringify(variables)]);
 
   const handleInputChange = (e) => {
     handleExpressionChange(e.target.value.trim().toUpperCase());
@@ -129,6 +137,7 @@ BoolSolverInstance.propTypes = {
   onDeleteInstance: PropTypes.func.isRequired,
   onFColumnValuesChange: PropTypes.func,
   expressionName: PropTypes.string.isRequired,
+  onVariablesChange: PropTypes.func,
 };
 
 export default BoolSolverInstance;
