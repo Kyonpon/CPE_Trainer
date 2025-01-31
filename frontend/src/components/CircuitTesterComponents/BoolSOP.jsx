@@ -45,7 +45,7 @@ const BoolSOP = ({ variables, minTerms }) => {
 };
 // Define PropTypes for the component with length validation
 BoolSOP.propTypes = {
-  variables: PropTypes.array.isRequired, // Array of variables
+  variables: PropTypes.array, // Array of variables
   minTerms: PropTypes.array, // Array of minterms
 };
 export default BoolSOP;

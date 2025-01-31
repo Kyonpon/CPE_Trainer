@@ -16,26 +16,26 @@ const BoolExpressTT = ({ variables = [], tableData = {} }) => {
     return <div></div>; // Show loading or nothing while data is empty
   }
 
-  // Generate truth table with the variables
+  // Generate truth table for the variables
   function generateTruthTable(vars) {
     const n = vars.length; // Number of variables
     const totalCombinations = Math.pow(2, n); // 2^n possible combinations
-    const truthTable = {};
+    const inputsTT = {};
 
     // Initialize each variable with an empty array
     vars.forEach((variable) => {
-      truthTable[variable] = [];
+      inputsTT[variable] = [];
     });
 
     for (let i = 0; i < totalCombinations; i++) {
       // For each variable, determine the bit value for that variable in the current combination
       for (let j = 0; j < n; j++) {
         const value = (i >> (n - j - 1)) & 1; // Calculate the bit for the current variable
-        truthTable[vars[j]].push(value);
+        inputsTT[vars[j]].push(value);
       }
     }
 
-    return truthTable;
+    return inputsTT;
   }
 
   const inputsTT = generateTruthTable(variables);

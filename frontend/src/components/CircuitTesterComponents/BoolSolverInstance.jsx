@@ -1,63 +1,75 @@
-import { Box, Heading, HStack, Input, VStack } from "@chakra-ui/react";
-import BoolSOP from "./BoolSOP";
+import { Box, Heading, HStack, Input, VStack, Text } from "@chakra-ui/react";
 import BoolExpressTT from "./BoolExpressTT";
 //import BoolKmap from "./BoolKmap";
-import { generateTable } from "../../utils/BoolUtils";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PropTypes from "prop-types";
+import { useLogicCheck } from "../../hooks/zustandLogicCheck";
 
-function BoolSolverInstance({
-  onDeleteInstance,
-  onFColumnValuesChange,
-  expressionName,
-  onVariablesChange,
-}) {
+function BoolSolverInstance({ onDeleteInstance, expressionName }) {
+  const { handleInputInstance, BoolMenuInstances } = useLogicCheck();
   const [expression, setExpression] = useState("");
   const [variables, setVariables] = useState([]);
   const [tableData, setTableData] = useState({});
+  const [validExpression, setValidExpression] = useState(true);
 
-  useEffect(() => {
-    // Avoid unnecessary state updates
-    if (tableData.fColumnValues) {
-      setTimeout(() => {
-        onFColumnValuesChange?.(tableData.fColumnValues);
-      }, 0);
-    }
-
-    setTimeout(() => {
-      onVariablesChange?.(variables);
-    }, 0);
-  }, [JSON.stringify(tableData.fColumnValues), JSON.stringify(variables)]);
-
-  const handleInputChange = (e) => {
-    handleExpressionChange(e.target.value.trim().toUpperCase());
+  const isValidExpression = (expression) => {
+    const hasInvalidCharacters = /[^A-Z01+'()^ ]/.test(expression);
+    const hasUnmatchedParentheses =
+      (expression.match(/\(/g) || []).length !==
+      (expression.match(/\)/g) || []).length;
+    const hasEmptyParentheses = /\(\s*\)/.test(expression);
+    return !(
+      hasInvalidCharacters ||
+      hasUnmatchedParentheses ||
+      hasEmptyParentheses
+    );
   };
 
-  const handleExpressionChange = (newExpression) => {
+  const handleInputChange = (e) => {
+    const newExpression = e.target.value.trim().toUpperCase();
     setExpression(newExpression);
-    if (!newExpression) {
+    setValidExpression(isValidExpression(newExpression));
+
+    if (isValidExpression(newExpression)) {
+      handleInputInstance(newExpression, expressionName);
+    } else {
+      // Clear state if invalid
       setVariables([]);
       setTableData({});
-      return;
     }
-
-    const uniqueVariables = [...new Set(newExpression.match(/[A-Z]/g))].sort();
-    if (uniqueVariables.length > 8) {
-      alert("You can only have up to 8 variables.");
-      return;
-    }
-
-    const [tableHTML, minTerms, maxTerms, fColumnValues] = generateTable(
-      newExpression,
-      uniqueVariables
-    );
-    setVariables(uniqueVariables);
-    setTableData({ tableHTML, minTerms, maxTerms, fColumnValues });
   };
 
   const handleExpressionDelete = () => {
     onDeleteInstance();
   };
+
+  //Responsible for rendering the boolean expression in a more readable format
+  function processBooleanExpression(expression) {
+    const result = [];
+    let i = 0;
+
+    // Loop through the string and process characters
+    while (i < expression.length) {
+      if (expression[i] === "'") {
+        // Overline the previous character
+        const previousChar = expression[i - 1];
+        result[result.length - 1] = (
+          <Text key={i - 1} as="span" css={{ textDecoration: "overline" }}>
+            {previousChar}
+          </Text>
+        );
+      } else if (expression[i] !== "'") {
+        // Just push the regular characters
+        result.push(expression[i]);
+      }
+      i++;
+    }
+
+    return result;
+  }
+
+  const currentInstance = BoolMenuInstances[expressionName];
+  const hasExpressionSOP = currentInstance && currentInstance.ExpressionSOP;
 
   return (
     <Box m={0} p={0}>
@@ -91,13 +103,18 @@ function BoolSolverInstance({
             justifyContent="center"
             alignItems="center"
           >
-            {!expression ? (
-              <Heading size="md" textAlign="center">
-                Enter a Logic/Boolean Function
+            {!validExpression && ( // Conditionally render error message
+              <Heading size="md" textAlign="center" color="red.400">
+                Invalid Expression! Please check for errors.
               </Heading>
-            ) : (
-              <BoolSOP variables={variables} minTerms={tableData.minTerms} />
             )}
+            {validExpression &&
+              expression &&
+              hasExpressionSOP && ( // Conditionally render content only if ExpressionSOP exists
+                <Heading>
+                  {processBooleanExpression(currentInstance.ExpressionSOP)}
+                </Heading>
+              )}
           </Box>
           <Box
             p={4}
@@ -133,11 +150,12 @@ function BoolSolverInstance({
 }
 
 BoolSolverInstance.propTypes = {
-  instanceExpression: PropTypes.string.isRequired,
+  instanceExpression: PropTypes.string,
   onDeleteInstance: PropTypes.func.isRequired,
   onFColumnValuesChange: PropTypes.func,
   expressionName: PropTypes.string.isRequired,
   onVariablesChange: PropTypes.func,
+  expressionSOP: PropTypes.string,
 };
 
 export default BoolSolverInstance;
