@@ -6,82 +6,49 @@ import {
   Tbody,
   Tr,
   Th,
-  Td,
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
+import { useEffect, useState } from "react";
 
-const BoolExpressTT = ({ variables = [], tableData = {} }) => {
-  // Return null or a loading message if no table data is present
-  if (!variables.length) {
-    return <div></div>; // Show loading or nothing while data is empty
-  }
+const BoolExpressTT = ({ finalTT = {} }) => {
+  const [tableData, setTableData] = useState([]);
 
-  // Generate truth table for the variables
-  function generateTruthTable(vars) {
-    const n = vars.length; // Number of variables
-    const totalCombinations = Math.pow(2, n); // 2^n possible combinations
-    const inputsTT = {};
+  useEffect(() => {
+    const data = [];
+    if (Object.keys(finalTT).length > 0) {
+      const finalTTkeys = Object.keys(finalTT);
+      const firstKeyArr = finalTT[finalTTkeys[0]];
+      const numRows = firstKeyArr.length;
 
-    // Initialize each variable with an empty array
-    vars.forEach((variable) => {
-      inputsTT[variable] = [];
-    });
-
-    for (let i = 0; i < totalCombinations; i++) {
-      // For each variable, determine the bit value for that variable in the current combination
-      for (let j = 0; j < n; j++) {
-        const value = (i >> (n - j - 1)) & 1; // Calculate the bit for the current variable
-        inputsTT[vars[j]].push(value);
+      for (let i = 0; i < numRows; i++) {
+        const row = {};
+        for (const key in finalTT) {
+          row[key] = finalTT[key][i];
+        }
+        data.push(row);
       }
     }
-
-    return inputsTT;
-  }
-
-  const inputsTT = generateTruthTable(variables);
-  //console.log("inputsTT", inputsTT);
-  // This is the Function Output
-  const output = tableData.ExpressionOutput || [];
-  // console.log("F()", output);
-  const truthTableWithF = {};
-
-  // Add all variables from inputsTT
-  Object.keys(inputsTT).forEach((variable) => {
-    truthTableWithF[variable] = inputsTT[variable];
-  });
-
-  //This just keyed the "F()" to the ouput array
-  truthTableWithF["F()"] = output;
-  // console.log("Complete Object", truthTableWithF);
-
-  //Table Header Array
-  const columns = [...variables, "F()"];
+    setTableData(data);
+  }, [finalTT]);
 
   return (
     <TableContainer>
       <Table variant="striped" colorScheme="teal">
-        <TableCaption>Truth Table with F() column values</TableCaption>
+        <TableCaption>Check Table</TableCaption>
         <Thead>
           <Tr>
-            {columns.map((colName) => (
-              <Th key={colName}>{colName}</Th> // Header for each column (including F())
+            {Object.keys(finalTT).map((key) => (
+              <Th key={key}>{key}</Th>
             ))}
           </Tr>
         </Thead>
         <Tbody>
-          {Array.from({ length: output.length }).map((_, rowIndex) => (
-            <Tr key={rowIndex}>
-              {variables.map((variable, colIndex) => (
-                <Td key={colIndex}>
-                  {truthTableWithF[variable] &&
-                  truthTableWithF[variable][rowIndex] !== undefined
-                    ? truthTableWithF[variable][rowIndex]
-                    : "N/A"}
-                </Td>
+          {tableData.map((row, index) => (
+            <tr key={index}>
+              {Object.keys(finalTT).map((key) => (
+                <td key={key}>{row[key]}</td>
               ))}
-              {/* Render the F() column */}
-              <Td key="fColumn">{truthTableWithF["F()"][rowIndex]}</Td>
-            </Tr>
+            </tr>
           ))}
         </Tbody>
       </Table>
@@ -91,10 +58,7 @@ const BoolExpressTT = ({ variables = [], tableData = {} }) => {
 
 // Define prop types
 BoolExpressTT.propTypes = {
-  variables: PropTypes.arrayOf(PropTypes.string).isRequired,
-  tableData: PropTypes.shape({
-    fColumnValues: PropTypes.array, // Array that should hold the 'fColumnValues' data
-  }).isRequired,
+  finalTT: PropTypes.object,
 };
 
 export default BoolExpressTT;

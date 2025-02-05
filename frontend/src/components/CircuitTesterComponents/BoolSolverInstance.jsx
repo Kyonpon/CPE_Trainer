@@ -6,9 +6,8 @@ import PropTypes from "prop-types";
 import { useLogicCheck } from "../../hooks/zustandLogicCheck";
 
 function BoolSolverInstance({ onDeleteInstance, expressionName }) {
-  const { handleInputInstance, BoolMenuInstances } = useLogicCheck();
+  const { handleInputInstance, BoolSolverInstances } = useLogicCheck();
   const [expression, setExpression] = useState("");
-  const [variables, setVariables] = useState([]);
   const [validExpression, setValidExpression] = useState(true);
 
   const isValidExpression = (expression) => {
@@ -30,11 +29,7 @@ function BoolSolverInstance({ onDeleteInstance, expressionName }) {
     setValidExpression(isValidExpression(newExpression));
 
     if (isValidExpression(newExpression)) {
-      handleInputInstance(newExpression, expressionName);
-      setVariables(currentInstance.Variables);
-    } else {
-      // Clear state if invalid
-      setVariables([]);
+      handleInputInstance(newExpression, expressionName); //This is from useLogicCheck.js
     }
   };
 
@@ -67,7 +62,7 @@ function BoolSolverInstance({ onDeleteInstance, expressionName }) {
     return result;
   }
 
-  const currentInstance = BoolMenuInstances[expressionName];
+  const currentInstance = BoolSolverInstances[expressionName];
   const hasExpressionSOP = currentInstance && currentInstance.ExpressionSOP;
 
   return (
@@ -134,11 +129,11 @@ function BoolSolverInstance({ onDeleteInstance, expressionName }) {
 
         <HStack justify="space-evenly" spacing={1} w="100%">
           <Box flex="1">
-            <BoolExpressTT
-              variables={variables}
-              tableData={currentInstance}
-            ></BoolExpressTT>
-            *
+            {currentInstance ? (
+              <BoolExpressTT finalTT={currentInstance.FinalTT} />
+            ) : (
+              <div>No Boolean Expression SOP available for this instance</div>
+            )}
           </Box>
           <Box flex="1">
             {/* <BoolKmap variables={variables} minTerms={tableData.minTerms} /> */}
