@@ -1,4 +1,19 @@
-import { Box, Heading, HStack, Input, VStack, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  HStack,
+  Input,
+  VStack,
+  Text,
+  Button,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+} from "@chakra-ui/react";
 import BoolExpressTT from "./BoolExpressTT";
 //import BoolKmap from "./BoolKmap";
 import { useState } from "react";
@@ -9,6 +24,7 @@ function BoolSolverInstance({ onDeleteInstance, expressionName }) {
   const { handleInputInstance, BoolSolverInstances } = useLogicCheck();
   const [expression, setExpression] = useState("");
   const [validExpression, setValidExpression] = useState(true);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const isValidExpression = (expression) => {
     const hasInvalidCharacters = /[^A-Z01+'()^ ]/.test(expression);
@@ -68,9 +84,29 @@ function BoolSolverInstance({ onDeleteInstance, expressionName }) {
   return (
     <Box m={0} p={0}>
       <VStack spacing={1}>
-        <Heading size="lg" textAlign="left" width="100%" ml="1%">
-          {expressionName}
-        </Heading>
+        <HStack justify="flex-start" w="100%">
+          <Heading size="lg" textAlign="left">
+            {expressionName}
+          </Heading>
+          {currentInstance ? (
+            <Box>
+              <Button onClick={onOpen}>Check Table</Button>
+              <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent>
+                  <ModalHeader>Truth Table</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody>
+                    <BoolExpressTT finalTT={currentInstance.FinalTT} />
+                  </ModalBody>
+                </ModalContent>
+              </Modal>
+            </Box>
+          ) : (
+            <div>No Boolean Expression SOP available for this instance</div>
+          )}
+        </HStack>
+
         <Box display="grid" gridTemplateColumns="1fr 1fr .3fr" gap={1} w="100%">
           <Box
             p={4}
@@ -128,13 +164,7 @@ function BoolSolverInstance({ onDeleteInstance, expressionName }) {
         </Box>
 
         <HStack justify="space-evenly" spacing={1} w="100%">
-          <Box flex="1">
-            {currentInstance ? (
-              <BoolExpressTT finalTT={currentInstance.FinalTT} />
-            ) : (
-              <div>No Boolean Expression SOP available for this instance</div>
-            )}
-          </Box>
+          <Box flex="1"></Box>
           <Box flex="1">
             {/* <BoolKmap variables={variables} minTerms={tableData.minTerms} /> */}
           </Box>
