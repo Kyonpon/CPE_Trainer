@@ -37,6 +37,7 @@ function CircuitTesterHome() {
     setFunctionName("");
   };
 
+  //Check Button
   const handleMCU = () => {
     //This checks if all instances have the same number of variables
     const allVariables = {};
@@ -62,6 +63,7 @@ function CircuitTesterHome() {
     createFinalTable(BoolMenuInstances);
   };
 
+  //Debug Button
   const handleCheck = () => {
     console.log("Zustand instances:", BoolMenuInstances);
     console.log("Instance Tracker:", instanceTracker);
