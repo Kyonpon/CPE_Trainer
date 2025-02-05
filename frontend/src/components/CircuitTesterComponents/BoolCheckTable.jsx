@@ -1,12 +1,4 @@
-import {
-  Table,
-  TableCaption,
-  TableContainer,
-  Tbody,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
+import { Table, TableContainer, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
 
 import { useFinalTable } from "../../hooks/zustandFinalTable";
 import { useEffect, useState } from "react";
@@ -39,7 +31,6 @@ function BoolCheckTable() {
   return (
     <TableContainer>
       <Table variant="striped" colorScheme="teal">
-        <TableCaption>Check Table</TableCaption>
         <Thead>
           <Tr>
             {Object.keys(finalTable).map((key) => (
