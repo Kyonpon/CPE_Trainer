@@ -22,7 +22,9 @@ function BoolCheckTable() {
   useEffect(() => {
     const data = [];
     if (Object.keys(finalTable).length > 0) {
-      const numRows = finalTable["A"].length; // Assuming all arrays have the same length
+      const finalTTkeys = Object.keys(finalTable);
+      const firstKeyArr = finalTable[finalTTkeys[0]];
+      const numRows = firstKeyArr.length; // Assuming all arrays have the same length
       for (let i = 0; i < numRows; i++) {
         const row = {};
         for (const key in finalTable) {
