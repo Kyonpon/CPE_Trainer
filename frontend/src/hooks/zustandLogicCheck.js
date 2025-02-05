@@ -2,8 +2,8 @@ import { create } from "zustand";
 import { generateTable, generateSOP } from "../utils/BoolUtils";
 
 export const useLogicCheck = create((set, get) => ({
-  BoolMenuInstances: {}, // Initialize as an empty object
-  setBoolMenuInstances: (BoolMenuInstances) => set({ BoolMenuInstances }),
+  BoolSolverInstances: {}, // Initialize as an empty object
+  setBoolSolverInstances: (BoolSolverInstances) => set({ BoolSolverInstances }),
 
   addBoolFunction: (functionName) => {
     const trimmedFunctionName = functionName.trim().toUpperCase();
@@ -15,7 +15,7 @@ export const useLogicCheck = create((set, get) => ({
     const currentState = get();
 
     // Check if the functionName already exists
-    if (currentState.BoolMenuInstances[trimmedFunctionName]) {
+    if (currentState.BoolSolverInstances[trimmedFunctionName]) {
       return {
         success: false,
         message: `Function "${trimmedFunctionName}" already exists`,
@@ -24,8 +24,8 @@ export const useLogicCheck = create((set, get) => ({
 
     // Add the new functionName with the default structure
     set((state) => ({
-      BoolMenuInstances: {
-        ...state.BoolMenuInstances,
+      BoolSolverInstances: {
+        ...state.BoolSolverInstances,
         [trimmedFunctionName]: {
           Variables: [],
           InputsTT: {},
@@ -49,7 +49,7 @@ export const useLogicCheck = create((set, get) => ({
     const currentState = get();
 
     // Check if the functionName exists
-    if (!currentState.BoolMenuInstances[functionName]) {
+    if (!currentState.BoolSolverInstances[functionName]) {
       return {
         success: false,
         message: `Function "${functionName}" does not exist`,
@@ -58,9 +58,9 @@ export const useLogicCheck = create((set, get) => ({
 
     // Remove the functionName from the state (CORRECTED)
     set((state) => {
-      const newBoolMenuInstances = { ...state.BoolMenuInstances }; // Create a copy
-      delete newBoolMenuInstances[functionName]; // Delete from the copy
-      return { BoolMenuInstances: newBoolMenuInstances }; // Update state with the copy
+      const newBoolSolverInstances = { ...state.BoolSolverInstances }; // Create a copy
+      delete newBoolSolverInstances[functionName]; // Delete from the copy
+      return { BoolSolverInstances: newBoolSolverInstances }; // Update state with the copy
     });
 
     return {
@@ -138,8 +138,8 @@ export const useLogicCheck = create((set, get) => ({
       // console.log("Final Truth Table:", FinalTT);
 
       set((state) => ({
-        BoolMenuInstances: {
-          ...state.BoolMenuInstances,
+        BoolSolverInstances: {
+          ...state.BoolSolverInstances,
           [trimmedFunctionName]: {
             Variables: uniqueVariables,
             InputsTT: inputsTT,

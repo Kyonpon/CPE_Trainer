@@ -9,11 +9,12 @@ function CircuitTesterHome() {
   const [instanceTracker, setInstanceTracker] = useState([]);
   const [functionName, setFunctionName] = useState("");
   const [equalVariables, setEqualVariables] = useState();
-  const { addBoolFunction, removeBoolFunction, BoolMenuInstances } =
+  const { addBoolFunction, removeBoolFunction, BoolSolverInstances } =
     useLogicCheck();
   const { createFinalTable, finalTable } = useFinalTable();
 
   const [isDisabled, setIsDisabled] = useState(true);
+
   const handleDisable = useCallback(() => {
     const instances = instanceTracker.length;
     if (instances > 0) {
@@ -25,8 +26,8 @@ function CircuitTesterHome() {
   }, [instanceTracker]);
 
   useEffect(() => {
-    setInstanceTracker(Object.keys(BoolMenuInstances));
-  }, [BoolMenuInstances]);
+    setInstanceTracker(Object.keys(BoolSolverInstances));
+  }, [BoolSolverInstances]);
 
   useEffect(() => {
     handleDisable();
@@ -43,8 +44,8 @@ function CircuitTesterHome() {
     const allVariables = {};
     const variableCounts = [];
 
-    for (const instanceName in BoolMenuInstances) {
-      const { Variables } = BoolMenuInstances[instanceName];
+    for (const instanceName in BoolSolverInstances) {
+      const { Variables } = BoolSolverInstances[instanceName];
       allVariables[instanceName] = Variables;
       variableCounts.push(Variables.length);
     }
@@ -60,12 +61,12 @@ function CircuitTesterHome() {
     }
 
     setEqualVariables(true);
-    createFinalTable(BoolMenuInstances);
+    createFinalTable(BoolSolverInstances);
   };
 
   //Debug Button
   const handleCheck = () => {
-    console.log("Zustand instances:", BoolMenuInstances);
+    console.log("Zustand instances:", BoolSolverInstances);
     console.log("Instance Tracker:", instanceTracker);
     console.log("Zustand final table:", finalTable);
   };
