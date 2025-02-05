@@ -73,6 +73,7 @@ export const useLogicCheck = create((set, get) => ({
     const trimmedFunctionName = expressionName.trim().toUpperCase();
     expression, expressionName;
     let variables = [];
+    // eslint-disable-next-line no-unused-vars
     let solvedMinterms = [];
     let expressionOut = [];
 
@@ -91,6 +92,7 @@ export const useLogicCheck = create((set, get) => ({
         return;
       }
 
+      // eslint-disable-next-line no-unused-vars
       const [tableHTML, minTerms, maxTerms, fColumnValues] = generateTable(
         newExpression,
         uniqueVariables
