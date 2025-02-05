@@ -9,7 +9,6 @@ function BoolSolverInstance({ onDeleteInstance, expressionName }) {
   const { handleInputInstance, BoolMenuInstances } = useLogicCheck();
   const [expression, setExpression] = useState("");
   const [variables, setVariables] = useState([]);
-  const [tableData, setTableData] = useState({});
   const [validExpression, setValidExpression] = useState(true);
 
   const isValidExpression = (expression) => {
@@ -32,10 +31,10 @@ function BoolSolverInstance({ onDeleteInstance, expressionName }) {
 
     if (isValidExpression(newExpression)) {
       handleInputInstance(newExpression, expressionName);
+      setVariables(currentInstance.Variables);
     } else {
       // Clear state if invalid
       setVariables([]);
-      setTableData({});
     }
   };
 
@@ -137,8 +136,9 @@ function BoolSolverInstance({ onDeleteInstance, expressionName }) {
           <Box flex="1">
             <BoolExpressTT
               variables={variables}
-              tableData={tableData}
+              tableData={currentInstance}
             ></BoolExpressTT>
+            *
           </Box>
           <Box flex="1">
             {/* <BoolKmap variables={variables} minTerms={tableData.minTerms} /> */}
@@ -150,12 +150,8 @@ function BoolSolverInstance({ onDeleteInstance, expressionName }) {
 }
 
 BoolSolverInstance.propTypes = {
-  instanceExpression: PropTypes.string,
   onDeleteInstance: PropTypes.func.isRequired,
-  onFColumnValuesChange: PropTypes.func,
   expressionName: PropTypes.string.isRequired,
-  onVariablesChange: PropTypes.func,
-  expressionSOP: PropTypes.string,
 };
 
 export default BoolSolverInstance;

@@ -41,7 +41,7 @@ const BoolExpressTT = ({ variables = [], tableData = {} }) => {
   const inputsTT = generateTruthTable(variables);
   //console.log("inputsTT", inputsTT);
   // This is the Function Output
-  const output = tableData.fColumnValues || [];
+  const output = tableData.ExpressionOutput || [];
   // console.log("F()", output);
   const truthTableWithF = {};
 
