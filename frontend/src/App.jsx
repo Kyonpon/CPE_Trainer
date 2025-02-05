@@ -8,7 +8,8 @@ import Universallogicmenupage from "./pages/ActivitiesLibPages/Universallogicmen
 import Combinationallogicmenupage from "./pages/ActivitiesLibPages/Combinationallogicmenupage";
 import Activitiescircuitpages from "./pages/ActivitiesLibPages/Activitiescircuitpages";
 import Microprocessormenupage from "./pages/ActivitiesLibPages/Microprocessormenupage";
-import CircuitTesterHome from "./pages/CircuitTester/CircuitTesterHome";
+//import CircuitTesterHome from "./pages/CircuitTester/CircuitTesterHome";
+import Circuittesterpage from "./pages/CircuitTester/CircuitTesterpage";
 
 function App() {
   return (
@@ -51,7 +52,7 @@ function App() {
           ></Route>
           <Route
             path="/logicciruittesterhome"
-            element={<CircuitTesterHome />}
+            element={<Circuittesterpage />}
           />
         </Routes>
       </Box>
