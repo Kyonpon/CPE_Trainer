@@ -1,0 +1,12 @@
+{
+  "ModulesInstances": {
+    "Module1": {
+      "BoolSolverInstances": {},
+      "finalTable": {}
+    },
+    "Module2": {
+      "BoolSolverInstances": {},
+      "finalTable": {}
+    }
+  }
+}

@@ -6,7 +6,7 @@ import BoolCheckTable from "../../components/CircuitTesterComponents/BoolCheckTa
 import { useFinalTable } from "../../hooks/zustandFinalTable";
 import PropTypes from "prop-types";
 
-function CombiCheckModule({ moduleName }) {
+function CombiCheckModule({ moduleName, onDeleteModule }) {
   const [instanceTracker, setInstanceTracker] = useState([]);
   const [functionName, setFunctionName] = useState("");
   const [equalVariables, setEqualVariables] = useState();
@@ -70,6 +70,10 @@ function CombiCheckModule({ moduleName }) {
     console.log("Instance Tracker:", instanceTracker);
     console.log("Zustand final table:", finalTable);
   };
+
+  const handleDeleteModule = () => {
+    onDeleteModule();
+  };
   return (
     <Box p={2} m={0} w="100vw" backgroundColor="purple.700">
       <h1>{moduleName}</h1>
@@ -92,6 +96,9 @@ function CombiCheckModule({ moduleName }) {
         </Button>
         <Button mt={2} onClick={handleMCU} isDisabled={isDisabled}>
           Create Check Table
+        </Button>
+        <Button mt={2} onClick={handleDeleteModule}>
+          Delete Module
         </Button>
         <Button mt={2} onClick={handleCheck}>
           Debug
@@ -133,6 +140,7 @@ function CombiCheckModule({ moduleName }) {
 
 CombiCheckModule.propTypes = {
   moduleName: PropTypes.string.isRequired,
+  onDeleteModule: PropTypes.func.isRequired,
 };
 
 export default CombiCheckModule;
