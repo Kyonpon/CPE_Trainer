@@ -4,7 +4,11 @@ import { useCallback, useEffect, useState } from "react";
 import { useLogicCheck } from "../../hooks/zustandLogicCheck";
 import BoolCheckTable from "../../components/CircuitTesterComponents/BoolCheckTable";
 import { useFinalTable } from "../../hooks/zustandFinalTable";
-import PropTypes from "prop-types";
+import PropTypes, { func } from "prop-types";
+import {
+  moduleAddBoolFunction,
+  moduleHandleInputInstance,
+} from "../../utils/BoolUtils";
 
 function CombiCheckModule({ moduleName, onDeleteModule }) {
   const [instanceTracker, setInstanceTracker] = useState([]);
@@ -14,6 +18,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
   const { createFinalTable, finalTable } = useFinalTable();
   const { addBoolFunction, removeBoolFunction, BoolSolverInstances } =
     useLogicCheck();
+  const [moduleBoolSolverInstances, setModuleSolverInstances] = useState({});
 
   const handleDisable = useCallback(() => {
     const instances = instanceTracker.length;
@@ -26,15 +31,22 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
   }, [instanceTracker]);
 
   useEffect(() => {
-    setInstanceTracker(Object.keys(BoolSolverInstances));
-  }, [BoolSolverInstances]);
+    setInstanceTracker(Object.keys(moduleBoolSolverInstances));
+  }, [moduleBoolSolverInstances]);
 
   useEffect(() => {
     handleDisable();
   }, [handleDisable]);
 
   const handleAddExpression = () => {
-    addBoolFunction(functionName);
+    const newBooleanExp = moduleAddBoolFunction(
+      functionName,
+      moduleBoolSolverInstances
+    );
+    setModuleSolverInstances({
+      ...moduleBoolSolverInstances,
+      [functionName]: newBooleanExp,
+    });
     setFunctionName("");
   };
 
@@ -44,8 +56,8 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     const allVariables = {};
     const variableCounts = [];
 
-    for (const instanceName in BoolSolverInstances) {
-      const { Variables } = BoolSolverInstances[instanceName];
+    for (const instanceName in moduleBoolSolverInstances) {
+      const { Variables } = moduleBoolSolverInstances[instanceName];
       allVariables[instanceName] = Variables;
       variableCounts.push(Variables.length);
     }
@@ -61,27 +73,58 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     }
 
     setEqualVariables(true);
-    createFinalTable(BoolSolverInstances);
+    createFinalTable(moduleBoolSolverInstances);
   };
 
   //Debug Button
   const handleCheck = () => {
-    console.log("Zustand instances:", BoolSolverInstances);
+    console.log("Module Boolean instances:", moduleBoolSolverInstances);
     console.log("Instance Tracker:", instanceTracker);
     console.log("Zustand final table:", finalTable);
+  };
+
+  const handleDeleteModuleBoolExpression = (moduleBoolExpressionName) => {
+    if (!moduleBoolExpressionName) {
+      return { success: false, message: "Function name cannot be empty" };
+    }
+    if (!(moduleBoolExpressionName in moduleBoolSolverInstances)) {
+      return {
+        success: false,
+        message: `Function "${moduleBoolExpressionName}" doesn't already exist`,
+      };
+    }
+    const newModuleBoolSolverInstances = { ...moduleBoolSolverInstances };
+    delete newModuleBoolSolverInstances[moduleBoolExpressionName];
+    setModuleSolverInstances(newModuleBoolSolverInstances);
+
+    return {
+      success: true,
+      message: `Function "${moduleBoolExpressionName}" removed successfully`,
+    };
   };
 
   const handleDeleteModule = () => {
     onDeleteModule();
   };
+
+  const handleUpdate = (moduleBoolExpressionName, newValues) => {
+    setModuleSolverInstances((prevInstances) => ({
+      ...prevInstances,
+      [moduleBoolExpressionName]: {
+        ...newValues,
+      },
+    }));
+  };
   return (
-    <Box p={2} m={0} w="100vw" backgroundColor="purple.700">
+    <Box p={2} mb={5} w="100vw" backgroundColor="purple.700">
       <h1>{moduleName}</h1>
       {instanceTracker.map((instance) => (
         <BoolSolverInstance
           key={instance}
           expressionName={instance}
-          onDeleteInstance={() => removeBoolFunction(instance)}
+          moduleBoolSolverInstances={moduleBoolSolverInstances}
+          onDeleteInstance={() => handleDeleteModuleBoolExpression(instance)}
+          onInput={handleUpdate}
         />
       ))}
       <HStack>
