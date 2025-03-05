@@ -1,27 +1,22 @@
 import { Box, Button, HStack, Input } from "@chakra-ui/react";
 import BoolSolverInstance from "../../components/CircuitTesterComponents/BoolSolverInstance";
 import { useCallback, useEffect, useState } from "react";
-import { useLogicCheck } from "../../hooks/zustandLogicCheck";
 import BoolCheckTable from "../../components/CircuitTesterComponents/BoolCheckTable";
-import { useFinalTable } from "../../hooks/zustandFinalTable";
+
 import PropTypes, { func } from "prop-types";
-import {
-  moduleAddBoolFunction,
-  moduleHandleInputInstance,
-  moduleFinalTable,
-} from "../../utils/BoolUtils";
-import { set } from "mongoose";
+import { moduleAddBoolFunction, moduleFinalTable } from "../../utils/BoolUtils";
 
 function CombiCheckModule({ moduleName, onDeleteModule }) {
   const [instanceTracker, setInstanceTracker] = useState([]);
   const [functionName, setFunctionName] = useState("");
   const [equalVariables, setEqualVariables] = useState();
   const [isDisabled, setIsDisabled] = useState(true);
-  const { createFinalTable, finalTable } = useFinalTable();
-  const { addBoolFunction, removeBoolFunction, BoolSolverInstances } =
-    useLogicCheck();
   const [moduleBoolSolverInstances, setModuleSolverInstances] = useState({});
   const [moduleFinalTableData, setModuleFinalTableData] = useState({});
+  const [toBackend, setToBackend] = useState({
+    moduleName: moduleName,
+    inputsOutputs: {},
+  });
 
   const handleDisable = useCallback(() => {
     const instances = instanceTracker.length;
@@ -43,7 +38,15 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
 
   useEffect(() => {
     console.log("Updated moduleFinalTableData:", moduleFinalTableData);
+    setToBackend((prev) => ({
+      ...prev,
+      inputsOutputs: moduleFinalTableData,
+    }));
   }, [moduleFinalTableData]);
+
+  useEffect(() => {
+    console.log("Updated toBackend:", toBackend);
+  }, [toBackend]);
 
   const handleAddExpression = () => {
     const newBooleanExp = moduleAddBoolFunction(
@@ -81,14 +84,12 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
 
     setEqualVariables(true);
     setModuleFinalTableData(moduleFinalTable(moduleBoolSolverInstances));
-    createFinalTable(moduleBoolSolverInstances);
   };
 
   //Debug Button
   const handleCheck = () => {
     console.log("Module Boolean instances:", moduleBoolSolverInstances);
     console.log("Instance Tracker:", instanceTracker);
-    console.log("Zustand final table:", finalTable);
     console.log(
       "Module Final Table: ",
       moduleFinalTable(moduleBoolSolverInstances)

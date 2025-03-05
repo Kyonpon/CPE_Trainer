@@ -18,7 +18,6 @@ import BoolExpressTT from "./BoolExpressTT";
 //import BoolKmap from "./BoolKmap";
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { useLogicCheck } from "../../hooks/zustandLogicCheck";
 
 import { moduleHandleInputInstance } from "../../utils/BoolUtils";
 function BoolSolverInstance({
@@ -27,7 +26,6 @@ function BoolSolverInstance({
   onDeleteInstance,
   onInput,
 }) {
-  const { handleInputInstance, BoolSolverInstances } = useLogicCheck();
   const [expression, setExpression] = useState("");
   const [validExpression, setValidExpression] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -53,7 +51,7 @@ function BoolSolverInstance({
     if (isValidExpression(newExpression)) {
       onInput(
         expressionName,
-        moduleHandleInputInstance(newExpression, expressionName)
+        moduleHandleInputInstance(newExpression, expressionName) //This gets the SOP and other attr from utils
       );
     }
   };
