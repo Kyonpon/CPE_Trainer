@@ -88,7 +88,7 @@ function BoolSolverInstance({
   }
 
   const currentInstance = moduleBoolSolverInstances[expressionName];
-  console.log("Instance:", expressionName, currentInstance);
+  //console.log("Instance:", expressionName, currentInstance);
   const hasExpressionSOP = currentInstance && currentInstance.ExpressionSOP;
 
   return (
