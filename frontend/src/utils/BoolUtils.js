@@ -581,3 +581,32 @@ export const moduleHandleInputInstance= (booleanExpression, trimmedFunctionName)
   return handleExpressionChange(booleanExpression)
 
 }
+
+export const moduleFinalTable = (moduleSolverInstances= {}) =>{
+  if(!moduleSolverInstances){
+    return {
+      success: false,
+      message: "No instances found",
+    }
+  }
+
+  if(Object.keys(moduleSolverInstances).length == 0){
+    return console.log("No Instances provided. Ignoring boolean menus.");
+  }
+
+  const firstFunctionName = Object.keys(moduleSolverInstances)[0];
+  const firstFunctionObject = moduleSolverInstances[firstFunctionName];
+  const firstFunctionVariables = firstFunctionObject.InputsTT;
+
+  const expressionNamesAndOutput = {};
+  Object.keys(moduleSolverInstances).forEach((functionName) => {
+    expressionNamesAndOutput[functionName] =
+    moduleSolverInstances[functionName].ExpressionOutput;
+  });
+
+  const CfinalTable = {
+    ...firstFunctionVariables,
+    ...expressionNamesAndOutput,
+  };
+  return CfinalTable
+}
