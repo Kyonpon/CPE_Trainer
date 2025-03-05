@@ -8,7 +8,9 @@ import PropTypes, { func } from "prop-types";
 import {
   moduleAddBoolFunction,
   moduleHandleInputInstance,
+  moduleFinalTable,
 } from "../../utils/BoolUtils";
+import { set } from "mongoose";
 
 function CombiCheckModule({ moduleName, onDeleteModule }) {
   const [instanceTracker, setInstanceTracker] = useState([]);
@@ -19,6 +21,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
   const { addBoolFunction, removeBoolFunction, BoolSolverInstances } =
     useLogicCheck();
   const [moduleBoolSolverInstances, setModuleSolverInstances] = useState({});
+  const [moduleFinalTableData, setModuleFinalTableData] = useState({});
 
   const handleDisable = useCallback(() => {
     const instances = instanceTracker.length;
@@ -37,6 +40,10 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
   useEffect(() => {
     handleDisable();
   }, [handleDisable]);
+
+  useEffect(() => {
+    console.log("Updated moduleFinalTableData:", moduleFinalTableData);
+  }, [moduleFinalTableData]);
 
   const handleAddExpression = () => {
     const newBooleanExp = moduleAddBoolFunction(
@@ -73,6 +80,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     }
 
     setEqualVariables(true);
+    setModuleFinalTableData(moduleFinalTable(moduleBoolSolverInstances));
     createFinalTable(moduleBoolSolverInstances);
   };
 
@@ -81,6 +89,10 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     console.log("Module Boolean instances:", moduleBoolSolverInstances);
     console.log("Instance Tracker:", instanceTracker);
     console.log("Zustand final table:", finalTable);
+    console.log(
+      "Module Final Table: ",
+      moduleFinalTable(moduleBoolSolverInstances)
+    );
   };
 
   const handleDeleteModuleBoolExpression = (moduleBoolExpressionName) => {
@@ -161,7 +173,9 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
               <Box mt={2} border="1px" p={2} textAlign="center">
                 THIS IS THE TABLE
               </Box>
-              <BoolCheckTable></BoolCheckTable>
+              <BoolCheckTable
+                finalTable={moduleFinalTableData}
+              ></BoolCheckTable>
             </>
           ) : (
             // Show "NOT ALL INSTANCES HAVE THE SAME NUMBER OF VARIABLES" warning if equalVariables is false
