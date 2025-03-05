@@ -2,7 +2,7 @@ import { Box, Button, HStack, Input } from "@chakra-ui/react";
 import BoolSolverInstance from "../../components/CircuitTesterComponents/BoolSolverInstance";
 import { useCallback, useEffect, useState } from "react";
 import BoolCheckTable from "../../components/CircuitTesterComponents/BoolCheckTable";
-
+import axios from "axios";
 import PropTypes, { func } from "prop-types";
 import { moduleAddBoolFunction, moduleFinalTable } from "../../utils/BoolUtils";
 
@@ -44,9 +44,16 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     }));
   }, [moduleFinalTableData]);
 
-  useEffect(() => {
-    console.log("Updated toBackend:", toBackend);
-  }, [toBackend]);
+  const sendToCheck = async (toBackend) => {
+    try {
+      const response = await axios.post(
+        "/api/circuitchecker/getchecktt",
+        toBackend
+      );
+      console.log("runned");
+      console.log(response.data);
+    } catch (error) {}
+  };
 
   const handleAddExpression = () => {
     const newBooleanExp = moduleAddBoolFunction(
@@ -84,6 +91,11 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
 
     setEqualVariables(true);
     setModuleFinalTableData(moduleFinalTable(moduleBoolSolverInstances));
+  };
+
+  const handleSend = () => {
+    console.log("ToBackend:", toBackend);
+    sendToCheck(moduleFinalTableData);
   };
 
   //Debug Button
@@ -177,6 +189,9 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
               <BoolCheckTable
                 finalTable={moduleFinalTableData}
               ></BoolCheckTable>
+              <Button mt={2} onClick={handleSend} isDisabled={isDisabled}>
+                Send To Backend
+              </Button>
             </>
           ) : (
             // Show "NOT ALL INSTANCES HAVE THE SAME NUMBER OF VARIABLES" warning if equalVariables is false
