@@ -1,10 +1,7 @@
 import { Table, TableContainer, Tbody, Th, Thead, Tr } from "@chakra-ui/react";
-
-import { useFinalTable } from "../../hooks/zustandFinalTable";
 import { useEffect, useState } from "react";
 
-function BoolCheckTable() {
-  const { finalTable } = useFinalTable();
+function BoolCheckTable({ finalTable = {} }) {
   //const headings = Object.keys(finalTable);
   //const firstKey = Object.keys(finalTable)[0];
   //const rowLenght = finalTable[firstKey].length;

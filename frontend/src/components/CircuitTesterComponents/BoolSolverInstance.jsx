@@ -18,10 +18,14 @@ import BoolExpressTT from "./BoolExpressTT";
 //import BoolKmap from "./BoolKmap";
 import { useState } from "react";
 import PropTypes from "prop-types";
-import { useLogicCheck } from "../../hooks/zustandLogicCheck";
 
-function BoolSolverInstance({ onDeleteInstance, expressionName }) {
-  const { handleInputInstance, BoolSolverInstances } = useLogicCheck();
+import { moduleHandleInputInstance } from "../../utils/BoolUtils";
+function BoolSolverInstance({
+  expressionName,
+  moduleBoolSolverInstances,
+  onDeleteInstance,
+  onInput,
+}) {
   const [expression, setExpression] = useState("");
   const [validExpression, setValidExpression] = useState(true);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -45,7 +49,10 @@ function BoolSolverInstance({ onDeleteInstance, expressionName }) {
     setValidExpression(isValidExpression(newExpression));
 
     if (isValidExpression(newExpression)) {
-      handleInputInstance(newExpression, expressionName); //This is from useLogicCheck.js
+      onInput(
+        expressionName,
+        moduleHandleInputInstance(newExpression, expressionName) //This gets the SOP and other attr from utils
+      );
     }
   };
 
@@ -78,7 +85,8 @@ function BoolSolverInstance({ onDeleteInstance, expressionName }) {
     return result;
   }
 
-  const currentInstance = BoolSolverInstances[expressionName];
+  const currentInstance = moduleBoolSolverInstances[expressionName];
+  //console.log("Instance:", expressionName, currentInstance);
   const hasExpressionSOP = currentInstance && currentInstance.ExpressionSOP;
 
   return (
@@ -155,7 +163,7 @@ function BoolSolverInstance({ onDeleteInstance, expressionName }) {
             flexDirection="column"
             alignContent="center"
             justifyContent="center"
-            onClick={() => handleExpressionDelete(console.log("Delete"))}
+            onClick={handleExpressionDelete}
           >
             <Heading size="md" textAlign="center">
               Delete

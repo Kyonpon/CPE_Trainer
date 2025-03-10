@@ -485,3 +485,128 @@ export const generateSOP = (minterms, variables) => {
 
   return minimizedExpression;
 };
+
+
+export const moduleAddBoolFunction = (functionName, moduleBoolSolverInstance)=>{
+  const trimmedFunctionName = functionName.trim().toUpperCase();
+  if (!trimmedFunctionName) {
+    return { success: false, message: "Function name cannot be empty" };
+  }
+  if (trimmedFunctionName in moduleBoolSolverInstance) {
+    return {
+      success: false,
+      message: `Function "${trimmedFunctionName}" already exists`,
+    }
+  }
+  const output = {
+      Variables:[],
+      InputsTT:{},
+      ExpressionOutput:[],
+      EspressionSOP: "",
+      FinalTT: {},
+  }
+
+  return output
+}
+
+export const moduleHandleInputInstance= (booleanExpression, trimmedFunctionName) =>{
+  let variables = [];
+  let solvedMinterms =[];
+  let expressionOut = [];
+
+  const handleExpressionChange = (newBooleanExpression) => {
+    if (!newBooleanExpression) {
+      variables = [];
+      solvedMinterms = [];
+      expressionOut = [];
+    }
+
+    const uniqueVariables = [
+      ...new Set(newBooleanExpression.match(/[A-Z]/g)),
+    ].sort();
+    if (uniqueVariables.length > 8) {
+      alert("You can only have up to 8 variables.");
+      return;
+    }
+
+    const [tableHTML, minTerms, maxTerms, fColumnValues] = generateTable(
+      newBooleanExpression,
+      uniqueVariables
+    );
+
+    variables = uniqueVariables;
+    expressionOut = fColumnValues;
+    solvedMinterms = minTerms;
+    const solvedExpression = generateSOP(solvedMinterms, variables);
+
+
+    function generateTruthTable(vars) {
+      const n = vars.length; // Number of variables
+      const totalCombinations = Math.pow(2, n); // 2^n possible combinations
+      const inputsTT = {};
+
+      // Initialize each variable with an empty array
+      vars.forEach((variable) => {
+        inputsTT[variable] = [];
+      });
+
+      for (let i = 0; i < totalCombinations; i++) {
+        // For each variable, determine the bit value for that variable in the current combination
+        for (let j = 0; j < n; j++) {
+          const value = (i >> (n - j - 1)) & 1; // Calculate the bit for the current variable
+          inputsTT[vars[j]].push(value);
+        }
+      }
+
+      return inputsTT;
+    }
+
+    const inputsTT = generateTruthTable(variables);
+    const FinalTT = {};
+    Object.keys(inputsTT).forEach((variable) => {
+      FinalTT[variable] = inputsTT[variable];
+    });
+    FinalTT[trimmedFunctionName] = expressionOut;
+
+    const newBoolInstance = {
+        Variables: uniqueVariables,
+        InputsTT: inputsTT,
+        ExpressionOutput: fColumnValues,
+        ExpressionSOP: generateSOP(minTerms, uniqueVariables),
+        FinalTT: FinalTT,
+    }
+    return newBoolInstance
+  }
+
+  return handleExpressionChange(booleanExpression)
+
+}
+
+export const moduleFinalTable = (moduleSolverInstances= {}) =>{
+  if(!moduleSolverInstances){
+    return {
+      success: false,
+      message: "No instances found",
+    }
+  }
+
+  if(Object.keys(moduleSolverInstances).length == 0){
+    return console.log("No Instances provided. Ignoring boolean menus.");
+  }
+
+  const firstFunctionName = Object.keys(moduleSolverInstances)[0];
+  const firstFunctionObject = moduleSolverInstances[firstFunctionName];
+  const firstFunctionVariables = firstFunctionObject.InputsTT;
+
+  const expressionNamesAndOutput = {};
+  Object.keys(moduleSolverInstances).forEach((functionName) => {
+    expressionNamesAndOutput[functionName] =
+    moduleSolverInstances[functionName].ExpressionOutput;
+  });
+
+  const CfinalTable = {
+    ...firstFunctionVariables,
+    ...expressionNamesAndOutput,
+  };
+  return CfinalTable
+}

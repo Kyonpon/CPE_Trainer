@@ -31,7 +31,7 @@ export const useFinalTable = create((set) => ({
       ...expressionNamesAndOutput,
     };
 
-    console.log("First Function Name Variables:", firstFunctionVariables);
+    //console.log("First Function Name Variables:", firstFunctionVariables);
     set({ finalTable: CfinalTable });
   },
 }));
