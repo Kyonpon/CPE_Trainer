@@ -95,7 +95,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
 
   const handleSend = () => {
     console.log("ToBackend:", toBackend);
-    sendToCheck(moduleFinalTableData);
+    sendToCheck(toBackend);
   };
 
   //Debug Button
