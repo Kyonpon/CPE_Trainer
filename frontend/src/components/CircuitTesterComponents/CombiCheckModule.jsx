@@ -15,7 +15,8 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
   const [moduleFinalTableData, setModuleFinalTableData] = useState({});
   const [toBackend, setToBackend] = useState({
     moduleName: moduleName,
-    inputsOutputs: {},
+    inputs: {},
+    outputs: {},
   });
 
   const handleDisable = useCallback(() => {
@@ -37,10 +38,20 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
   }, [handleDisable]);
 
   useEffect(() => {
-    console.log("Updated moduleFinalTableData:", moduleFinalTableData);
+    const outputs = {};
+    const expressionNames = Object.keys(moduleBoolSolverInstances);
+    expressionNames.map((expressionName) => {
+      outputs[expressionName] =
+        moduleBoolSolverInstances[expressionName].ExpressionOutput;
+    });
+    if (expressionNames.length > 0) {
+      const firstInputs =
+        moduleBoolSolverInstances[expressionNames[0]].InputsTT;
+      setToBackend((prev) => ({ ...prev, inputs: firstInputs }));
+    }
     setToBackend((prev) => ({
       ...prev,
-      inputsOutputs: moduleFinalTableData,
+      outputs: outputs,
     }));
   }, [moduleFinalTableData]);
 
@@ -50,7 +61,6 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
         "/api/circuitchecker/getchecktt",
         toBackend
       );
-      console.log("runned");
       console.log(response.data);
     } catch (error) {}
   };
