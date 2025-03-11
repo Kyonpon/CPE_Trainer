@@ -1,9 +1,12 @@
 import express from "express";
-import { getModuleCheckTable } from "../controllers/circuitchecker.controller.js";
+import {
+  getModuleCheckTable,
+  testSend,
+} from "../controllers/circuitchecker.controller.js";
 
 const router = express.Router();
 
-router.post("/getchecktt", getModuleCheckTable)
+router.post("/getchecktt", getModuleCheckTable);
+router.get("/test/:modulename", testSend);
 
-
-export {router as CircuitCheckerAPI}
+export { router as CircuitCheckerAPI };
