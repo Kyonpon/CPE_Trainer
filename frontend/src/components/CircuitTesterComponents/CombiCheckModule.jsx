@@ -5,6 +5,7 @@ import BoolCheckTable from "../../components/CircuitTesterComponents/BoolCheckTa
 import axios from "axios";
 import PropTypes, { func } from "prop-types";
 import { moduleAddBoolFunction, moduleFinalTable } from "../../utils/BoolUtils";
+import TestTable from "./TestTable";
 
 function CombiCheckModule({ moduleName, onDeleteModule }) {
   const [instanceTracker, setInstanceTracker] = useState([]);
@@ -184,21 +185,20 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
       </HStack>
       {isDisabled ? (
         // Show "Instances are disabled" warning if isDisabled is true
-        <Box mt={2} border="1px" p={2} textAlign="center" color="red.500">
-          WARNING: INSTANCES ARE DISABLED
-        </Box>
+        // <Box mt={2} border="1px" p={2} textAlign="center" color="red.500">
+        //   WARNING: INSTANCES ARE DISABLED
+        // </Box>
+        <Box></Box>
       ) : (
         // If isDisabled is false, check equalVariables
         <>
           {equalVariables ? (
             // Show the table if equalVariables is true
             <>
-              <Box mt={2} border="1px" p={2} textAlign="center">
-                THIS IS THE TABLE
-              </Box>
-              <BoolCheckTable
+              {/* <BoolCheckTable
                 finalTable={moduleFinalTableData}
-              ></BoolCheckTable>
+              ></BoolCheckTable> */}
+              <TestTable finalTable={moduleFinalTableData}></TestTable>
               <Button mt={2} onClick={handleSend} isDisabled={isDisabled}>
                 Send To Backend
               </Button>
