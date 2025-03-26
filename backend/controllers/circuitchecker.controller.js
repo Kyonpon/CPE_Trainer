@@ -4,7 +4,7 @@ export const getModuleCheckTable = (req, res) => {
   const { moduleName, inputs, outputs } = req.body;
 
   receivedTruthTable[moduleName] = { inputs, outputs };
-  res.status(200).json({ success: true, data: moduleCheckTable });
+  res.status(200).json({ success: true, data: receivedTruthTable });
   console.log(moduleName);
   console.log("receivedTruthTable: ", receivedTruthTable);
 };
