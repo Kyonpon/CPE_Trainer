@@ -1,4 +1,4 @@
-import v2UniversalLogicModel from "../models/v2.universallogic.model";
+import v2UniversalLogicModel from "../models/v2.universallogic.model.js";
 import mongoose from "mongoose";
 
 export const v2AddULcircuit = async (req, res) => {
