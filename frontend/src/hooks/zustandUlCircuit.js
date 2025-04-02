@@ -38,7 +38,7 @@ export const useULCircuits = create((set) => ({
   fetchUniversalLogicCircuit: async () => {
     try {
       const response = await axios.get("api/ulcircuits/getall");
-      set({ universalLogicCircuit: response.data.circuits });
+      set({ universalLogicCircuit: response.data.allCircuits });
     } catch (error) {
       console.log("Error Fetching universal logic circuits:", error);
     }
