@@ -63,7 +63,9 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
         toBackend
       );
       console.log(response.data);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleAddExpression = () => {
