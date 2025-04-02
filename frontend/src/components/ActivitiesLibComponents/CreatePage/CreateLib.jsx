@@ -31,7 +31,7 @@ function CreateLib() {
   //Limited to create
   const zustandFunctions = {
     combinational: useCBCircuits().createCombiLogicCircuit,
-    universal: useULCircuits().createUniversalLogicCircruit,
+    universal: useULCircuits().createUniversalLogicCircuit,
     microprocessor: useMicroCircuits().createMicroCircuit,
   };
 
