@@ -437,7 +437,7 @@ function Activitiescircuitpages({ circuitType }) {
 
 // Add PropTypes validation
 Activitiescircuitpages.propTypes = {
-  circuitType: PropTypes.oneOf(["CB", "Micro"]).isRequired,
+  circuitType: PropTypes.oneOf(["CB", "Micro", "UL"]).isRequired,
 };
 
 export default Activitiescircuitpages;
