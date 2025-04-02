@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { useParams } from "react-router-dom";
 import { useCBCircuits } from "../../hooks/zustandCBCircuit";
 import { useMicroCircuits } from "../../hooks/zustandMicroCircuit";
+import { useULCircuits } from "../../hooks/zustandUlCircuit";
 import { useEffect, useState } from "react";
 import TextAndImageComponent from "../../components/ActivitiesLibComponents/ActivityPageComponents/TextAndImageComponent";
 import TextComponent from "../../components/ActivitiesLibComponents/ActivityPageComponents/TextComponent";
@@ -34,8 +35,14 @@ function Activitiescircuitpages({ circuitType }) {
 
   const cbcStore = useCBCircuits();
   const microStore = useMicroCircuits();
+  const universalStore = useULCircuits();
 
-  const store = circuitType === "CB" ? cbcStore : microStore;
+  const store =
+    circuitType === "CB"
+      ? cbcStore
+      : circuitType === "Micro"
+      ? microStore
+      : universalStore;
 
   const {
     fetchSingleCircuit,

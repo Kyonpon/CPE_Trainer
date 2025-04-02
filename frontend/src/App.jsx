@@ -48,6 +48,12 @@ function App() {
               <Activitiescircuitpages circuitType="Micro"></Activitiescircuitpages>
             }
           ></Route>
+          <Route
+            path="/ulcircuit/:id"
+            element={
+              <Activitiescircuitpages circuitType="UL"></Activitiescircuitpages>
+            }
+          ></Route>
         </Routes>
       </Box>
     </>
