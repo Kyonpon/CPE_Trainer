@@ -1,3 +1,5 @@
+import { set } from "mongoose";
+
 let receivedTruthTable = {};
 
 //Sample return data from esp 32
@@ -18,7 +20,7 @@ let receivedTruthTable = {};
 //   }
 // };
 
-let resultTruthTable ={};
+let resultTruthTable = {};
 
 // react app > Server
 export const getModuleCheckTable = (req, res) => {
@@ -47,6 +49,42 @@ export const testSend = (req, res) => {
 
 // ESP32 > Server
 export const getTestResults = (req, res) => {
-  const {moduleName, isPassed, outputsActual} = req.body;
+  const { moduleName, isPassed, outputsActual } = req.body;
   resultTruthTable[moduleName] = { isPassed, outputsActual };
-}
+};
+
+const randomResultGenerator = () => {
+  let randomResult = {
+    isPassed: [],
+    outputsActual: {
+      fn1: [],
+      fn2: [],
+    },
+  };
+
+  for (let i = 0; i < 4; i++) {
+    randomResult.isPassed.push(Math.round(Math.random()));
+    randomResult.outputsActual.fn1.push(Math.round(Math.random()));
+    randomResult.outputsActual.fn2.push(Math.round(Math.random()));
+  }
+  return randomResult;
+};
+
+const handler = {
+  set(target, key, value) {
+    console.log(`Setting ${key} to ${value}`);
+
+    target[key] = value;
+    return true;
+  },
+};
+
+const proxy = new Proxy(resultTruthTable, handler);
+
+export const getTestResultsRandom = (req, res) => {
+  const { moduleName } = req.params;
+  const randomResult = randomResultGenerator();
+  proxy.moduleName = randomResult;
+  res.json(randomResult);
+  console.log(resultTruthTable);
+};
