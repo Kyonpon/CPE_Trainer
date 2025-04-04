@@ -9,8 +9,12 @@ import { ULCircuitAPI } from "./routes/universallogic.route.js";
 import { CBCircuitAPIv2 } from "./routes/v2.combilogic.route.js";
 import { MicroCircuitAPI } from "./routes/micro.route.js";
 import { CircuitCheckerAPI } from "./routes/circuitchecker.route.js";
+import http from "http";
+import { WebSocketServer } from "ws";
 
 const app = express();
+const server = http.createServer(app);
+const wss = new WebSocketServer({ server });
 const PORT = process.env.PORT || 5000;
 
 dotenv.config();
@@ -34,7 +38,29 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-app.listen(PORT, () => {
+// In server.js
+const clients = new Set(); // Set to store all active connections
+
+wss.on("connection", (ws) => {
+  clients.add(ws); // Add new client to the set
+  console.log(`New client connected. Total clients: ${clients.size}`);
+
+  ws.on("close", () => {
+    clients.delete(ws); // Remove disconnected client
+    console.log(`Client disconnected. Remaining clients: ${clients.size}`);
+  });
+});
+
+export const broadcastToClients = (data) => {
+  clients.forEach((client) => {
+    if (client.readyState === 1) {
+      // WebSocket.OPEN = 1
+      client.send(JSON.stringify(data));
+    }
+  });
+};
+
+server.listen(PORT, () => {
   connectDB();
   console.log("Server started @ http://localhost:5000");
 });

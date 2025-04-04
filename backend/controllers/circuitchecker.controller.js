@@ -1,7 +1,7 @@
-import { set } from "mongoose";
+import { broadcastToClients } from "../server.js";
 
 let receivedTruthTable = {};
-
+let resultTruthTable = {};
 //Sample return data from esp 32
 // let resultTruthTable = {
 //   modulename1: {
@@ -19,8 +19,6 @@ let receivedTruthTable = {};
 //     }
 //   }
 // };
-
-let resultTruthTable = {};
 
 // react app > Server
 export const getModuleCheckTable = (req, res) => {
@@ -70,17 +68,7 @@ const randomResultGenerator = () => {
   return randomResult;
 };
 
-const handler = {
-  set(target, key, value) {
-    console.log(`Setting ${key} to ${value}`);
-
-    target[key] = value;
-    return true;
-  },
-};
-
-const proxy = new Proxy(resultTruthTable, handler);
-
+// SERVER > React App
 export const getTestResultsRandom = (req, res) => {
   const { moduleName } = req.params;
   const randomResult = randomResultGenerator();
@@ -88,3 +76,21 @@ export const getTestResultsRandom = (req, res) => {
   res.json(randomResult);
   console.log(resultTruthTable);
 };
+
+const handler = {
+  set(target, key, value) {
+    target[key] = value;
+
+    broadcastToClients(target);
+    return true;
+  },
+};
+const proxy = new Proxy(resultTruthTable, handler);
+
+//DEBUGS
+const testRefereshValues = () => {
+  const randomResult = randomResultGenerator();
+  proxy.module1 = randomResult;
+  //console.log(resultTruthTable);
+};
+const refresh = setInterval(testRefereshValues, 2000);
