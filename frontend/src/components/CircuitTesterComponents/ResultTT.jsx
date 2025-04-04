@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import DynamicTable from "./DynamicTable";
 
 function ResultTT() {
   const [message, setMessage] = useState({});
@@ -71,19 +72,15 @@ function ResultTT() {
   useEffect(() => {
     console.log("Result Table:", resultTable);
   }, [resultTable]);
+
   return (
     <div>
       <h1>Result Test Table</h1>
-      {parsedMessage && (
-        <div>
-          <h2>Module 1</h2>
-          <p>isPassed: {JSON.stringify(parsedMessage.module1?.isPassed)}</p>
-          <p>
-            outputsActual:{" "}
-            {JSON.stringify(parsedMessage.module1?.outputsActual)}
-          </p>
-        </div>
-      )}
+      <DynamicTable
+        dynamicTableData={resultTable}
+        tableName={"Result Table"}
+        testData={resultTable.isPassed} // Example test data, replace with actual data
+      ></DynamicTable>
     </div>
   );
 }

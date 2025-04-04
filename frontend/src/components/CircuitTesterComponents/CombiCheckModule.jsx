@@ -5,7 +5,8 @@ import BoolCheckTable from "../../components/CircuitTesterComponents/BoolCheckTa
 import axios from "axios";
 import PropTypes, { func } from "prop-types";
 import { moduleAddBoolFunction, moduleFinalTable } from "../../utils/BoolUtils";
-import TestTable from "./TestTable";
+import DynamicTable from "./DynamicTable";
+import ResultTT from "./ResultTT";
 
 function CombiCheckModule({ moduleName, onDeleteModule }) {
   const [instanceTracker, setInstanceTracker] = useState([]);
@@ -200,7 +201,13 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
               {/* <BoolCheckTable
                 finalTable={moduleFinalTableData}
               ></BoolCheckTable> */}
-              <TestTable finalTable={moduleFinalTableData}></TestTable>
+              {console.log("Final Table:", moduleFinalTableData)}
+              <DynamicTable
+                dynamicTableData={moduleFinalTableData}
+                tableName={"TEST TABLE"}
+                testData={[1, 1, 1, 1, 1, 1, 1, 1]} // Example test data, replace with actual data
+              ></DynamicTable>
+              <ResultTT></ResultTT>
               <Button mt={2} onClick={handleSend} isDisabled={isDisabled}>
                 Send To Backend
               </Button>
