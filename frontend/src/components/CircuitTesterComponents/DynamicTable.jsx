@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Box, Grid, GridItem, Heading } from "@chakra-ui/react";
+import PropTypes from "prop-types";
 
 function DynamicTable({
   dynamicTableData = {},
@@ -71,5 +72,11 @@ function DynamicTable({
     </Box>
   );
 }
+
+DynamicTable.propTypes = {
+  dynamicTableData: PropTypes.object.isRequired,
+  tableName: PropTypes.string,
+  testData: PropTypes.arrayOf(PropTypes.number),
+};
 
 export default DynamicTable;
