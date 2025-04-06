@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import DynamicTable from "./DynamicTable";
 
 function ResultTT() {
+  // eslint-disable-next-line no-unused-vars
   const [message, setMessage] = useState({});
   const [parsedMessage, setParsedMessage] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [socket, setSocket] = useState(null);
   const [resultTable, setResultTable] = useState({
     isPassed: [],
