@@ -48,11 +48,13 @@ function ResultTT() {
     };
   }, []);
 
+
+  //TO DO: Make this dynamic and not hardcoded
   useEffect(() => {
     if (parsedMessage) {
       updateResultable(
-        parsedMessage.module1?.isPassed,
-        parsedMessage.module1?.outputsActual
+        parsedMessage.Module1?.isPassed,
+        parsedMessage.Module1?.outputsActual
       );
     }
   }, [parsedMessage]);
