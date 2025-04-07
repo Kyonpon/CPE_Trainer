@@ -47,8 +47,23 @@ export const testSend = (req, res) => {
 
 // ESP32 > Server
 export const getTestResults = (req, res) => {
-  const { moduleName, isPassed, outputsActual } = req.body;
-  resultTruthTable[moduleName] = { isPassed, outputsActual };
+  const { moduleName } = req.params;
+  console.log("Mopdule Name: ", moduleName);
+  try {
+    const { isPassed, outputsActual } = req.body;
+
+    if (!moduleName || !isPassed || !outputsActual) {
+      return res.status(400).json({ error: "Invalid data format" });
+    }
+
+   
+   
+    proxy[moduleName] = {isPassed, outputsActual};
+    res.json({ success: true, data: proxy.moduleName });
+  } catch (error) {
+    console.error("Error processing request:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
 const randomResultGenerator = () => {
@@ -80,7 +95,7 @@ export const getTestResultsRandom = (req, res) => {
 const handler = {
   set(target, key, value) {
     target[key] = value;
-
+    console.log("Updated target: ", target);
     broadcastToClients(target);
     return true;
   },
@@ -93,4 +108,4 @@ const testRefereshValues = () => {
   proxy.module1 = randomResult;
   //console.log(resultTruthTable);
 };
-const refresh = setInterval(testRefereshValues, 2000);
+//const refresh = setInterval(testRefereshValues, 2000);
