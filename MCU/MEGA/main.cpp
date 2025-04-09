@@ -16,69 +16,89 @@ Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 // Function to initialize the OLED display
 void initializeOLED()
 {
-    Serial.println("Initializing OLED...");
-    if (!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDRESS))
+  Serial.println("Initializing OLED...");
+  if (!display.begin(SSD1306_SWITCHCAPVCC, OLED_ADDRESS))
+  {
+    Serial.println(F("SSD1306 allocation failed. Check wiring or I2C address."));
+    while (true)
     {
-        Serial.println(F("SSD1306 allocation failed. Check wiring or I2C address."));
-        while (true)
-        {
-            delay(100); // Infinite loop to halt execution
-        }
+      delay(100); // Infinite loop to halt execution
     }
-    Serial.println("OLED initialized successfully.");
+  }
+  Serial.println("OLED initialized successfully.");
 
-    // Clear and display a startup message
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 10);
-    display.println("System Starting...");
-    display.display();
-    delay(2000); // Pause to show the message
+  // Clear and display a startup message
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 10);
+  display.println("System Starting...");
+  display.display();
+  delay(2000); // Pause to show the message
 }
 
 // Function to update the OLED display with custom text
-void updateOLED(const String &message)
+void updateOLED(const String &message, int textSize, int cursorY)
 {
-    display.clearDisplay();
-    display.setTextSize(1);
-    display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    display.println(message);
-    display.display();
+  display.clearDisplay();
+  display.setTextSize(textSize); // Set the font size
+  display.setTextColor(WHITE);
+
+  // Calculate the line height based on the text size
+  int lineHeight = 8 * textSize; // Default line height is 8 pixels, scaled by text size
+
+  // Ensure the cursorY does not exceed the screen height
+  if (cursorY + lineHeight > SCREEN_HEIGHT)
+  {
+    Serial.println("Error: Text exceeds screen height.");
+    return; // Exit if the text won't fit on the screen
+  }
+
+  display.setCursor(0, cursorY); // Set the cursor position
+  display.println(message);      // Print the message
+  display.display();             // Update the display
 }
 
 //----------------------------------------FRONT PANEL PINS-----------------------------------
 #define MAX_OUTPUT_PROBE 16
 #define MAX_INPUT_PROBE 4
 int outputProbePins[MAX_OUTPUT_PROBE] = {A14, A12, A10, A8, A6, A4, A2, A0, 46, 44, 42, 40, 38, 36, 34, 32};
-int inputProbePins[MAX_INPUT_PROBE] = {41, 43, 45, 47};
+int inputProbePins[MAX_INPUT_PROBE] = {A7, A5, A3, A1}; // 41, 43, 45, 47 or A7, A5, A3, A1 layered
 
-#define MANUAL_CHECK A1
-#define START_TEST A3
-#define MANUAL_SW A5
+#define MANUAL_CHECK 45 // A1 or 45
+#define START_TEST 43   // A3 or 43
+#define MANUAL_SW 45    // A5 or 45
 #define NC1 A7
 #define NC2 A9
+#define pinESP 39
 
 void setup()
 {
-    // Initialize the OLED display
-    initializeOLED();
-    Serial.begin(115200);
-    Serial2.begin(115200);
-    delay(1000);
-    Serial.println("Starting up...");
-    updateOLED("Hello, world!");
-    delay(2000);
-    updateOLED("Testing OLED...");
+  // Initialize the OLED display
+  initializeOLED();
+  Serial.begin(115200);
+  Serial2.begin(115200);
+  delay(1000);
+  Serial.println("Starting up...");
 
-    pinMode(NC1, INPUT);
-    pinMode(NC2, INPUT);
-    pinMode(MANUAL_SW, INPUT);
-    pinMode(MANUAL_CHECK, INPUT);
-    pinMode(START_TEST, INPUT);
-    // blinkAll(outputProbePins, inputProbePins, MAX_OUTPUT_PROBE, MAX_INPUT_PROBE, 100);
-    String TEST_JSON = R"rawliteral(
+  updateOLED("Starting  up...", 2, 10); // Display startup message on OLED
+  delay(2000);
+
+  pinMode(NC1, INPUT);
+  pinMode(NC2, INPUT);
+  pinMode(MANUAL_SW, INPUT);
+  pinMode(MANUAL_CHECK, INPUT);
+  pinMode(START_TEST, INPUT);
+  updateOLED("Checking  LED's", 2, 10); // Display setup complete message on OLED
+  blinkAll(outputProbePins, inputProbePins, MAX_OUTPUT_PROBE, MAX_INPUT_PROBE, 50);
+  updateOLED("Check     Serial", 2, 10); // Display setup complete message on OLED
+  if (Serial2.available() > 0)
+  {
+    String receivedData = Serial2.readStringUntil('\n'); // Read until newline
+    Serial.println("Received: " + receivedData);
+  } // Clear the serial buffer
+  delay(5000);
+  String TEST_JSON = R"rawliteral(
         {
           "inputs": {
             "A": [0, 0, 0, 0, 1, 1, 1, 1],
@@ -91,26 +111,21 @@ void setup()
           }
         }
       )rawliteral";
-    String result = circuitChecker(TEST_JSON);
-    Serial2.write(result.c_str());
-    Serial.println(result);
-    delay(5000);
+  updateOLED("Checking  Circuit", 2, 10); // Display setup complete message on OLED
+  String result = circuitChecker(TEST_JSON);
+  Serial2.write(result.c_str());
+  Serial.println(result);
+  updateOLED("Finished  Check  ", 2, 10); // Display setup complete message on OLED
+  delay(5000);
 }
 
 void loop()
 {
-    Serial.println("");
-    Serial.println("TEST PINS");
-    Serial.print("NC1: ");
-    Serial.println(digitalRead(NC1));
-    Serial.print("NC2: ");
-    Serial.println(digitalRead(NC2));
-    Serial.print("MANUAL_SW: ");
-    Serial.println(digitalRead(MANUAL_SW));
-    Serial.print("MANUAL_CHECK: ");
-    Serial.println(digitalRead(MANUAL_CHECK));
-    Serial.print("START_TEST: ");
-    Serial.println(digitalRead(START_TEST));
+  if (Serial2.available() > 0)
+  {
+    String receivedData = Serial2.readStringUntil('\n'); // Read until newline
+    Serial.println("Received: " + receivedData);
+  } // Clear the serial buffer
 
-    delay(1000);
+  delay(1000);
 }

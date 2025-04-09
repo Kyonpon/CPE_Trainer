@@ -4,8 +4,10 @@
 
 const int MAX_INPUT_PROBE = 4;
 const int MAX_OUTPUT_PROBE = 16;
-int INPUT_PROBE_PINS[MAX_INPUT_PROBE] = {41, 43, 45, 47};
+int INPUT_PROBE_PINS[MAX_INPUT_PROBE] = {A7, A5, A3, A1}; // 41, 43, 45, 47 or A7, A5, A3, A1 layered
 int OUTPUT_PROBE_PINS[MAX_OUTPUT_PROBE] = {A14, A12, A10, A8, A6, A4, A2, A0, 46, 44, 42, 40, 38, 36, 34, 32};
+const int iteratorPin = A1;
+const int autoPin = A5;
 
 void printArray(int *array, int arr_size)
 {
@@ -19,6 +21,8 @@ String circuitChecker(String apiJSON)
 {
     const char *testCircuit = apiJSON.c_str();
     Serial2.begin(115200);
+    pinMode(iteratorPin, INPUT);
+    pinMode(autoPin, INPUT);
 
     // Setup for the circuit input and circuit output probes
     for (int i = 0; i < MAX_INPUT_PROBE; i++)
@@ -43,6 +47,11 @@ String circuitChecker(String apiJSON)
 
     JsonObject circuitInputs = jsonDoc["inputs"].as<JsonObject>();
     JsonObject circuitOutputs = jsonDoc["outputs"].as<JsonObject>();
+    Serial.println("Circuit Inputs:");
+    serializeJson(circuitInputs, Serial);
+    Serial.println("");
+    Serial.println("Circuit Outputs:");
+    serializeJson(circuitOutputs, Serial);
 
     // Grabbing the first key value pair in the circuit inputs (needed to determine the row)
 
@@ -71,10 +80,13 @@ String circuitChecker(String apiJSON)
         JsonArray arr = outputs.createNestedArray(key);
         outputsNames.add(key);
     }
-    serializeJsonPretty(resultDoc, Serial);
+    // serializeJsonPretty(resultDoc, Serial);
     Serial.println("");
     for (int rowIndex = 0; rowIndex < testIteration; rowIndex++)
     {
+        while (!(digitalRead(autoPin) || digitalRead(iteratorPin)))
+        {
+        }
         int isPassed = 1;
 
         for (JsonPair kv : circuitInputs)
