@@ -31,7 +31,7 @@ export const getModuleCheckTable = (req, res) => {
 };
 
 // Server > ESP32
-export const testSend = (req, res) => {
+export const sendTestData = (req, res) => {
   const { modulename } = req.params;
 
   if (!Object.keys(receivedTruthTable).includes(modulename)) {

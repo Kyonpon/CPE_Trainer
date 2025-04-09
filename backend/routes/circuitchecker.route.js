@@ -3,13 +3,13 @@ import {
   getModuleCheckTable,
   getTestResults,
   getTestResultsRandom,
-  testSend,
+  sendTestData,
 } from "../controllers/circuitchecker.controller.js";
 
 const router = express.Router();
 
 router.post("/getchecktt", getModuleCheckTable);
-router.get("/test/:modulename", testSend);
+router.get("/testdata/:modulename", sendTestData);
 router.get("/random/:modulename", getTestResultsRandom);
 router.post("/testresults/:moduleName", getTestResults )
 
