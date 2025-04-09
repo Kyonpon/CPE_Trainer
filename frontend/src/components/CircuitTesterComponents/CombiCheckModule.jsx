@@ -1,7 +1,6 @@
-import { Box, Button, HStack, Input } from "@chakra-ui/react";
+import { Box, Button, Grid, GridItem, HStack, Input } from "@chakra-ui/react";
 import BoolSolverInstance from "../../components/CircuitTesterComponents/BoolSolverInstance";
 import { useCallback, useEffect, useState } from "react";
-import BoolCheckTable from "../../components/CircuitTesterComponents/BoolCheckTable";
 import axios from "axios";
 import PropTypes, { func } from "prop-types";
 import { moduleAddBoolFunction, moduleFinalTable } from "../../utils/BoolUtils";
@@ -20,6 +19,81 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     inputs: {},
     outputs: {},
   });
+
+  //#region Wesbocket stuff
+  const [message, setMessage] = useState({});
+  const [parsedMessage, setParsedMessage] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [resultTable, setResultTable] = useState({
+    isPassed: [],
+  });
+
+  useEffect(() => {
+    const ws = new WebSocket("ws://localhost:5000");
+
+    ws.onopen = () => {
+      console.log("WebSocket is connected");
+    };
+
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data); // Parse the JSON string
+        setParsedMessage(data); // Store the parsed data
+        setMessage(event.data); // Keep the raw message if needed
+      } catch (error) {
+        console.error("Error parsing message:", error);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    ws.onclose = (event) => {
+      console.log("WebSocket is closed", event);
+      // Optionally, attempt to reconnect after a delay
+      setTimeout(() => {
+        console.log("Reconnecting...");
+        setSocket(new WebSocket("ws://localhost:5000"));
+      }, 3000);
+    };
+
+    setSocket(ws);
+
+    return () => {
+      ws.close();
+    };
+  }, []);
+
+  //TO DO: Make this dynamic and not hardcoded
+  useEffect(() => {
+    if (parsedMessage) {
+      updateResultable(
+        parsedMessage.Module1?.isPassed,
+        parsedMessage.Module1?.outputsActual
+      );
+    }
+  }, [parsedMessage]);
+
+  const updateResultable = (isPassed, outputsActual) => {
+    Object.keys(outputsActual).forEach((key) => {
+      setResultTable((prev) => ({
+        ...prev,
+        [key]: outputsActual[key],
+      }));
+    });
+
+    setResultTable((prev) => ({
+      ...prev,
+      isPassed: isPassed,
+    }));
+  };
+
+  useEffect(() => {
+    console.log("Result Table:", resultTable);
+  }, [resultTable]);
+
+  //#endregion
 
   const handleDisable = useCallback(() => {
     const instances = instanceTracker.length;
@@ -198,16 +272,20 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
           {equalVariables ? (
             // Show the table if equalVariables is true
             <>
-              {/* <BoolCheckTable
-                finalTable={moduleFinalTableData}
-              ></BoolCheckTable> */}
               {console.log("Final Table:", moduleFinalTableData)}
-              <DynamicTable
-                dynamicTableData={moduleFinalTableData}
-                tableName={"TEST TABLE"}
-                testData={[1, 1, 1, 1, 1, 1, 1, 1]} // Example test data, replace with actual data
-              ></DynamicTable>
-              <ResultTT></ResultTT>
+              <Grid templateColumns={"repeat(3, 1fr)"} columnGap={1}>
+                <GridItem colSpan={2}>
+                  <DynamicTable
+                    dynamicTableData={moduleFinalTableData}
+                    tableName={"TEST TABLE"}
+                    testData={resultTable.isPassed}
+                  ></DynamicTable>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <ResultTT resultTable={resultTable}></ResultTT>{" "}
+                </GridItem>
+              </Grid>
+
               <Button mt={2} onClick={handleSend} isDisabled={isDisabled}>
                 Send To Backend
               </Button>
