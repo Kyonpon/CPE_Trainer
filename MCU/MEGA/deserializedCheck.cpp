@@ -6,8 +6,8 @@ const int MAX_INPUT_PROBE = 4;
 const int MAX_OUTPUT_PROBE = 16;
 int INPUT_PROBE_PINS[MAX_INPUT_PROBE] = {A7, A5, A3, A1}; // 41, 43, 45, 47 or A7, A5, A3, A1 layered
 int OUTPUT_PROBE_PINS[MAX_OUTPUT_PROBE] = {A14, A12, A10, A8, A6, A4, A2, A0, 46, 44, 42, 40, 38, 36, 34, 32};
-const int iteratorPin = A1;
-const int autoPin = A5;
+const int iteratorPin = 45; // A1 or 45
+const int autoPin = 41;     //  // A5 or 41
 
 void printArray(int *array, int arr_size)
 {

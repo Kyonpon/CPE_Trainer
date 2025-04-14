@@ -67,7 +67,7 @@ int inputProbePins[MAX_INPUT_PROBE] = {A7, A5, A3, A1}; // 41, 43, 45, 47 or A7,
 
 #define MANUAL_CHECK 45 // A1 or 45
 #define START_TEST 43   // A3 or 43
-#define MANUAL_SW 45    // A5 or 45
+#define MANUAL_SW 41    // A5 or 41
 #define NC1 A7
 #define NC2 A9
 #define pinESP 39
