@@ -78,6 +78,7 @@ void setup()
   initializeOLED();
   Serial.begin(115200);
   Serial2.begin(115200);
+  Serial3.begin(9600);
   delay(1000);
   Serial.println("Starting up...");
 
@@ -112,20 +113,22 @@ void setup()
         }
       )rawliteral";
   updateOLED("Checking  Circuit", 2, 10); // Display setup complete message on OLED
-  String result = circuitChecker(TEST_JSON);
-  Serial2.write(result.c_str());
-  Serial.println(result);
+  // String result = circuitChecker(TEST_JSON);
+  // Serial2.write(result.c_str());
+  // Serial.println(result);
   updateOLED("Finished  Check  ", 2, 10); // Display setup complete message on OLED
-  delay(5000);
+  delay(1000);
 }
+String received = "";
 
 void loop()
 {
-  if (Serial2.available() > 0)
+  while (Serial3.available())
   {
-    String receivedData = Serial2.readStringUntil('\n'); // Read until newline
-    Serial.println("Received: " + receivedData);
-  } // Clear the serial buffer
-
-  delay(1000);
+    received = Serial3.readStringUntil('\n');
+    Serial.println(received);
+    Serial3.println("ACK");
+    delay(500);
+    circuitChecker(received);
+  }
 }

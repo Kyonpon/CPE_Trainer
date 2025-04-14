@@ -49,6 +49,27 @@ void fetchTestData()
     }
 }
 
+void sendWithAck(String message)
+{
+    Serial2.print(message + '\n'); // Send message with newline
+
+    while (!Serial2.available())
+    {
+        delay(10); // Wait for ACK
+    }
+    String ack = Serial2.readStringUntil('\n'); // Read ACK until newline
+    Serial.println("ACK received: " + ack);     // Print ACK
+    if (ack == "ACK")
+    {
+        Serial.println("ACK received!");
+        return; // ACK received, exit the function
+    }
+    else
+    {
+        Serial.println("Invalid ACK received!");
+        delay(5000); // Wait for 5 seconds before retrying
+    }
+}
 void setup()
 {
     pinMode(ROTARY_SWITCH, INPUT);
@@ -95,7 +116,7 @@ void loop()
             http.end();
         }
     }
-    Serial.println("Sending data to MEGA...");
-    Serial2.println(prevResponse);
-    delay(1000);
+    Serial.println("Sending data to MEGA..." + prevResponse);
+    sendWithAck(prevResponse); // Send the data to MEGA and wait for ACK
+    Serial.println("Rotary switch read" + String(digitalRead(ROTARY_SWITCH)));
 }
