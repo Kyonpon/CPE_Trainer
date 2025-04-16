@@ -38,7 +38,7 @@ function Circuittesterpage() {
           onDeleteModule={() => removeModule(module)}
         />
       ))} */}
-      <Tabs variant="enclosed">
+      <Tabs variant="enclosed" isFitted>
         <TabList>
           {moduleTracker.map((module) => (
             <Tab key={module}>{module}</Tab>
