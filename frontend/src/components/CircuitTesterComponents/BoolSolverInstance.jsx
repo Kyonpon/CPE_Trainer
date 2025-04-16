@@ -119,9 +119,10 @@ function BoolSolverInstance({
           <Box
             p={4}
             m={0}
-            backgroundColor="gray"
+            backgroundColor="gray.700 "
             display="flex"
             flexDirection="column"
+            borderRadius={5}
           >
             <Input
               placeholder="Example Format: (AB)' + AB'C + A'"
@@ -135,11 +136,12 @@ function BoolSolverInstance({
           <Box
             p={4}
             m={0}
-            backgroundColor="gray"
+            backgroundColor="gray.700 "
             display="flex"
             flexDirection="column"
             justifyContent="center"
             alignItems="center"
+            borderRadius={5}
           >
             {!validExpression && ( // Conditionally render error message
               <Heading size="md" textAlign="center" color="red.400">

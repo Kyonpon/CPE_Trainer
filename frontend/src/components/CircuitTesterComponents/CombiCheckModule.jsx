@@ -230,8 +230,8 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     }));
   };
   return (
-    <Box p={2} mb={5} backgroundColor="purple.700">
-      <h1>{moduleName}</h1>
+    <Box p={2} borderRadius={5}>
+      {/* <h1>{moduleName}</h1> */}
       {instanceTracker.map((instance) => (
         <BoolSolverInstance
           key={instance}
@@ -274,19 +274,19 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
             // Show the table if equalVariables is true
             <>
               {console.log("Final Table:", moduleFinalTableData)}
-              <Grid templateColumns={"repeat(3, 1fr)"} columnGap={1}>
+              <Grid templateColumns={"repeat(3, 1fr)"} columnGap={1} mt={2}>
                 <GridItem colSpan={2}>
                   <DynamicTable
                     dynamicTableData={moduleFinalTableData}
                     tableName={"TEST TABLE"}
                     testData={resultTable.isPassed}
                   ></DynamicTable>
-                  <ModuleSignals signals={moduleFinalTableData}></ModuleSignals>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <ResultTT resultTable={resultTable}></ResultTT>{" "}
                 </GridItem>
               </Grid>
+              <ModuleSignals signals={moduleFinalTableData}></ModuleSignals>
 
               <Button mt={2} onClick={handleSend} isDisabled={isDisabled}>
                 Send To Backend
