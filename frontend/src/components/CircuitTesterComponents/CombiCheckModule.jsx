@@ -6,6 +6,7 @@ import PropTypes, { func } from "prop-types";
 import { moduleAddBoolFunction, moduleFinalTable } from "../../utils/BoolUtils";
 import DynamicTable from "./DynamicTable";
 import ResultTT from "./ResultTT";
+import ModuleSignals from "./ModuleSignals";
 
 function CombiCheckModule({ moduleName, onDeleteModule }) {
   const [instanceTracker, setInstanceTracker] = useState([]);
@@ -280,6 +281,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
                     tableName={"TEST TABLE"}
                     testData={resultTable.isPassed}
                   ></DynamicTable>
+                  <ModuleSignals signals={moduleFinalTableData}></ModuleSignals>
                 </GridItem>
                 <GridItem colSpan={1}>
                   <ResultTT resultTable={resultTable}></ResultTT>{" "}
