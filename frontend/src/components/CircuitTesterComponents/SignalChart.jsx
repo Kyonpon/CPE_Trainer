@@ -11,7 +11,10 @@ import {
 import { Flex, Text, Box } from "@chakra-ui/react";
 
 const SignalChart = ({ title, data, showToggleLines = false }) => {
-  const chartData = data.map((value, index) => ({ index, value }));
+  const chartData = [
+    ...data.map((value, index) => ({ index, value })),
+    { index: data.length, value: data[data.length - 1] }, // <-- extra point
+  ];
 
   return (
     <Flex align="center" w="100%">
@@ -32,7 +35,7 @@ const SignalChart = ({ title, data, showToggleLines = false }) => {
               dataKey="index"
               hide
               type="number"
-              domain={["dataMin", "dataMax"]}
+              domain={["dataMin", chartData.length - 1]} // or just 'dataMax'
             />
             <YAxis
               type="number"
