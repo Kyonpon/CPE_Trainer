@@ -230,7 +230,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     }));
   };
   return (
-    <Box p={2} mb={5} w="100vw" backgroundColor="purple.700">
+    <Box p={2} mb={5} backgroundColor="purple.700">
       <h1>{moduleName}</h1>
       {instanceTracker.map((instance) => (
         <BoolSolverInstance

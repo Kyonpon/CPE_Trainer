@@ -1,4 +1,12 @@
-import { Box, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
+} from "@chakra-ui/react";
 import CombiCheckModule from "../../components/CircuitTesterComponents/CombiCheckModule";
 import { useModuleInstances } from "../../hooks/circuitTesterGlobalStates/zustandModuleInstances";
 import { useEffect, useState } from "react";
@@ -23,13 +31,30 @@ function Circuittesterpage() {
     <Box>
       <Button onClick={handleAddModule}>Add ESP-1</Button>
       <Button onClick={handleDebug}> Debug Modules</Button>
-      {moduleTracker.map((module) => (
+      {/* {moduleTracker.map((module) => (
         <CombiCheckModule
           key={module}
           moduleName={module}
           onDeleteModule={() => removeModule(module)}
         />
-      ))}
+      ))} */}
+      <Tabs>
+        <TabList>
+          {moduleTracker.map((module) => (
+            <Tab key={module}>{module}</Tab>
+          ))}
+        </TabList>
+        <TabPanels>
+          {moduleTracker.map((module) => (
+            <TabPanel key={module}>
+              <CombiCheckModule
+                moduleName={module}
+                onDeleteModule={() => removeModule(module)}
+              />
+            </TabPanel>
+          ))}
+        </TabPanels>
+      </Tabs>
     </Box>
   );
 }
