@@ -232,15 +232,6 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
   return (
     <Box p={2} borderRadius={5}>
       {/* <h1>{moduleName}</h1> */}
-      {instanceTracker.map((instance) => (
-        <BoolSolverInstance
-          key={instance}
-          expressionName={instance}
-          moduleBoolSolverInstances={moduleBoolSolverInstances}
-          onDeleteInstance={() => handleDeleteModuleBoolExpression(instance)}
-          onInput={handleUpdate}
-        />
-      ))}
       <HStack>
         <Input
           w="30%"
@@ -261,6 +252,17 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
           Debug
         </Button>
       </HStack>
+
+      {instanceTracker.map((instance) => (
+        <BoolSolverInstance
+          key={instance}
+          expressionName={instance}
+          moduleBoolSolverInstances={moduleBoolSolverInstances}
+          onDeleteInstance={() => handleDeleteModuleBoolExpression(instance)}
+          onInput={handleUpdate}
+        />
+      ))}
+
       {isDisabled ? (
         // Show "Instances are disabled" warning if isDisabled is true
         // <Box mt={2} border="1px" p={2} textAlign="center" color="red.500">
