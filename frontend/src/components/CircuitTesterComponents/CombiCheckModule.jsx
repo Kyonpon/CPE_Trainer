@@ -68,18 +68,13 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     };
   }, []);
 
-  //TO DO: Make this dynamic and not hardcoded
   useEffect(() => {
     if (parsedMessage) {
       updateResultable(
-        parsedMessage.Module1?.isPassed,
-        parsedMessage.Module1?.outputsActual
+        parsedMessage[moduleName].isPassed,
+        parsedMessage[moduleName].outputsActual
       );
-      updateResultGraph(parsedMessage.Module1?.acutalInputsOutputs);
-      console.log(
-        "Parsed message:",
-        parsedMessage.Module1?.acutalInputsOutputs
-      );
+      updateResultGraph(parsedMessage[moduleName].acutalInputsOutputs);
     }
   }, [parsedMessage]);
 
