@@ -56,31 +56,12 @@ export const getTestResults = (req, res) => {
       return res.status(400).json({ error: "Invalid data format" });
     }
 
-   
-   
-    proxy[moduleName] = {isPassed, outputsActual};
+    proxy[moduleName] = { isPassed, outputsActual };
     res.json({ success: true, data: proxy.moduleName });
   } catch (error) {
     console.error("Error processing request:", error);
     res.status(500).json({ error: "Internal server error" });
   }
-};
-
-const randomResultGenerator = () => {
-  let randomResult = {
-    isPassed: [],
-    outputsActual: {
-      fn1: [],
-      fn2: [],
-    },
-  };
-
-  for (let i = 0; i < 4; i++) {
-    randomResult.isPassed.push(Math.round(Math.random()));
-    randomResult.outputsActual.fn1.push(Math.round(Math.random()));
-    randomResult.outputsActual.fn2.push(Math.round(Math.random()));
-  }
-  return randomResult;
 };
 
 // SERVER > React App
@@ -103,9 +84,37 @@ const handler = {
 const proxy = new Proxy(resultTruthTable, handler);
 
 //DEBUGS
+
+const randomResultGenerator = () => {
+  let randomResult = {
+    isPassed: [],
+    outputsActual: {},
+  };
+
+  if (Object.keys(receivedTruthTable).length === 0) {
+    console.log("No received truth table data available.");
+    return randomResult;
+  }
+  const receivedKeys = Object.keys(receivedTruthTable.Module1.outputs); //THIS IS STATIC
+  const lenght = receivedTruthTable.Module1.outputs[receivedKeys[0]].length; //THIS IS STATIC
+  receivedKeys.forEach((key) => {
+    randomResult.outputsActual[key] = [];
+  });
+  // Generate random values for isPassed and outputsActual
+  for (let i = 0; i < lenght; i++) {}
+  for (let i = 0; i < lenght; i++) {
+    randomResult.isPassed.push(Math.floor(Math.random() * 2)); // Random 0 or 1
+    receivedKeys.forEach((key) => {
+      randomResult.outputsActual[key].push(Math.floor(Math.random() * 2)); // Random 0 or 1
+    });
+  }
+  console.log("Random Result: ", randomResult);
+  return randomResult;
+};
 const testRefereshValues = () => {
   const randomResult = randomResultGenerator();
-  proxy.module1 = randomResult;
+  proxy.Module1 = randomResult;
   //console.log(resultTruthTable);
 };
-//const refresh = setInterval(testRefereshValues, 2000);
+const refresh = setInterval(testRefereshValues, 2000);
+//const refresh = setInterval(randomResultGenerator, 2000);

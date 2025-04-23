@@ -7,6 +7,7 @@ import { moduleAddBoolFunction, moduleFinalTable } from "../../utils/BoolUtils";
 import DynamicTable from "./DynamicTable";
 import ResultTT from "./ResultTT";
 import ModuleSignals from "./ModuleSignals";
+import { set } from "mongoose";
 
 function CombiCheckModule({ moduleName, onDeleteModule }) {
   const [instanceTracker, setInstanceTracker] = useState([]);
@@ -20,6 +21,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     inputs: {},
     outputs: {},
   });
+  const [resultTableData, setResultTableData] = useState({});
 
   //#region Wesbocket stuff
   const [message, setMessage] = useState({});
@@ -73,10 +75,16 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
         parsedMessage.Module1?.isPassed,
         parsedMessage.Module1?.outputsActual
       );
+      updateGraphs(moduleFinalTableData, parsedMessage.Module1?.outputsActual);
     }
   }, [parsedMessage]);
 
   const updateResultable = (isPassed, outputsActual) => {
+    if (!outputsActual) {
+      console.warn("outputsActual is undefined or null");
+      return;
+    }
+
     Object.keys(outputsActual).forEach((key) => {
       setResultTable((prev) => ({
         ...prev,
@@ -90,9 +98,28 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     }));
   };
 
+  const updateGraphs = (moduleFinalTableData, outputsActual) => {
+    Object.keys(moduleFinalTableData).forEach((key) => {
+      setResultTableData((prev) => ({
+        ...prev,
+        [key]: moduleFinalTableData[key],
+      }));
+    });
+    Object.keys(outputsActual).forEach((key) => {
+      setResultTableData((prev) => ({
+        ...prev,
+        [key]: outputsActual[key],
+      }));
+    });
+  };
+
+  // useEffect(() => {
+  //   console.log("Result Table:", resultTable);
+  // }, [resultTable]);
+
   useEffect(() => {
-    console.log("Result Table:", resultTable);
-  }, [resultTable]);
+    console.log("Result Table Data:", resultTableData);
+  }, [resultTableData]);
 
   //#endregion
 
@@ -275,7 +302,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
           {equalVariables ? (
             // Show the table if equalVariables is true
             <>
-              {console.log("Final Table:", moduleFinalTableData)}
+              {/* {console.log("moduleFinalTableData:", moduleFinalTableData)} */}
               <Grid templateColumns={"repeat(3, 1fr)"} columnGap={1} mt={2}>
                 <GridItem colSpan={2}>
                   <DynamicTable
@@ -288,7 +315,14 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
                   <ResultTT resultTable={resultTable}></ResultTT>{" "}
                 </GridItem>
               </Grid>
-              <ModuleSignals signals={moduleFinalTableData}></ModuleSignals>
+              <Grid templateColumns={"repeat(2, 1fr)"} columnGap={1} mt={2}>
+                <GridItem colSpan={1}>
+                  <ModuleSignals signals={moduleFinalTableData}></ModuleSignals>
+                </GridItem>
+                <GridItem colSpan={1}>
+                  <ModuleSignals signals={resultTableData}></ModuleSignals>
+                </GridItem>
+              </Grid>
 
               <Button mt={2} onClick={handleSend} isDisabled={isDisabled}>
                 Send To Backend

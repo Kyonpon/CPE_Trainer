@@ -27,7 +27,7 @@ function DynamicTable({
         }
         data.push(row);
       }
-      console.log("Data:", data);
+      // console.log("Data:", data);
       setTableData(data);
     }
   }, [dynamicTableData]);
