@@ -21,7 +21,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     inputs: {},
     outputs: {},
   });
-  const [resultTableData, setResultTableData] = useState({});
+  const [resultGraphData, setResultGraphData] = useState({});
 
   //#region Wesbocket stuff
   const [message, setMessage] = useState({});
@@ -75,7 +75,11 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
         parsedMessage.Module1?.isPassed,
         parsedMessage.Module1?.outputsActual
       );
-      updateGraphs(moduleFinalTableData, parsedMessage.Module1?.outputsActual);
+      updateResultGraph(parsedMessage.Module1?.acutalInputsOutputs);
+      console.log(
+        "Parsed message:",
+        parsedMessage.Module1?.acutalInputsOutputs
+      );
     }
   }, [parsedMessage]);
 
@@ -85,12 +89,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
       return;
     }
 
-    Object.keys(outputsActual).forEach((key) => {
-      setResultTable((prev) => ({
-        ...prev,
-        [key]: outputsActual[key],
-      }));
-    });
+    setResultTable(outputsActual);
 
     setResultTable((prev) => ({
       ...prev,
@@ -98,28 +97,14 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     }));
   };
 
-  const updateGraphs = (moduleFinalTableData, outputsActual) => {
-    Object.keys(moduleFinalTableData).forEach((key) => {
-      setResultTableData((prev) => ({
-        ...prev,
-        [key]: moduleFinalTableData[key],
-      }));
-    });
-    Object.keys(outputsActual).forEach((key) => {
-      setResultTableData((prev) => ({
-        ...prev,
-        [key]: outputsActual[key],
-      }));
-    });
+  const updateResultGraph = (acutalInputsOutputs) => {
+    if (!acutalInputsOutputs) {
+      console.warn("acutalInputsOutputs is undefined or null");
+      return;
+    }
+
+    setResultGraphData(acutalInputsOutputs);
   };
-
-  // useEffect(() => {
-  //   console.log("Result Table:", resultTable);
-  // }, [resultTable]);
-
-  useEffect(() => {
-    console.log("Result Table Data:", resultTableData);
-  }, [resultTableData]);
 
   //#endregion
 
@@ -320,7 +305,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
                   <ModuleSignals signals={moduleFinalTableData}></ModuleSignals>
                 </GridItem>
                 <GridItem colSpan={1}>
-                  <ModuleSignals signals={resultTableData}></ModuleSignals>
+                  <ModuleSignals signals={resultGraphData}></ModuleSignals>
                 </GridItem>
               </Grid>
 

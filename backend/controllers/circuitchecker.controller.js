@@ -76,7 +76,7 @@ export const getTestResultsRandom = (req, res) => {
 const handler = {
   set(target, key, value) {
     target[key] = value;
-    console.log("Updated target: ", target);
+    //console.log("Updated target: ", target);
     broadcastToClients(target);
     return true;
   },
@@ -88,6 +88,7 @@ const proxy = new Proxy(resultTruthTable, handler);
 const randomResultGenerator = () => {
   let randomResult = {
     isPassed: [],
+    acutalInputsOutputs: {},
     outputsActual: {},
   };
 
@@ -95,20 +96,31 @@ const randomResultGenerator = () => {
     console.log("No received truth table data available.");
     return randomResult;
   }
-  const receivedKeys = Object.keys(receivedTruthTable.Module1.outputs); //THIS IS STATIC
-  const lenght = receivedTruthTable.Module1.outputs[receivedKeys[0]].length; //THIS IS STATIC
-  receivedKeys.forEach((key) => {
+  const receivedOutputKeys = Object.keys(receivedTruthTable.Module1.outputs); //THIS IS STATIC
+  const receivedInputKeys = Object.keys(receivedTruthTable.Module1.inputs); //THIS IS STATIC
+  const lenght =
+    receivedTruthTable.Module1.outputs[receivedOutputKeys[0]].length; //THIS IS STATIC
+
+  receivedInputKeys.forEach((key) => {
+    randomResult.acutalInputsOutputs[key] =
+      receivedTruthTable.Module1.inputs[key];
+  });
+
+  // Initialize the acutalInputsOutputs object with empty arrays for each key
+  receivedOutputKeys.forEach((key) => {
+    randomResult.acutalInputsOutputs[key] = [];
     randomResult.outputsActual[key] = [];
   });
   // Generate random values for isPassed and outputsActual
-  for (let i = 0; i < lenght; i++) {}
   for (let i = 0; i < lenght; i++) {
     randomResult.isPassed.push(Math.floor(Math.random() * 2)); // Random 0 or 1
-    receivedKeys.forEach((key) => {
+    receivedOutputKeys.forEach((key) => {
+      randomResult.acutalInputsOutputs[key].push(Math.floor(Math.random() * 2)); // Random 0 or 1
+    });
+    receivedOutputKeys.forEach((key) => {
       randomResult.outputsActual[key].push(Math.floor(Math.random() * 2)); // Random 0 or 1
     });
   }
-  console.log("Random Result: ", randomResult);
   return randomResult;
 };
 const testRefereshValues = () => {
