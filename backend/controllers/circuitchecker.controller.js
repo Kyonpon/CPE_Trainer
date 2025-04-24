@@ -88,13 +88,19 @@ const randomResultGenerator = (moduleName) => {
     console.log("No received truth table data available.");
     return randomResult;
   }
+  if (!Object.keys(receivedTruthTable).includes(moduleName)) {
+    console.log("Module name not found in received truth table.");
+    return randomResult;
+  }
 
   const receivedOutputKeys = Object.keys(
     receivedTruthTable[moduleName].outputs
   );
-  const receivedInputKeys = Object.keys(receivedTruthTable[moduleName].inputs); //THIS IS STATIC
+
+  const receivedInputKeys = Object.keys(receivedTruthTable[moduleName].inputs);
+
   const lenght =
-    receivedTruthTable[moduleName].outputs[receivedOutputKeys[0]].length; //THIS IS STATIC
+    receivedTruthTable[moduleName].outputs[receivedOutputKeys[0]].length;
 
   receivedInputKeys.forEach((key) => {
     randomResult.acutalInputsOutputs[key] =
@@ -106,7 +112,7 @@ const randomResultGenerator = (moduleName) => {
     randomResult.acutalInputsOutputs[key] = [];
     randomResult.outputsActual[key] = [];
   });
-  // Generate random values for isPassed and outputsActual
+  // Generate random values for isPassed and outputsActuals
   for (let i = 0; i < lenght; i++) {
     randomResult.isPassed.push(Math.floor(Math.random() * 2)); // Random 0 or 1
     receivedOutputKeys.forEach((key) => {
@@ -123,7 +129,8 @@ const testRefereshValues = () => {
   const randomResult2 = randomResultGenerator("Module2");
   proxy.Module1 = randomResult1;
   proxy.Module2 = randomResult2;
-  console.log(resultTruthTable);
+  //console.log("Random Result TT: ", resultTruthTable);
+  //console.log("Received Truth Table: ", receivedTruthTable);
 };
 const refresh = setInterval(testRefereshValues, 2000);
 //const refresh = setInterval(randomResultGenerator, 2000);
