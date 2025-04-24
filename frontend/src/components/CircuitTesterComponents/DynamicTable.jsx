@@ -34,7 +34,7 @@ function DynamicTable({
 
   return (
     <Box bg="white" minH="50" padding={0.5} borderRadius="5">
-      <Heading size="md" textAlign="center" bg={"#38256b"} p={1}>
+      <Heading size="md" textAlign="center" bg={"gray.800"} p={1}>
         {tableName}
       </Heading>
       <Grid
@@ -45,7 +45,7 @@ function DynamicTable({
         {Object.keys(dynamicTableData).map((key) => (
           <GridItem
             key={key}
-            bg="#38256b"
+            bg="gray.800"
             minH="3em"
             display="flex"
             justifyContent="center"
