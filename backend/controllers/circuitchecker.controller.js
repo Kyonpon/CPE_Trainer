@@ -45,6 +45,7 @@ export const sendTestData = (req, res) => {
   res.json(processedTruthTable);
 };
 
+//#region UPDATE THIS IT'S NOT COMPATIBLE WITH THE FRONTEND
 // ESP32 > Server
 export const getTestResults = (req, res) => {
   const { moduleName } = req.params;
@@ -129,8 +130,8 @@ const testRefereshValues = () => {
   const randomResult2 = randomResultGenerator("Module2");
   proxy.Module1 = randomResult1;
   proxy.Module2 = randomResult2;
-  //console.log("Random Result TT: ", resultTruthTable);
-  //console.log("Received Truth Table: ", receivedTruthTable);
+  console.log("Random Result TT: ", resultTruthTable);
+  console.log("Received Truth Table: ", receivedTruthTable);
 };
-const refresh = setInterval(testRefereshValues, 2000);
+const refresh = setInterval(testRefereshValues, 5000);
 //const refresh = setInterval(randomResultGenerator, 2000);
