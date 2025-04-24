@@ -1,4 +1,12 @@
-import { Box, Button, Grid, GridItem, HStack, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Grid,
+  GridItem,
+  Heading,
+  HStack,
+  Input,
+} from "@chakra-ui/react";
 import BoolSolverInstance from "../../components/CircuitTesterComponents/BoolSolverInstance";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
@@ -7,7 +15,7 @@ import { moduleAddBoolFunction, moduleFinalTable } from "../../utils/BoolUtils";
 import DynamicTable from "./DynamicTable";
 import ResultTT from "./ResultTT";
 import ModuleSignals from "./ModuleSignals";
-import { set } from "mongoose";
+import LCPanel from "./VisualizedPanel/LCPanel";
 
 function CombiCheckModule({ moduleName, onDeleteModule }) {
   const [instanceTracker, setInstanceTracker] = useState([]);
@@ -196,12 +204,14 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
 
   //Debug Button
   const handleCheck = () => {
-    console.log("Module Boolean instances:", moduleBoolSolverInstances);
+    console.log("Debugging module:", moduleName);
     console.log("Instance Tracker:", instanceTracker);
-    console.log(
-      "Module Final Table: ",
-      moduleFinalTable(moduleBoolSolverInstances)
-    );
+    console.log("functionName:", functionName);
+    console.log("Module Bool Solver Instances:", moduleBoolSolverInstances);
+    console.log("Module Final Table Data:", moduleFinalTableData);
+    console.log("To Backend:", toBackend);
+    console.log("Result Table:", resultTable);
+    console.log("Result Graph Data:", resultGraphData);
   };
 
   const handleDeleteModuleBoolExpression = (moduleBoolExpressionName) => {
@@ -303,6 +313,20 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
                   <ModuleSignals signals={resultGraphData}></ModuleSignals>
                 </GridItem>
               </Grid>
+
+              <Box
+                mt={2}
+                backgroundColor={"gray.700"}
+                p={2}
+                borderRadius={5}
+                textAlign={"center"}
+              >
+                <Heading>Panel Assignment</Heading>
+                <LCPanel
+                  outputs={toBackend.outputs}
+                  inputs={toBackend.inputs}
+                ></LCPanel>
+              </Box>
 
               <Button mt={2} onClick={handleSend} isDisabled={isDisabled}>
                 Send To Backend
