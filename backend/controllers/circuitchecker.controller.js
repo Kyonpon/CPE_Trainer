@@ -48,7 +48,7 @@ export const sendTestData = (req, res) => {
 // ESP32 > Server
 export const getTestResults = (req, res) => {
   const { moduleName } = req.params;
-  console.log("Mopdule Name: ", moduleName);
+  console.log("Module Name: ", moduleName);
   try {
     const { isPassed, outputsActual } = req.body;
 
@@ -65,14 +65,6 @@ export const getTestResults = (req, res) => {
 };
 
 // SERVER > React App
-export const getTestResultsRandom = (req, res) => {
-  const { moduleName } = req.params;
-  const randomResult = randomResultGenerator();
-  proxy.moduleName = randomResult;
-  res.json(randomResult);
-  console.log(resultTruthTable);
-};
-
 const handler = {
   set(target, key, value) {
     target[key] = value;
@@ -85,7 +77,7 @@ const proxy = new Proxy(resultTruthTable, handler);
 
 //DEBUGS
 
-const randomResultGenerator = () => {
+const randomResultGenerator = (moduleName) => {
   let randomResult = {
     isPassed: [],
     acutalInputsOutputs: {},
@@ -96,14 +88,17 @@ const randomResultGenerator = () => {
     console.log("No received truth table data available.");
     return randomResult;
   }
-  const receivedOutputKeys = Object.keys(receivedTruthTable.Module1.outputs); //THIS IS STATIC
-  const receivedInputKeys = Object.keys(receivedTruthTable.Module1.inputs); //THIS IS STATIC
+
+  const receivedOutputKeys = Object.keys(
+    receivedTruthTable[moduleName].outputs
+  );
+  const receivedInputKeys = Object.keys(receivedTruthTable[moduleName].inputs); //THIS IS STATIC
   const lenght =
-    receivedTruthTable.Module1.outputs[receivedOutputKeys[0]].length; //THIS IS STATIC
+    receivedTruthTable[moduleName].outputs[receivedOutputKeys[0]].length; //THIS IS STATIC
 
   receivedInputKeys.forEach((key) => {
     randomResult.acutalInputsOutputs[key] =
-      receivedTruthTable.Module1.inputs[key];
+      receivedTruthTable[moduleName].inputs[key];
   });
 
   // Initialize the acutalInputsOutputs object with empty arrays for each key
@@ -124,9 +119,11 @@ const randomResultGenerator = () => {
   return randomResult;
 };
 const testRefereshValues = () => {
-  const randomResult = randomResultGenerator();
-  proxy.Module1 = randomResult;
-  //console.log(resultTruthTable);
+  const randomResult1 = randomResultGenerator("Module1");
+  const randomResult2 = randomResultGenerator("Module2");
+  proxy.Module1 = randomResult1;
+  proxy.Module2 = randomResult2;
+  console.log(resultTruthTable);
 };
 const refresh = setInterval(testRefereshValues, 2000);
 //const refresh = setInterval(randomResultGenerator, 2000);
