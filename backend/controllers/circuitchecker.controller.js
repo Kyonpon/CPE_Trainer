@@ -57,7 +57,12 @@ export const getTestResults = (req, res) => {
       return res.status(400).json({ error: "Invalid data format" });
     }
 
-    proxy[moduleName] = { isPassed, outputsActual };
+    const acutalInputsOutputs = {
+      ...receivedTruthTable[moduleName].inputs,
+      ...outputsActual,
+    };
+
+    proxy[moduleName] = { isPassed, outputsActual, acutalInputsOutputs };
     res.json({ success: true, data: proxy.moduleName });
   } catch (error) {
     console.error("Error processing request:", error);
