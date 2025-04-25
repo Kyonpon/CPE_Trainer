@@ -60,6 +60,43 @@ export const broadcastToClients = (data) => {
   });
 };
 
+const clients2 = new Set();
+const circuitCheckerWss = new WebSocketServer({ noServer: true });
+const icTesterWss = new WebSocketServer({ noServer: true });
+
+const circuitCheckerhandler = (ws) => {
+  clients2.add(ws);
+  console.log(
+    `New circuit checker client connected. Total clients: ${clients2.size}`
+  );
+
+  ws.on("close", () => {
+    clients2.delete(ws);
+    console.log(
+      `Circuit checker client disconnected. Remaining clients: ${clients2.size}`
+    );
+  });
+};
+
+const icTesterHandler = (ws) => {};
+
+circuitCheckerWss.on("connection", circuitCheckerhandler);
+icTesterWss.on("connection", icTesterHandler);
+
+server.on("upgrade", (request, socket, head) => {
+  if (request.url === "/circuitchecker") {
+    circuitCheckerWss.handleUpgrade(request, socket, head, (ws) => {
+      circuitCheckerWss.emit("connection", ws, request);
+    });
+  } else if (request.url === "/ic-tester") {
+    icTesterWss.handleUpgrade(request, socket, head, (ws) => {
+      icTesterWss.emit("connection", ws, request);
+    });
+  } else {
+    socket.destroy();
+  }
+});
+
 server.listen(PORT, () => {
   connectDB();
   console.log("Server started @ http://localhost:5000");
