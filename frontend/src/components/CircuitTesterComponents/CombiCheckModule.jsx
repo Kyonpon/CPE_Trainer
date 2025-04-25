@@ -210,8 +210,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     sendToCheck(toBackend);
   };
 
-  //Debug Button
-  const handleCheck = () => {
+  const handleDebug = () => {
     console.log("Debugging module:", moduleName);
     console.log("Instance Tracker:", instanceTracker);
     console.log("functionName:", functionName);
@@ -278,7 +277,6 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
 
   return (
     <Box p={2} borderRadius={5}>
-      {/* <h1>{moduleName}</h1> */}
       <HStack>
         <Input
           w="30%"
@@ -295,7 +293,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
         <Button mt={2} onClick={handleDeleteModule}>
           Delete Module
         </Button>
-        <Button mt={2} onClick={handleCheck}>
+        <Button mt={2} onClick={handleDebug}>
           Debug
         </Button>
       </HStack>
@@ -311,15 +309,11 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
       ))}
 
       {isDisabled ? (
-        // Show "Instances are disabled" warning if isDisabled is true
-        // <Box mt={2} border="1px" p={2} textAlign="center" color="red.500">
-        //   WARNING: INSTANCES ARE DISABLED
-        // </Box>
-        <Box></Box>
+        <Box />
       ) : (
-        <>
+        <Box>
           {equalVariables ? (
-            <>
+            <Box>
               <HStack mt={2}>
                 <Button onClick={handleSend} isDisabled={isDisabled}>
                   Send To Backend
@@ -372,9 +366,8 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
                   </ModalBody>
                 </ModalContent>
               </Modal>
-            </>
+            </Box>
           ) : (
-            // Show "NOT ALL INSTANCES HAVE THE SAME NUMBER OF VARIABLES" warning if equalVariables is false
             <Box
               mt={2}
               border="1px"
@@ -385,7 +378,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
               WARNING: NOT ALL INSTANCES HAVE THE SAME NUMBER OF VARIABLES
             </Box>
           )}
-        </>
+        </Box>
       )}
     </Box>
   );
