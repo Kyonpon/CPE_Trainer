@@ -133,5 +133,5 @@ const testRefereshValues = () => {
   console.log("Random Result TT: ", resultTruthTable);
   console.log("Received Truth Table: ", receivedTruthTable);
 };
-const refresh = setInterval(testRefereshValues, 5000);
+const refresh = setInterval(testRefereshValues, 1500);
 //const refresh = setInterval(randomResultGenerator, 2000);

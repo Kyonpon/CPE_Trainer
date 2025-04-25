@@ -16,6 +16,7 @@ import DynamicTable from "./DynamicTable";
 import ResultTT from "./ResultTT";
 import ModuleSignals from "./ModuleSignals";
 import LCPanel from "./VisualizedPanel/LCPanel";
+import { debounce } from "lodash";
 
 function CombiCheckModule({ moduleName, onDeleteModule }) {
   const [instanceTracker, setInstanceTracker] = useState([]);
@@ -246,6 +247,25 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
       },
     }));
   };
+
+  const handleNewFunctionNme = (e) => {
+    setFunctionName(e.target.value);
+  };
+
+  const debouncedEffect = debounce((value) => {
+    // Do something with the value, like API call
+    console.log("Debounced input:", value);
+  }, 500); // 500ms delay
+
+  useEffect(() => {
+    debouncedEffect(functionName);
+    return debouncedEffect.cancel;
+  }, [functionName]);
+
+  const [graphOn, setGraphOn] = useState(false);
+  const handleToggleTable = () => {
+    setGraphOn((prev) => !prev);
+  };
   return (
     <Box p={2} borderRadius={5}>
       {/* <h1>{moduleName}</h1> */}
@@ -253,7 +273,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
         <Input
           w="30%"
           value={functionName}
-          onChange={(e) => setFunctionName(e.target.value)}
+          onChange={handleNewFunctionNme}
           placeholder="Name the output function of this expression ( eg. f(), Sum, Carry, etc.)"
         ></Input>
         <Button mt={2} onClick={handleAddExpression}>
@@ -293,26 +313,32 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
             // Show the table if equalVariables is true
             <>
               {/* {console.log("moduleFinalTableData:", moduleFinalTableData)} */}
-              <Grid templateColumns={"repeat(3, 1fr)"} columnGap={1} mt={2}>
-                <GridItem colSpan={2}>
-                  <DynamicTable
-                    dynamicTableData={moduleFinalTableData}
-                    tableName={"TEST TABLE"}
-                    testData={resultTable.isPassed}
-                  ></DynamicTable>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <ResultTT resultTable={resultTable}></ResultTT>{" "}
-                </GridItem>
-              </Grid>
-              <Grid templateColumns={"repeat(2, 1fr)"} columnGap={1} mt={2}>
-                <GridItem colSpan={1}>
-                  <ModuleSignals signals={moduleFinalTableData}></ModuleSignals>
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <ModuleSignals signals={resultGraphData}></ModuleSignals>
-                </GridItem>
-              </Grid>
+
+              {graphOn ? (
+                <Grid templateColumns={"repeat(2, 1fr)"} columnGap={1} mt={2}>
+                  <GridItem colSpan={1}>
+                    <ModuleSignals
+                      signals={moduleFinalTableData}
+                    ></ModuleSignals>
+                  </GridItem>
+                  <GridItem colSpan={1}>
+                    <ModuleSignals signals={resultGraphData}></ModuleSignals>
+                  </GridItem>
+                </Grid>
+              ) : (
+                <Grid templateColumns={"repeat(3, 1fr)"} columnGap={1} mt={2}>
+                  <GridItem colSpan={2}>
+                    <DynamicTable
+                      dynamicTableData={moduleFinalTableData}
+                      tableName={"TEST TABLE"}
+                      testData={resultTable.isPassed}
+                    ></DynamicTable>
+                  </GridItem>
+                  <GridItem colSpan={1}>
+                    <ResultTT resultTable={resultTable}></ResultTT>{" "}
+                  </GridItem>
+                </Grid>
+              )}
 
               <Box
                 mt={2}
@@ -322,14 +348,17 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
                 textAlign={"center"}
               >
                 <Heading>Panel Assignment</Heading>
-                <LCPanel
+                {/* <LCPanel
                   outputs={toBackend.outputs}
                   inputs={toBackend.inputs}
-                ></LCPanel>
+                ></LCPanel> */}
               </Box>
 
               <Button mt={2} onClick={handleSend} isDisabled={isDisabled}>
                 Send To Backend
+              </Button>
+              <Button mt={2} onClick={handleToggleTable}>
+                Toggle View
               </Button>
             </>
           ) : (
