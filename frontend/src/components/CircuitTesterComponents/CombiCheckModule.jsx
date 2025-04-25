@@ -6,6 +6,13 @@ import {
   Heading,
   HStack,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
 } from "@chakra-ui/react";
 import BoolSolverInstance from "../../components/CircuitTesterComponents/BoolSolverInstance";
 import { useCallback, useEffect, useState } from "react";
@@ -266,6 +273,9 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
   const handleToggleTable = () => {
     setGraphOn((prev) => !prev);
   };
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
     <Box p={2} borderRadius={5}>
       {/* <h1>{moduleName}</h1> */}
@@ -307,13 +317,16 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
         // </Box>
         <Box></Box>
       ) : (
-        // If isDisabled is false, check equalVariables
         <>
           {equalVariables ? (
-            // Show the table if equalVariables is true
             <>
-              {/* {console.log("moduleFinalTableData:", moduleFinalTableData)} */}
-
+              <HStack mt={2}>
+                <Button onClick={handleSend} isDisabled={isDisabled}>
+                  Send To Backend
+                </Button>
+                <Button onClick={handleToggleTable}>Toggle View</Button>
+                <Button onClick={onOpen}>Show Panel Assignment</Button>
+              </HStack>
               {graphOn ? (
                 <Grid templateColumns={"repeat(2, 1fr)"} columnGap={1} mt={2}>
                   <GridItem colSpan={1}>
@@ -340,26 +353,25 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
                 </Grid>
               )}
 
-              <Box
-                mt={2}
-                backgroundColor={"gray.700"}
-                p={2}
-                borderRadius={5}
-                textAlign={"center"}
-              >
-                <Heading>Panel Assignment</Heading>
-                {/* <LCPanel
-                  outputs={toBackend.outputs}
-                  inputs={toBackend.inputs}
-                ></LCPanel> */}
-              </Box>
-
-              <Button mt={2} onClick={handleSend} isDisabled={isDisabled}>
-                Send To Backend
-              </Button>
-              <Button mt={2} onClick={handleToggleTable}>
-                Toggle View
-              </Button>
+              <Modal isOpen={isOpen} onClose={onClose} size="xl">
+                <ModalOverlay />
+                <ModalContent width="fit-content" minWidth="fit-content">
+                  <ModalHeader>Panel Assignment</ModalHeader>
+                  <ModalCloseButton />
+                  <ModalBody
+                    mt={2}
+                    backgroundColor={"gray.700"}
+                    p={2}
+                    borderRadius={5}
+                    textAlign={"center"}
+                  >
+                    <LCPanel
+                      outputs={toBackend.outputs}
+                      inputs={toBackend.inputs}
+                    ></LCPanel>
+                  </ModalBody>
+                </ModalContent>
+              </Modal>
             </>
           ) : (
             // Show "NOT ALL INSTANCES HAVE THE SAME NUMBER OF VARIABLES" warning if equalVariables is false
