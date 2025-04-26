@@ -26,8 +26,8 @@ export const getModuleCheckTable = (req, res) => {
 
   receivedTruthTable[moduleName] = { inputs, outputs };
   res.status(200).json({ success: true, data: receivedTruthTable });
-  console.log(moduleName);
-  console.log("receivedTruthTable: ", receivedTruthTable);
+  //console.log(moduleName);
+  //console.log("receivedTruthTable: ", receivedTruthTable);
 };
 
 // Server > ESP32
@@ -41,7 +41,7 @@ export const sendTestData = (req, res) => {
     });
   }
   const processedTruthTable = receivedTruthTable[modulename];
-  console.log(processedTruthTable);
+  //console.log(processedTruthTable);
   res.json(processedTruthTable);
 };
 
@@ -62,7 +62,10 @@ export const getTestResults = (req, res) => {
       ...outputsActual,
     };
 
+    //console.log("acutalInputsOutputs: ", acutalInputsOutputs);
+
     proxy[moduleName] = { isPassed, outputsActual, acutalInputsOutputs };
+    console.log("Sent to Frontend: ")
     res.json({ success: true, data: proxy.moduleName });
   } catch (error) {
     console.error("Error processing request:", error);
@@ -138,5 +141,5 @@ const testRefereshValues = () => {
   console.log("Random Result TT: ", resultTruthTable);
   console.log("Received Truth Table: ", receivedTruthTable);
 };
-const refresh = setInterval(testRefereshValues, 1500);
+//const refresh = setInterval(testRefereshValues, 1500);
 //const refresh = setInterval(randomResultGenerator, 2000);
