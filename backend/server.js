@@ -8,6 +8,7 @@ import { UserAPI } from "./routes/user.route.js";
 import { ULCircuitAPI } from "./routes/universallogic.route.js";
 import { CBCircuitAPIv2 } from "./routes/v2.combilogic.route.js";
 import { MicroCircuitAPI } from "./routes/micro.route.js";
+import { ULCircuitAPIv2 } from "./routes/v2.unversallogic.route.js";
 import { CircuitCheckerAPI } from "./routes/circuitchecker.route.js";
 import http from "http";
 import { WebSocketServer } from "ws";
@@ -24,7 +25,7 @@ app.use(cors());
 
 app.use("/api/circuits", CircuitAPI);
 app.use("/api/users", UserAPI);
-app.use("/api/ulcircuits", ULCircuitAPI);
+app.use("/api/ulcircuits", ULCircuitAPIv2);
 app.use("/api/cbcircuits", CBCircuitAPIv2);
 app.use("/api/microcircuits", MicroCircuitAPI);
 app.use("/api/circuitchecker", CircuitCheckerAPI);

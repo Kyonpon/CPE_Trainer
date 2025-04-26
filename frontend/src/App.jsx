@@ -25,6 +25,7 @@ function App() {
             path="/createmicro"
             element={<Createpage></Createpage>}
           ></Route>
+          <Route path="/createul" element={<Createpage></Createpage>}></Route>
           <Route path="/login" element={<Loginpage></Loginpage>}></Route>
           <Route
             path="/ulcircuitsHome"
@@ -48,6 +49,12 @@ function App() {
             path="/microcircuit/:id"
             element={
               <Activitiescircuitpages circuitType="Micro"></Activitiescircuitpages>
+            }
+          ></Route>
+          <Route
+            path="/ulcircuit/:id"
+            element={
+              <Activitiescircuitpages circuitType="UL"></Activitiescircuitpages>
             }
           ></Route>
           <Route

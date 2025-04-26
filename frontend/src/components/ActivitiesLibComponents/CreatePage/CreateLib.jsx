@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useUlCircuits } from "../../../hooks/zustandUlCircuit";
+import { useULCircuits } from "../../../hooks/zustandUlCircuit";
 import { useCBCircuits } from "../../../hooks/zustandCBCircuit";
 import { useMicroCircuits } from "../../../hooks/zustandMicroCircuit";
 import {
@@ -31,7 +31,7 @@ function CreateLib() {
   //Limited to create
   const zustandFunctions = {
     combinational: useCBCircuits().createCombiLogicCircuit,
-    universal: useUlCircuits().createUniversalLogicCircruit,
+    universal: useULCircuits().createUniversalLogicCircuit,
     microprocessor: useMicroCircuits().createMicroCircuit,
   };
 
