@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TwoInputVizualizer from "../../components/ICTester/TwoInputVizualizer";
 import { Box, Button, Heading } from "@chakra-ui/react";
 
@@ -36,51 +36,67 @@ function ICTesterHome() {
     });
   };
 
-  const handleTestGoodGate2 = () => {
-    testGood(gateSet.gate2);
-  };
-
-  const handleTestBadGate2 = () => {
-    testBad(gateSet.gate2);
-  };
-
-  const handleTestGoodGate1 = () => {
-    testGood(gateSet.gate1);
-  };
-
-  const handleTestBadGate1 = () => {
-    testBad(gateSet.gate1);
-  };
-
-  const handleTestGoodGate3 = () => {
-    testGood(gateSet.gate3);
-  };
-
-  const handleTestBadGate3 = () => {
-    testBad(gateSet.gate3);
-  };
-
-  const handleTestGoodGate4 = () => {
-    testGood(gateSet.gate4);
-  };
-
-  const handleTestBadGate4 = () => {
-    testBad(gateSet.gate4);
-  };
-
   const gatesState = [1, 0, 0, 1];
+
+  const [wsMessage, setWsMessage] = useState({});
+  const [parsedWsMessage, setParsedWsMessage] = useState(null);
+  const [ws, setWs] = useState(null);
+  const [espResponse, setEspResponse] = useState([]);
+
+  useEffect(() => {
+    const wsClient = new WebSocket("ws://localhost:5000/ic-tester");
+
+    wsClient.onopen = () => {
+      console.log("WebSocket connection opened");
+    };
+
+    wsClient.onmessage = (event) => {
+      try {
+        const wsParse = JSON.parse(event.data);
+        setParsedWsMessage(wsParse);
+        setWsMessage(event.data);
+        setEspResponse(wsParse.gatesStates);
+      } catch (error) {
+        console.error("Error parsing WebSocket message:", error);
+      }
+    };
+
+    wsClient.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+
+    wsClient.onclose = () => {
+      console.log("WebSocket connection closed");
+      setTimeout(() => {
+        const newWsClient = new WebSocket("ws://localhost:5000/ic-tester");
+        setWs(newWsClient);
+      }, 1000); // Reconnect after 1 second
+    };
+
+    setWs(wsClient);
+    return () => {
+      wsClient.close();
+    };
+  }, []);
 
   const handlGateStatus = () => {
     const quadGateIC = Object.keys(gateSet);
-    for (let i = 0; i < gatesState.length; i++) {
-      if (gatesState[i] === 0) {
+    for (let i = 0; i < espResponse.length; i++) {
+      if (espResponse[i] === 0) {
         testBad(gateSet[quadGateIC[i]]);
       }
-      if (gatesState[i] === 1) {
+      if (espResponse[i] === 1) {
         testGood(gateSet[quadGateIC[i]]);
       }
     }
   };
+
+  useEffect(() => {
+    console.log("ESP Response:", espResponse);
+    if (espResponse && espResponse.length > 0) {
+      handlGateStatus();
+    }
+  }, [espResponse]);
 
   return (
     <Box>
@@ -90,33 +106,6 @@ function ICTesterHome() {
           pinStatuses={pinStatuses}
           setPinStatuses={setPinStatuses}
         ></TwoInputVizualizer>
-      </Box>
-      <Box display="flex" justifyContent="center" gap={2}>
-        <Box>
-          <h1>Gate 1</h1>
-          <Button onClick={handleTestGoodGate1}>Test GOOD</Button>
-          <Button onClick={handleTestBadGate1}>Test BAD</Button>
-        </Box>
-        <Box>
-          <h1>Gate 2</h1>
-          <Button onClick={handleTestGoodGate2}>Test GOOD</Button>
-          <Button onClick={handleTestBadGate2}>Test BAD</Button>
-        </Box>
-        <Box>
-          <h1>Gate 3</h1>
-          <Button onClick={handleTestGoodGate3}>Test GOOD</Button>
-          <Button onClick={handleTestBadGate3}>Test BAD</Button>
-        </Box>
-        <Box>
-          <h1>Gate 4</h1>
-          <Button onClick={handleTestGoodGate4}>Test GOOD</Button>
-          <Button onClick={handleTestBadGate4}>Test BAD</Button>
-        </Box>
-
-        <Box>
-          <h1>Testing</h1>
-          <Button onClick={handlGateStatus}> Test </Button>
-        </Box>
       </Box>
     </Box>
   );
