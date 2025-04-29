@@ -11,11 +11,11 @@ import { MicroCircuitAPI } from "./routes/micro.route.js";
 import { ULCircuitAPIv2 } from "./routes/v2.unversallogic.route.js";
 import { CircuitCheckerAPI } from "./routes/circuitchecker.route.js";
 import http from "http";
-import { WebSocketServer } from "ws";
+import { WebSocketServer, WebSocket } from "ws";
+import { testRefreshGatesInterval } from "./controllers/icChecker.controller.js";
 
 const app = express();
 const server = http.createServer(app);
-const wss = new WebSocketServer({ server });
 const PORT = process.env.PORT || 5000;
 
 dotenv.config();
@@ -39,64 +39,92 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-// In server.js
-const clients = new Set(); // Set to store all active connections
+// const wss = new WebSocketServer({ server });
+// const clients = new Set();
+// wss.on("connection", (ws) => {
+//   clients.add(ws); // Add new client to the set
+//   console.log(`New client connected. Total clients: ${clients.size}`);
 
-wss.on("connection", (ws) => {
-  clients.add(ws); // Add new client to the set
-  console.log(`New client connected. Total clients: ${clients.size}`);
+//   ws.on("close", () => {
+//     clients.delete(ws); // Remove disconnected client
+//     console.log(`Client disconnected. Remaining clients: ${clients.size}`);
+//   });
+// });
+
+// export const broadcastToClients = (data) => {
+//   clients.forEach((client) => {
+//     if (client.readyState === 1) {
+//       // WebSocket.OPEN = 1
+//       client.send(JSON.stringify(data));
+//     }
+//   });
+// };
+
+const circuitCheckerClients = new Set();
+const circuitCheckerWss = new WebSocketServer({ noServer: true });
+const icTesterClients = new Set();
+const icTesterWss = new WebSocketServer({ noServer: true });
+
+const circuitCheckerhandler = (ws) => {
+  circuitCheckerClients.add(ws);
+  console.log(
+    `New circuit checker client connected. Total clients: ${circuitCheckerClients.size}`
+  );
 
   ws.on("close", () => {
-    clients.delete(ws); // Remove disconnected client
-    console.log(`Client disconnected. Remaining clients: ${clients.size}`);
+    circuitCheckerClients.delete(ws);
+    console.log(
+      `Circuit checker client disconnected. Remaining clients: ${circuitCheckerClients.size}`
+    );
   });
+};
+
+const icTesterHandler = (ws) => {
+  icTesterClients.add(ws);
+  console.log(
+    `New IC tester client connected. Total clients: ${icTesterClients.size}`
+  );
+
+  ws.on("close", () => {
+    icTesterClients.delete(ws);
+    console.log(
+      `IC tester client disconnected. Remaining clients: ${icTesterClients.size}`
+    );
+  });
+};
+
+circuitCheckerWss.on("connection", circuitCheckerhandler);
+icTesterWss.on("connection", icTesterHandler);
+
+server.on("upgrade", (request, socket, head) => {
+  if (request.url === "/circuitchecker") {
+    circuitCheckerWss.handleUpgrade(request, socket, head, (ws) => {
+      circuitCheckerWss.emit("connection", ws, request);
+    });
+  } else if (request.url === "/ic-tester") {
+    icTesterWss.handleUpgrade(request, socket, head, (ws) => {
+      icTesterWss.emit("connection", ws, request);
+    });
+  } else {
+    socket.destroy();
+  }
 });
 
-export const broadcastToClients = (data) => {
-  clients.forEach((client) => {
-    if (client.readyState === 1) {
-      // WebSocket.OPEN = 1
+export const circuitCheckerBroadcastToClients = (data) => {
+  circuitCheckerClients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
       client.send(JSON.stringify(data));
     }
   });
 };
 
-// const clients2 = new Set();
-// const circuitCheckerWss = new WebSocketServer({ noServer: true });
-// const icTesterWss = new WebSocketServer({ noServer: true });
-
-// const circuitCheckerhandler = (ws) => {
-//   clients2.add(ws);
-//   console.log(
-//     `New circuit checker client connected. Total clients: ${clients2.size}`
-//   );
-
-//   ws.on("close", () => {
-//     clients2.delete(ws);
-//     console.log(
-//       `Circuit checker client disconnected. Remaining clients: ${clients2.size}`
-//     );
-//   });
-// };
-
-// const icTesterHandler = (ws) => {};
-
-// circuitCheckerWss.on("connection", circuitCheckerhandler);
-// icTesterWss.on("connection", icTesterHandler);
-
-// server.on("upgrade", (request, socket, head) => {
-//   if (request.url === "/circuitchecker") {
-//     circuitCheckerWss.handleUpgrade(request, socket, head, (ws) => {
-//       circuitCheckerWss.emit("connection", ws, request);
-//     });
-//   } else if (request.url === "/ic-tester") {
-//     icTesterWss.handleUpgrade(request, socket, head, (ws) => {
-//       icTesterWss.emit("connection", ws, request);
-//     });
-//   } else {
-//     socket.destroy();
-//   }
-// });
+export const icTesterBroadcastToClients = (data) => {
+  icTesterClients.forEach((client) => {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(data));
+    }
+  });
+};
 
 server.listen(PORT, () => {
   connectDB();

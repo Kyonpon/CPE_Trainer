@@ -1,4 +1,7 @@
-import { broadcastToClients } from "../server.js";
+import {
+  //broadcastToClients,
+  circuitCheckerBroadcastToClients,
+} from "../server.js";
 
 let receivedTruthTable = {};
 let resultTruthTable = {};
@@ -65,7 +68,7 @@ export const getTestResults = (req, res) => {
     //console.log("acutalInputsOutputs: ", acutalInputsOutputs);
 
     proxy[moduleName] = { isPassed, outputsActual, acutalInputsOutputs };
-    console.log("Sent to Frontend: ")
+    console.log("Sent to Frontend: ");
     res.json({ success: true, data: proxy.moduleName });
   } catch (error) {
     console.error("Error processing request:", error);
@@ -78,7 +81,8 @@ const handler = {
   set(target, key, value) {
     target[key] = value;
     //console.log("Updated target: ", target);
-    broadcastToClients(target);
+    //broadcastToClients(target);
+    circuitCheckerBroadcastToClients(target);
     return true;
   },
 };
