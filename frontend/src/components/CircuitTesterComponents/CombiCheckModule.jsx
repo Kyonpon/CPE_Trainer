@@ -48,7 +48,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
   });
 
   useEffect(() => {
-    const ws = new WebSocket("ws://localhost:5000");
+    const ws = new WebSocket("ws://localhost:5000/circuitchecker");
 
     ws.onopen = () => {
       console.log("WebSocket is connected");
@@ -73,7 +73,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
       // Optionally, attempt to reconnect after a delay
       setTimeout(() => {
         console.log("Reconnecting...");
-        setSocket(new WebSocket("ws://localhost:5000"));
+        setSocket(new WebSocket("ws://localhost:5000/circuitchecker"));
       }, 3000);
     };
 
