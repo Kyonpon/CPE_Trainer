@@ -12,7 +12,8 @@ import { ULCircuitAPIv2 } from "./routes/v2.unversallogic.route.js";
 import { CircuitCheckerAPI } from "./routes/circuitchecker.route.js";
 import http from "http";
 import { WebSocketServer, WebSocket } from "ws";
-import { testRefreshGatesInterval } from "./controllers/icChecker.controller.js";
+import { ICCheckerAPI } from "./routes/icChecker.route.js";
+//import { testRefreshGatesInterval } from "./controllers/icChecker.controller.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -29,6 +30,7 @@ app.use("/api/ulcircuits", ULCircuitAPIv2);
 app.use("/api/cbcircuits", CBCircuitAPIv2);
 app.use("/api/microcircuits", MicroCircuitAPI);
 app.use("/api/circuitchecker", CircuitCheckerAPI);
+app.use("/api/ictester", ICCheckerAPI);
 
 const __dirname = path.resolve();
 if (process.env.NODE_ENV === "production") {

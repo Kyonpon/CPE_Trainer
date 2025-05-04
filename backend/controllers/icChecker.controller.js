@@ -1,7 +1,8 @@
 import { icTesterBroadcastToClients } from "../server.js";
 
 let receivedMCUData = {
-  gatesStates: [],
+  icName: "",
+  gateStates: []
 };
 
 const proxyHandler = {
@@ -13,6 +14,30 @@ const proxyHandler = {
   },
 };
 const proxyResultMCUData = new Proxy(receivedMCUData, proxyHandler);
+
+
+export const icGetResults = (req, res) => {
+  try {
+    const { icName, gateStates } = req.body;
+    console.log("IC Name: ", icName);
+    console.log("Gate States: ", gateStates);
+
+    if (!icName || !gateStates) {
+      return res.status(400).json({ error: "Invalid data format" });
+    }
+
+    proxyResultMCUData.icName = icName;
+    proxyResultMCUData.gateStates = gateStates;
+
+    console.log("Sent to Frontend: ", proxyResultMCUData);
+    res.json({ success: true, data: proxyResultMCUData });
+    
+  } catch (error) {
+    console.error("Error processing request:", error);
+    res.status(500).json({ error: "Internal server error" });
+    
+  }
+}
 
 //Debug functions
 const randomGateStateGenerator = () => {
@@ -26,9 +51,9 @@ const randomGateStateGenerator = () => {
 
 const testRefreshGates = () => {
   const newGateStates = randomGateStateGenerator();
-  proxyResultMCUData.gatesStates = newGateStates;
+  proxyResultMCUData.gateStates = newGateStates;
 };
 
-export const testRefreshGatesInterval = setInterval(() => {
-  testRefreshGates();
-}, 2000);
+// export const testRefreshGatesInterval = setInterval(() => {
+//   testRefreshGates();
+// }, 2000);
