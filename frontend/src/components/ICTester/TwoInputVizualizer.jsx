@@ -2,8 +2,8 @@ import { Box, Grid, GridItem, HStack, Stack } from "@chakra-ui/react";
 import { set } from "mongoose";
 import React, { useState } from "react";
 
-function TwoInputVizualizer({ pinStatuses, setPinStatuses }) {
-  const ICName = "IC 7400";
+function TwoInputVizualizer({ pinStatuses, setPinStatuses, ICName }) {
+
   const scale = 3; // Change this value to scale the entire IC (1 = normal, 2 = double, 0.5 = half)
   const originalWidth = 400;
   const originalHeight = 125;
