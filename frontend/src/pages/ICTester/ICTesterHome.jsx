@@ -95,6 +95,15 @@ function ICTesterHome() {
       gate3: [3, 4, 5, 6],
     };
 
+    const notGateSet = {
+      gate1: [7, 8],
+      gate2: [9, 10],
+      gate3: [11, 12],
+      gate4: [1, 2],
+      gate5: [3, 4],
+      gate6: [5, 6],
+    };
+
     const handleQuadGate = (gateStates, icPins) => {
       if (gateStates.length != 0) {
         let numGate = gateStates.length;
@@ -123,13 +132,32 @@ function ICTesterHome() {
       }
     };
 
+    const handleNotGate = (gateStates, icPins) => {
+      if (gateStates.length != 0) {
+        let numGate = gateStates.length;
+
+        for (let i = 0; i < numGate; i++) {
+          if (gateStates[i] === 1) {
+            testGood(notGateSet[icPins[i]], 2);
+          } else if (gateStates[i] === 0) {
+            testBad(notGateSet[icPins[i]], 2);
+          }
+        }
+      }
+    };
+
     if (gateStates.length > 0) {
       if (gateStates.length === 4) {
         const quadGateIC = Object.keys(quadGateSet);
         handleQuadGate(gateStates, quadGateIC);
-      } else {
+      }
+      if (gateStates.length === 3) {
         const triGateIC = Object.keys(triGateSet);
         handleTriGate(gateStates, triGateIC);
+      }
+      if (gateStates.length === 6) {
+        const notGateIC = Object.keys(notGateSet);
+        handleNotGate(gateStates, notGateIC);
       }
     }
   }, [gateStates]);
