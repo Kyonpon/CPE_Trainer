@@ -3,6 +3,7 @@ import {
   Button,
   Grid,
   GridItem,
+  Heading,
   HStack,
   Input,
   Modal,
@@ -11,7 +12,13 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import BoolSolverInstance from "../../components/CircuitTesterComponents/BoolSolverInstance";
 import { useCallback, useEffect, useState } from "react";
@@ -23,6 +30,14 @@ import ResultTT from "./ResultTT";
 import ModuleSignals from "./ModuleSignals";
 import LCPanel from "./VisualizedPanel/LCPanel";
 import { debounce } from "lodash";
+import {
+  fourInputGrayCode,
+  threeInputGrayCode,
+  toBackendFour,
+  toBackendThree,
+  toBackendTwo,
+  twoInputGrayCode,
+} from "./GrayCodeTable";
 
 function CombiCheckModule({ moduleName, onDeleteModule }) {
   const [instanceTracker, setInstanceTracker] = useState([]);
@@ -291,6 +306,79 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isGrayCodePanelOpen,
+    onOpen: onGrayCodePanelOpen,
+    onClose: onGrayCodePanelClose,
+  } = useDisclosure();
+
+  //#region Gray Code Panel
+  const [grayCodeInput, setGrayCodeInput] = useState(2);
+  const [isGrayCodeTableShown, setIsGrayCodeTableShown] = useState(false);
+  const [grayCodeTableData, setGrayCodeTableData] = useState({});
+
+  const [toBackendGray, setToBackendGray] = useState({
+    moduleName: moduleName,
+    inputs: {},
+    outputs: {},
+  });
+  const handleGrayCodeInputChange = (value) => {
+    setIsGrayCodeTableShown(false);
+    setGrayCodeInput(value);
+  };
+
+  const handleGrayCodeInputChangeID = (type) => {
+    if (type === "increment") {
+      setGrayCodeInput((prev) => Math.min(prev + 1, 4));
+    }
+    if (type === "decrement") {
+      setGrayCodeInput((prev) => Math.max(prev - 1, 2));
+    }
+    setIsGrayCodeTableShown(false);
+  };
+
+  const handleGrayCodeInputChangeSubmit = () => {
+    if (grayCodeInput === 4) {
+      setGrayCodeTableData(fourInputGrayCode);
+    }
+    if (grayCodeInput === 3) {
+      setGrayCodeTableData(threeInputGrayCode);
+    }
+    if (grayCodeInput === 2) {
+      setGrayCodeTableData(twoInputGrayCode);
+    }
+    setIsGrayCodeTableShown(true);
+  };
+
+  const handleSendGray = () => {
+    if (grayCodeInput === 4) {
+      setToBackendGray((prev) => ({
+        ...prev,
+        inputs: toBackendFour.inputs,
+        outputs: toBackendFour.outputs,
+      }));
+    }
+    if (grayCodeInput === 3) {
+      setToBackendGray((prev) => ({
+        ...prev,
+        inputs: toBackendThree.inputs,
+        outputs: toBackendThree.outputs,
+      }));
+    }
+    if (grayCodeInput === 2) {
+      setToBackendGray((prev) => ({
+        ...prev,
+        inputs: toBackendTwo.inputs,
+        outputs: toBackendTwo.outputs,
+      }));
+    }
+    console.log("TO BACKEND GRAY:", toBackendGray);
+    sendToCheck(toBackendGray);
+  };
+
+  useEffect(() => {
+    console.log("Gray Code Input:", grayCodeInput);
+  }, [grayCodeInput]);
 
   return (
     <Box p={2} borderRadius={5}>
@@ -311,6 +399,9 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
         <Button mt={2} onClick={handleMCU} isDisabled={isDisabled}>
           Create Check Table
         </Button>
+        <Button mt={2} onClick={onGrayCodePanelOpen}>
+          Gray Code Panel
+        </Button>
         <Button mt={2} onClick={handleDeleteModule}>
           Delete Module
         </Button>
@@ -318,6 +409,63 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
           Debug
         </Button>
       </HStack>
+
+      <Modal
+        isOpen={isGrayCodePanelOpen}
+        onClose={onGrayCodePanelClose}
+        size="full"
+      >
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Gray Code Panel</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack gap={5}>
+              <Heading>How many inputs?</Heading>
+              <HStack>
+                <NumberInput defaultValue={2} min={2} max={4}>
+                  <NumberInputField
+                    value={grayCodeInput}
+                    onChange={(e) => handleGrayCodeInputChange(e.target.value)}
+                  />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper
+                      onClick={() => handleGrayCodeInputChangeID("increment")}
+                    />
+                    <NumberDecrementStepper
+                      onClick={() => handleGrayCodeInputChangeID("decrement")}
+                    />
+                  </NumberInputStepper>
+                </NumberInput>
+                <Button onClick={handleGrayCodeInputChangeSubmit}>
+                  Submit
+                </Button>
+              </HStack>
+            </VStack>
+            {isGrayCodeTableShown ? (
+              <Box>
+                <Grid templateColumns={"repeat(3, 1fr)"} columnGap={1} mt={2}>
+                  <GridItem colSpan={2}>
+                    <DynamicTable
+                      dynamicTableData={grayCodeTableData}
+                      tableName={"TEST TABLE"}
+                      testData={resultTable.isPassed}
+                    ></DynamicTable>
+                  </GridItem>
+                  <GridItem colSpan={1}>
+                    <ResultTT resultTable={resultTable}></ResultTT>{" "}
+                  </GridItem>
+                </Grid>
+                <Button mt={5} onClick={handleSendGray}>
+                  Send To Backend
+                </Button>
+              </Box>
+            ) : (
+              <Box></Box>
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
 
       {instanceTracker.map((instance) => (
         <BoolSolverInstance
