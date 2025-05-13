@@ -3,7 +3,6 @@ import {
   Button,
   Grid,
   GridItem,
-  Heading,
   HStack,
   Input,
   Modal,
@@ -17,7 +16,7 @@ import {
 import BoolSolverInstance from "../../components/CircuitTesterComponents/BoolSolverInstance";
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
-import PropTypes, { func } from "prop-types";
+import PropTypes from "prop-types";
 import { moduleAddBoolFunction, moduleFinalTable } from "../../utils/BoolUtils";
 import DynamicTable from "./DynamicTable";
 import ResultTT from "./ResultTT";
@@ -40,8 +39,10 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
   const [resultGraphData, setResultGraphData] = useState({});
 
   //#region Wesbocket stuff
+  // eslint-disable-next-line no-unused-vars
   const [message, setMessage] = useState({});
   const [parsedMessage, setParsedMessage] = useState(null);
+  // eslint-disable-next-line no-unused-vars
   const [socket, setSocket] = useState(null);
   const [resultTable, setResultTable] = useState({
     isPassed: [],
@@ -92,6 +93,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
       );
       updateResultGraph(parsedMessage[moduleName].acutalInputsOutputs);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [parsedMessage]);
 
   const updateResultable = (isPassed, outputsActual) => {
@@ -153,6 +155,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
       ...prev,
       outputs: outputs,
     }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [moduleFinalTableData]);
 
   const sendToCheck = async (toBackend) => {
@@ -258,14 +261,16 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     setFunctionName(e.target.value);
   };
 
+  // eslint-disable-next-line no-unused-vars
   const debouncedEffect = debounce((value) => {
     // Do something with the value, like API call
-    console.log("Debounced input:", value);
+    //console.log("Debounced input:", value);
   }, 500); // 500ms delay
 
   useEffect(() => {
     debouncedEffect(functionName);
     return debouncedEffect.cancel;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [functionName]);
 
   const [graphOn, setGraphOn] = useState(false);
