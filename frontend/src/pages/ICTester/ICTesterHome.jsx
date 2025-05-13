@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import TwoInputVizualizer from "../../components/ICTester/TwoInputVizualizer";
-import { Box, Heading } from "@chakra-ui/react";
+import { Box, Heading, Image, VStack } from "@chakra-ui/react";
 
 function ICTesterHome() {
   const [pinStatuses, setPinStatuses] = useState([
@@ -165,13 +165,22 @@ function ICTesterHome() {
   return (
     <Box>
       <Heading>ICTester</Heading>
-      <Box display="flex" justifyContent="center">
+      <VStack justifyContent="center" gap={0}>
         <TwoInputVizualizer
           pinStatuses={pinStatuses}
           setPinStatuses={setPinStatuses}
           ICName={icName}
-        ></TwoInputVizualizer>
-      </Box>
+        />
+        <Box>
+          <Image
+            src={`/images/ic_pin_config/${icName}.png`}
+            alt={`IC Diagram for ${icName}`}
+            height={"450px"}
+            objectFit={"contain"}
+            borderRadius={"10px"}
+          />
+        </Box>
+      </VStack>
     </Box>
   );
 }
