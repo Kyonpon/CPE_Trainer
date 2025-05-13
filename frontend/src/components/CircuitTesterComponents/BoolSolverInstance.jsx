@@ -71,13 +71,21 @@ function BoolSolverInstance({
         // Overline the previous character
         const previousChar = expression[i - 1];
         result[result.length - 1] = (
-          <Text key={i - 1} as="span" css={{ textDecoration: "overline" }}>
+          <Text
+            key={i - 1}
+            as="span"
+            css={{ textDecoration: "overline", marginRight: "0.2em" }}
+          >
             {previousChar}
           </Text>
         );
       } else if (expression[i] !== "'") {
-        // Just push the regular characters
-        result.push(expression[i]);
+        // Push the regular characters with a space
+        result.push(
+          <Text key={i} as="span" css={{ marginRight: "0.2em" }}>
+            {expression[i]}
+          </Text>
+        );
       }
       i++;
     }
