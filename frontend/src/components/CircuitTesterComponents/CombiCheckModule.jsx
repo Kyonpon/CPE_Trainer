@@ -32,6 +32,7 @@ import LCPanel from "./VisualizedPanel/LCPanel";
 import { debounce } from "lodash";
 import {
   fourInputGrayCode,
+  generateGrayCodeObjects,
   threeInputGrayCode,
   toBackendFour,
   toBackendThree,
@@ -348,6 +349,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
       setGrayCodeTableData(twoInputGrayCode);
     }
     setIsGrayCodeTableShown(true);
+    console.log("Function Generator: ", generateGrayCodeObjects(grayCodeInput));
   };
 
   const handleSendGray = () => {
