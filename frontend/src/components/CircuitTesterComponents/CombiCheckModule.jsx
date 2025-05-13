@@ -29,6 +29,7 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
   const [functionName, setFunctionName] = useState("");
   const [equalVariables, setEqualVariables] = useState();
   const [isDisabled, setIsDisabled] = useState(true);
+  const [isDisabledAddOut, setIsDisabledAddOut] = useState(true);
   const [moduleBoolSolverInstances, setModuleSolverInstances] = useState({});
   const [moduleFinalTableData, setModuleFinalTableData] = useState({});
   const [toBackend, setToBackend] = useState({
@@ -131,13 +132,24 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
     }
   }, [instanceTracker]);
 
+  const handleDisableAddOut = useCallback(() => {
+    const functionNameLength = functionName.length;
+    if (functionNameLength === 0) {
+      setIsDisabledAddOut(true);
+    }
+    if (functionNameLength > 0) {
+      setIsDisabledAddOut(false);
+    }
+  }, [functionName]);
+
   useEffect(() => {
     setInstanceTracker(Object.keys(moduleBoolSolverInstances));
   }, [moduleBoolSolverInstances]);
 
   useEffect(() => {
     handleDisable();
-  }, [handleDisable]);
+    handleDisableAddOut();
+  }, [handleDisable, handleDisableAddOut]);
 
   useEffect(() => {
     const outputs = {};
@@ -289,7 +301,11 @@ function CombiCheckModule({ moduleName, onDeleteModule }) {
           onChange={handleNewFunctionNme}
           placeholder="Name the output function of this expression ( eg. f(), Sum, Carry, etc.)"
         ></Input>
-        <Button mt={2} onClick={handleAddExpression}>
+        <Button
+          mt={2}
+          onClick={handleAddExpression}
+          isDisabled={isDisabledAddOut}
+        >
           Add Another Output
         </Button>
         <Button mt={2} onClick={handleMCU} isDisabled={isDisabled}>
