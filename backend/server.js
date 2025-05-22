@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
+import open from "open";
 import { connectDB } from "./config/db.js";
 import { CircuitAPI } from "./routes/circuits.route.js";
 import { UserAPI } from "./routes/user.route.js";
@@ -131,4 +132,5 @@ export const icTesterBroadcastToClients = (data) => {
 server.listen(PORT, () => {
   connectDB();
   console.log("Server started @ http://localhost:5000");
+  open(`http://localhost:${PORT}`); // This opens the browser
 });
