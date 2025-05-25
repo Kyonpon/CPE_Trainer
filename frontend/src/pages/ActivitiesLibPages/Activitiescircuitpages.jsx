@@ -42,7 +42,18 @@ function Activitiescircuitpages({ circuitType }) {
       ? cbcStore
       : circuitType === "Micro"
       ? microStore
-      : universalStore;
+      : circuitType === "UL"
+      ? universalStore
+      : null;
+
+  useEffect(() => {
+    if (!store) {
+      console.error("Invalid circuit type provided.");
+      return;
+    }
+    // This will log the store to see if it is correct
+    console.log("Store:", store);
+  }, [store]);
 
   const {
     fetchSingleCircuit,

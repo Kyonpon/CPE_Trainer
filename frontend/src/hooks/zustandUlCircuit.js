@@ -50,8 +50,9 @@ export const useULCircuits = create((set) => ({
       return null;
     }
     try {
-      const response = await axios.get(`api/ulcircuits/getbyid/${id}`);
-      return response.data.circuit;
+      const res = await axios.get(`/api/ulcircuits/getbyid/${id}`);
+      console.log("Fetched Circuit:", res.data.gotUL);
+      return res.data.gotUL;
     } catch (error) {
       console.log("Error Fetching this ID in universal logic circuits:", error);
       return null;
