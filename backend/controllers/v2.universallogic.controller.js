@@ -170,7 +170,7 @@ export const v2UpdataULById = async (req, res) => {
         { new: true }
       );
 
-      if (!updatedCBCircuit) {
+      if (!updatedULCircuit) {
         return res
           .status(404)
           .json({ success: false, message: "MAIN DOCUMENT NOT FOUND" });
@@ -179,14 +179,14 @@ export const v2UpdataULById = async (req, res) => {
       res.status(200).json({
         success: true,
         message: "MAIN DOCUMENT UPDATED",
-        data: updatedCBCircuit,
+        data: updatedULCircuit,
       });
     }
   } catch (error) {
     res.status(200).json({
       success: true,
       message: "MAIN DOCUMENT UPDATED",
-      data: updatedCBCircuit,
+      data: updatedULCircuit,
     });
   }
 };
