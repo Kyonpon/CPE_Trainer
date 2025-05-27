@@ -48,7 +48,7 @@ const NavBar = () => {
           bgGradient={"linear(to-r, cyan.400,blue.500)"}
           bgClip={"text"}
         >
-          <Link to={"/"}>CPE-4B</Link>
+          <Link to={"/"}>MCU BASED: LOGIC CIRCUIT TRAINER</Link>
         </Text>
 
         <HStack spacing={3} alignItems={"center"}>
@@ -63,9 +63,9 @@ const NavBar = () => {
               </Link>
             </button>
           )}
-          <Link to={"/create"}>
+          {/* <Link to={"/create"}>
             <CiSquarePlus fontSize={40} />
-          </Link>
+          </Link> */}
           <Button onClick={toggleColorMode}>
             {colorMode === "light" ? "🌙" : "☀️"} {/* Corrected here */}
           </Button>

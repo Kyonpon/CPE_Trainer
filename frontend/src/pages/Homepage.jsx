@@ -33,42 +33,42 @@ const Homepage = () => {
     <Box pl={4}>
       <p>Homepage</p>
       <Box display="flex" justifyContent="center" gap="20px" flexFlow="wrap">
-        <HomeCards
+        {/* <HomeCards
           url="/microprocessorHome"
           imgurl="https://picsum.photos/250"
           imgurlalt="This is a picture"
           title="Microprocessors"
-        />
+        /> */}
         <HomeCards
           url="/ulcircuitsHome"
-          imgurl="https://picsum.photos/250"
+          imgurl="public/images/activities/universal/nand/card.png"
           imgurlalt="This is a picture"
           title="Universal Logic Circuit"
         />
         <HomeCards
           url="/cbcircuitsHome"
-          imgurl="https://picsum.photos/250"
+          imgurl="public/images/activities/combinational/full_adder/card.png"
           imgurlalt="This is a picture"
           title="Combinational Logic Circuits"
         />
         <HomeCards
           url="/74lstesterhome"
-          imgurl="https://picsum.photos/250"
+          imgurl="public/images/ic_tester.png"
           imgurlalt="This is a picture"
           title="74LS Series IC Tester"
         />
         <HomeCards
           url="/logicciruittesterhome"
-          imgurl="https://picsum.photos/250"
+          imgurl="public/images/circuit_checker.png"
           imgurlalt="This is a picture"
           title="Circuit Tester"
         />
-        <HomeCards
+        {/* <HomeCards
           url="/abouthome"
           imgurl="https://picsum.photos/250"
           imgurlalt="This is a picture"
           title="About"
-        />
+        /> */}
       </Box>
     </Box>
   );
